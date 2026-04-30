@@ -1,0 +1,184 @@
+{
+  "name": "Raiden",
+  "website": "https://raiden.wtf",
+  "docs": "https://raiden-4.gitbook.io/raiden.wtf.docs",
+  "dashboard": "https://raiden.wtf/dashboard",
+
+  "api_key": {
+    "required": true,
+    "header": "api-x-token",
+    "how_to_get": "Sign in with Discord at raiden.wtf/dashboard, select Raiden Bolt > Connect tab, API key displayed (click eye icon to reveal)"
+  },
+
+  "tip_wallets": [
+    "t1TcSg9biJsz4NjKjhopK8QZzPS4KzBgFSszu5QTGgF",
+    "t2XFAFBaUkCzxJwEbLWFX9PKFjfBCp2tSyFtx5z4RZM",
+    "t3QLYyXH4vZYbEifLqjD581t5dPVhq9LABxWceySzL2",
+    "t46SqGmwStEffUMp1fr2xmv5uyR85TB9annJuLKLf83",
+    "t55hdzzftxWkYy3J8t32C9RRcZDuMZ4LDuBmbTzJFkU",
+    "t6UtTQLUGHJJrzxAb8PBBZdZKra8SWUqvTv9zPnxKNz",
+    "t7qUQU35sLpPydh42BcPmtEfTWW8gBe4Ry3gjwVnokJ",
+    "t8pPgarSK3TnuLbbHmoE1RCQdLxfxuPqNTyFjBKahok",
+    "t96GGdw3MiaGR993XN8PSsRpKGXx56t5Wf6zcF1hBpY"
+  ],
+  "tip_wallet_note": "Custom per-account tip address also available in dashboard",
+
+  "min_tip_sol": 0.001,
+  "tip_mechanism": "SystemProgram.transfer instruction to any tip address included in the transaction",
+  "tip_priority": "Higher tips get higher routing priority",
+
+  "cost_on_failure": "Tips are part of the signed transaction; no explicit refund policy documented. If TX does not land, tip is not charged (it's in the TX itself). QUIC is fire-and-forget with no per-TX error feedback.",
+
+  "endpoints": {
+    "regions": {
+      "fra": { "label": "Frankfurt", "host": "fra.bolt.raiden.wtf" },
+      "ams": { "label": "Amsterdam", "host": "ams.bolt.raiden.wtf" },
+      "lnd": { "label": "London", "host": "lnd.bolt.raiden.wtf" },
+      "nyc": { "label": "New York", "host": "nyc.bolt.raiden.wtf" }
+    },
+    "sendTransaction": {
+      "fra": "https://fra.bolt.raiden.wtf/api/v1/sendTransaction",
+      "ams": "https://ams.bolt.raiden.wtf/api/v1/sendTransaction",
+      "lnd": "https://lnd.bolt.raiden.wtf/api/v1/sendTransaction",
+      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendTransaction"
+    },
+    "sendRawTransaction": {
+      "fra": "https://fra.bolt.raiden.wtf/api/v1/sendRawTransaction",
+      "ams": "https://ams.bolt.raiden.wtf/api/v1/sendRawTransaction",
+      "lnd": "https://lnd.bolt.raiden.wtf/api/v1/sendRawTransaction",
+      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendRawTransaction"
+    },
+    "quic": {
+      "fra": "fra.bolt.raiden.wtf:4433",
+      "ams": "ams.bolt.raiden.wtf:4433",
+      "lnd": "lnd.bolt.raiden.wtf:4433",
+      "nyc": "nyc.bolt.raiden.wtf:4433"
+    },
+    "ping": "GET https://{region}.bolt.raiden.wtf/ping"
+  },
+
+  "rate_limits": {
+    "beta_free": { "rps": 5, "cost": "Free" },
+    "tier_1": { "rps": 10, "cost": "$49/mo" },
+    "tier_2": { "rps": 20, "cost": "$199/mo" },
+    "tier_3": { "rps": "Custom", "cost": "$499/mo" },
+    "error_jsonrpc": -32005,
+    "error_http": 429,
+    "response_headers": {
+      "X-RateLimit-Limit": "Total allowed per second",
+      "X-RateLimit-Remaining": "Requests remaining in window",
+      "X-Region": "Processing region"
+    }
+  },
+
+  "methods": {
+    "sendTransaction": {
+      "protocol": "HTTPS",
+      "method": "POST",
+      "encoding": "base64",
+      "content_type": "application/json",
+      "auth_header": "api-x-token",
+      "request_format": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": ["BASE64_ENCODED_TX"]
+      },
+      "response_format": {
+        "jsonrpc": "2.0",
+        "result": "TX_SIGNATURE",
+        "id": 1
+      }
+    },
+    "sendRawTransaction": {
+      "protocol": "HTTPS",
+      "method": "POST",
+      "encoding": "binary",
+      "content_type": "application/octet-stream",
+      "auth_header": "api-x-token",
+      "request_format": "Raw serialized transaction bytes",
+      "response_success": {
+        "success": true,
+        "signature": "TX_SIGNATURE"
+      },
+      "response_error": {
+        "success": false,
+        "error": "ERROR_MESSAGE"
+      }
+    },
+    "quic": {
+      "protocol": "QUIC (UDP)",
+      "port": 4433,
+      "encoding": "binary",
+      "alpn": "raiden-tpu",
+      "max_tx_size_bytes": 1232,
+      "max_concurrent_streams": 64,
+      "idle_timeout_seconds": 30,
+      "delivery_model": "fire-and-forget (no per-TX response)",
+      "zero_rtt": true,
+      "auth": "Derived from API key: SHA-256(api_key) -> ed25519 keypair -> self-signed X.509 TLS client certificate",
+      "connection_error_codes": {
+        "1": "Unknown certificate (API key unrecognized)",
+        "3": "QUIC access not enabled for account",
+        "4": "Account suspended/banned"
+      }
+    }
+  },
+
+  "error_codes": {
+    "jsonrpc": {
+      "-32600": "Malformed request",
+      "-32601": "Unknown method",
+      "-32602": "Invalid params / missing tip",
+      "-32000": "Missing or invalid API key",
+      "-32005": "Rate limited",
+      "-32603": "Server error"
+    },
+    "http_binary": {
+      "400": "Invalid TX or missing tip",
+      "401": "Invalid API key",
+      "429": "Rate limited",
+      "500": "Server error"
+    },
+    "quic_connection": {
+      "1": "Unknown certificate (API key unrecognized)",
+      "3": "QUIC access not enabled",
+      "4": "Account suspended/banned"
+    }
+  },
+
+  "features": {
+    "landing_latency": "< 1ms average",
+    "uptime_sla": "99.9%",
+    "global_regions": 4,
+    "infrastructure": "Dedicated bare-metal servers",
+    "quic_zero_rtt": true,
+    "products": {
+      "raiden_bolt": {
+        "description": "Low-latency transaction landing",
+        "status": "active"
+      },
+      "raiden_surge": {
+        "description": "Direct validator shred streaming via UDP from APEX servers - see state changes before they hit RPC",
+        "status": "active",
+        "apex_servers": {
+          "fra": { "ip": "198.13.140.100", "datacenter": "FRA2" },
+          "ams": { "ip": "64.130.43.242", "datacenter": "AMS3" },
+          "lnd": { "ip": "64.130.46.240", "datacenter": "LON1" },
+          "nyc": { "ip": "64.130.45.192", "datacenter": "EWR2" }
+        },
+        "protocol": "UDP shreds from validators",
+        "requires": "Public IP + UDP port"
+      },
+      "raiden_insight": {
+        "description": "Strategy backtesting and analytics",
+        "status": "coming_soon"
+      }
+    }
+  },
+
+  "payment": {
+    "currency": "USDC on Solana (on-chain only)",
+    "quote_expiry_minutes": 15
+  }
+}

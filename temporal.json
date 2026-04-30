@@ -1,0 +1,202 @@
+{
+  "name": "Nozomi (by Temporal)",
+  "website": "https://temporal.xyz/",
+  "docs": "https://use.temporal.xyz/",
+  "contact": "hello@temporal.xyz",
+  "description": "Fully custom proprietary Solana client written by HPC and HFT engineers designed to land transactions as fast as possible",
+  "api_key": {
+    "required": true,
+    "passed_as": "query_parameter",
+    "parameter_name": "c",
+    "format": "?c=<YOUR_API_KEY>",
+    "how_to_get": "Contact hello@temporal.xyz or check https://temporal.xyz/ for access"
+  },
+  "tip_wallets": [
+    "TEMPaMeCRFAS9EKF53Jd6KpHxgL47uWLcpFArU1Fanq",
+    "noz3jAjPiHuBPqiSPkkugaJDkJscPuRhYnSpbi8UvC4",
+    "noz3str9KXfpKknefHji8L1mPgimezaiUyCHYMDv1GE",
+    "noz6uoYCDijhu1V7cutCpwxNiSovEwLdRHPwmgCGDNo",
+    "noz9EPNcT7WH6Sou3sr3GGjHQYVkN3DNirpbvDkv9YJ",
+    "nozc5yT15LazbLTFVZzoNZCwjh3yUtW86LoUyqsBu4L",
+    "nozFrhfnNGoyqwVuwPAW4aaGqempx4PU6g6D9CJMv7Z",
+    "nozievPk7HyK1Rqy1MPJwVQ7qQg2QoJGyP71oeDwbsu",
+    "noznbgwYnBLDHu8wcQVCEw6kDrXkPdKkydGJGNXGvL7",
+    "nozNVWs5N8mgzuD3qigrCG2UoKxZttxzZ85pvAQVrbP",
+    "nozpEGbwx4BcGp6pvEdAh1JoC2CQGZdU6HbNP1v2p6P",
+    "nozrhjhkCr3zXT3BiT4WCodYCUFeQvcdUkM7MqhKqge",
+    "nozrwQtWhEdrA6W8dkbt9gnUaMs52PdAv5byipnadq3",
+    "nozUacTVWub3cL4mJmGCYjKZTnE9RbdY5AP46iQgbPJ",
+    "nozWNju6dY353eMkMqURqwQEoM3SFgEKC6psLCSfUne",
+    "nozWCyTPppJjRuw2fpzDhhWbW355fzosWSzrrMYB1Qk",
+    "nozxNBgWohjR75vdspfxR5H9ceC7XXH99xpxhVGt3Bb"
+  ],
+  "min_tip_sol": 0.001,
+  "cost_on_failure": "none (tip only charged if transaction lands)",
+  "recommended_compute_unit_price_microlamports": 1000000,
+  "endpoints": {
+    "auto_routed": {
+      "url": "https://nozomi.temporal.xyz",
+      "type": "cloudflare_proxy",
+      "notes": "Recommended default"
+    },
+    "geo_dns": {
+      "url": "https://edge.nozomi.temporal.xyz",
+      "type": "geo_dns",
+      "notes": "Routes to nearest region automatically"
+    },
+    "tip_floor_rest": {
+      "url": "https://api.nozomi.temporal.xyz/tip_floor",
+      "type": "REST",
+      "method": "GET"
+    },
+    "tip_stream_ws": {
+      "url": "wss://api.nozomi.temporal.xyz/tip_stream",
+      "type": "WebSocket"
+    },
+    "regional": {
+      "pittsburgh": {
+        "direct": "https://pit1.nozomi.temporal.xyz",
+        "cloudflare": "https://pit.nozomi.temporal.xyz"
+      },
+      "newark": {
+        "direct": "https://ewr1.nozomi.temporal.xyz",
+        "cloudflare": "https://ewr.nozomi.temporal.xyz"
+      },
+      "ashburn": {
+        "direct": "https://ash1.nozomi.temporal.xyz",
+        "cloudflare": "https://ash.nozomi.temporal.xyz"
+      },
+      "los_angeles": {
+        "direct": "https://lax1.nozomi.temporal.xyz",
+        "cloudflare": "https://lax.nozomi.temporal.xyz"
+      },
+      "frankfurt": {
+        "direct": "https://fra2.nozomi.temporal.xyz",
+        "cloudflare": "https://fra.nozomi.temporal.xyz"
+      },
+      "amsterdam": {
+        "direct": "https://ams1.nozomi.temporal.xyz",
+        "cloudflare": "https://ams.nozomi.temporal.xyz"
+      },
+      "london": {
+        "direct": "https://lon1.nozomi.temporal.xyz",
+        "cloudflare": "https://lon.nozomi.temporal.xyz"
+      },
+      "tokyo": {
+        "direct": "https://tyo1.nozomi.temporal.xyz",
+        "cloudflare": "https://tyo1.nozomi.temporal.xyz"
+      },
+      "singapore": {
+        "direct": "https://sgp1.nozomi.temporal.xyz",
+        "cloudflare": "https://sgp.nozomi.temporal.xyz"
+      }
+    },
+    "regional_notes": {
+      "direct": "No intermediary, lowest latency for datacenter/VPS deployments",
+      "cloudflare": "Better backbone connectivity for residential ISPs, handles edge TLS termination"
+    }
+  },
+  "rate_limits": {
+    "scope": "per_region",
+    "notes": "Multi-region sends don't count against the same limit",
+    "qos_penalty": "Applied if landing rate drops below expected threshold",
+    "custom_limits": "Available for high-volume users (contact Temporal)"
+  },
+  "methods": {
+    "sendTransaction_jsonrpc": {
+      "path": "/",
+      "full_url_example": "https://nozomi.temporal.xyz/?c=YOUR_API_KEY",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": ["<BASE64_ENCODED_TX_BYTES>", {"encoding": "base64"}]
+      },
+      "response": "JSON-RPC response with transaction signature",
+      "encoding": "base64 (MUST be explicitly specified; Solana defaults to base58)",
+      "notes": "Standard Solana JSON-RPC compatible"
+    },
+    "sendTransaction2_api_v2": {
+      "path": "/api/sendTransaction2",
+      "full_url_example": "https://nozomi.temporal.xyz/api/sendTransaction2?c=YOUR_API_KEY",
+      "http_method": "POST",
+      "content_type": "text/plain",
+      "request_body": "<BASE64_ENCODED_TX_BYTES>",
+      "response": "Empty body with 200 OK (no signature returned)",
+      "encoding": "base64",
+      "advantages": [
+        "No CORS preflight needed",
+        "Faster encoding than JSON-RPC",
+        "Lower overhead"
+      ]
+    },
+    "sendBatch": {
+      "path": "/api/sendBatch",
+      "full_url_example": "https://nozomi.temporal.xyz/api/sendBatch?c=YOUR_API_KEY",
+      "http_method": "POST",
+      "content_type": "application/octet-stream",
+      "request_body": "Binary: concatenation of length-prefixed transactions [u16_big_endian_length][tx_bytes]...",
+      "response": "Empty body with 200 OK on success; 400 with plain text error description on failure",
+      "encoding": "raw binary with big-endian u16 length prefix per transaction",
+      "limits": {
+        "max_transactions_per_batch": 16,
+        "min_transaction_size_bytes": 66,
+        "max_transaction_size_bytes": 1232,
+        "max_body_size_bytes": 19744
+      },
+      "notes": "Stream-processed; partial success possible without rollback. Transactions forwarded as parsed, so if TX N fails, TX 1..N-1 may already be accepted."
+    },
+    "tip_floor": {
+      "path": "/tip_floor",
+      "full_url": "https://api.nozomi.temporal.xyz/tip_floor",
+      "http_method": "GET",
+      "response_schema": {
+        "time": "ISO 8601 timestamp",
+        "landed_tips_25th_percentile": "number",
+        "landed_tips_50th_percentile": "number",
+        "landed_tips_75th_percentile": "number",
+        "landed_tips_95th_percentile": "number",
+        "landed_tips_99th_percentile": "number"
+      }
+    },
+    "tip_stream": {
+      "url": "wss://api.nozomi.temporal.xyz/tip_stream",
+      "protocol": "WebSocket",
+      "response_schema": {
+        "time": "ISO 8601 timestamp",
+        "landed_tips_25th_percentile": "number",
+        "landed_tips_50th_percentile": "number",
+        "landed_tips_75th_percentile": "number",
+        "landed_tips_95th_percentile": "number",
+        "landed_tips_99th_percentile": "number"
+      }
+    },
+    "ping": {
+      "path": "/ping",
+      "http_method": "GET",
+      "notes": "Keep-alive health check endpoint"
+    }
+  },
+  "features": {
+    "tip_only_on_success": true,
+    "higher_tips_prioritized": true,
+    "delivery_paths": ["Jito validators", "Harmonic bundles"],
+    "tcp_keepalive": {
+      "timeout_seconds": 65,
+      "max_requests_per_connection": 1000,
+      "recommended_ping_interval_seconds": 60
+    },
+    "supported_languages": ["Rust", "Python", "JavaScript", "TypeScript", "cURL"],
+    "no_full_rpc": "Nozomi is NOT a full RPC. Use a separate RPC (e.g. Helius) for getLatestBlockhash and other read calls.",
+    "multi_region_send": "Can send to multiple regions simultaneously without rate limit penalty"
+  },
+  "response_status_codes": {
+    "200": "Success",
+    "400": "Framing error, size violation, parse failure, or insufficient tip",
+    "401": "Invalid or missing API key",
+    "429": "Rate limited",
+    "500": "Internal server error"
+  }
+}

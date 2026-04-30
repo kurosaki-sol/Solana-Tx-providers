@@ -1,0 +1,122 @@
+{
+  "name": "Everstake SWQoS",
+  "website": "https://everstake.one",
+  "docs": "https://github.com/everstake/everstake-swqos-docs",
+  "api_key": {
+    "required": false,
+    "note": "No API key needed for RPC path. QUIC path requires pubkey whitelisting (contact Everstake to authorize your pubkey)."
+  },
+  "tip_wallets": [
+    "J4cL8c22KNLHwheuWxK1SCYBWASWPGhEi6xvcGyf6o3S",
+    "EzuhsszPxRUHBwGPXtKoqCB58EiTJ1QiYA2XrhbUEFbr",
+    "7wsUm2VDopGDFyXkyhmgUh9V15QkEvnyqbgUPcagLcw2",
+    "Cy3WAM9NdjFG3kXCxXmD17WmtJMBKVpoBXabkSm88Xdt",
+    "BEEya88mme6JJ4rgshBR23eiDHmygUii9opUHE3qxnqK",
+    "Gq21dPAGVuuZucqBQeCkfbbqoEowL1t88igZekJ93CRu",
+    "79HFWkNoPhotXuFYi1ksuK5hE7AUnKasafP6c71hS9sM",
+    "Cp4pCm5JjDaZ4gXB8eSjNJvQ8eg7uK6awgjveofrSATz",
+    "DMHQ51qK2wChtDEUED54cqzbSLMLGvTygQCv5uLTUmZP",
+    "GDnz7cAA7hKEFmDyrk6mz3drybHWc3Gn14y9LCsvvtjE"
+  ],
+  "min_tip_sol": 0.0005,
+  "min_tip_lamports": 500000,
+  "cost_on_failure": "unknown (tip is embedded in TX, so likely lost on failure)",
+  "endpoints": {
+    "rpc_https": {
+      "main_cloudflare": "https://main-swqos.everstake.one",
+      "frankfurt": "https://fra-swqos.everstake.one",
+      "new_york": "https://ny-swqos.everstake.one",
+      "tokyo": "https://tyo-swqos.everstake.one",
+      "amsterdam": "https://ams-swqos.everstake.one"
+    },
+    "rpc_http": {
+      "main_cloudflare": "http://main-swqos.everstake.one",
+      "frankfurt": "http://fra-swqos.everstake.one",
+      "new_york": "http://ny-swqos.everstake.one",
+      "tokyo": "http://tyo-swqos.everstake.one",
+      "amsterdam": "http://ams-swqos.everstake.one"
+    },
+    "quic": {
+      "frankfurt": "64.130.57.62:11809",
+      "tokyo": "208.91.107.171:11809",
+      "amsterdam": "74.118.140.197:11809",
+      "new_york": "64.130.59.154:11809"
+    }
+  },
+  "rate_limits": {
+    "rpc": "Not explicitly documented (no per-second limit stated)",
+    "quic_connections_per_minute": 8,
+    "quic_keepalive_interval_seconds": 10
+  },
+  "methods": {
+    "sendTransaction_rpc": {
+      "path": "RPC (HTTP/HTTPS)",
+      "method": "sendTransaction",
+      "description": "Standard Solana JSON-RPC sendTransaction. TX must include a SystemProgram::transfer instruction to one of the tip wallets with >= 500000 lamports.",
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "integer",
+        "method": "sendTransaction",
+        "params": [
+          "signed_serialized_transaction",
+          {
+            "encoding": "base58 or base64 (standard Solana RPC)"
+          }
+        ]
+      },
+      "requirements": [
+        "Transaction must include a SystemProgram::transfer to a tip wallet",
+        "Minimum tip: 500000 lamports (0.0005 SOL)",
+        "Do NOT add the tip address to an AddressLookupTable",
+        "Transaction must be fully signed before submission"
+      ]
+    },
+    "sendTransaction_quic": {
+      "path": "QUIC (direct)",
+      "description": "Raw serialized transaction bytes sent over QUIC unidirectional stream. No JSON-RPC wrapping.",
+      "serialization": "bincode",
+      "alpn_protocol": "solana-tpu",
+      "requirements": [
+        "Must authorize your pubkey with Everstake before connecting",
+        "Uses QUINN library for Rust clients",
+        "TLS with dummy x509 certificate derived from keypair",
+        "Server verification is skipped (custom SkipServerVerification)",
+        "Transaction sent via open_uni() stream, finalized with finish()",
+        "Max size: PACKET_DATA_SIZE (from solana_perf::packet)"
+      ]
+    }
+  },
+  "features": {
+    "stake_weighted_qos": "Everstake's validator stake provides prioritized transaction delivery to block leaders",
+    "geographic_endpoints": ["main_cloudflare", "frankfurt", "new_york", "tokyo", "amsterdam"],
+    "http2_support": {
+      "enabled": true,
+      "h2c_cleartext": "Use http:// endpoints with http2_prior_knowledge() for lowest latency",
+      "h2_alpn": "Use https:// endpoints for HTTP/2 via ALPN",
+      "multiplexing": true,
+      "header_compression": true,
+      "persistent_connections": true
+    },
+    "quic_direct_path": {
+      "description": "Direct QUIC connection to validator for lowest latency, bypasses HTTP layer entirely",
+      "requires_whitelist": true
+    },
+    "single_leader_routing": {
+      "flag": "--rpc-send-transaction-tpu-peer <SocketAddr>",
+      "description": "Routes all transactions to single leader instead of following schedule",
+      "additional_flag_v2_3_plus": "--use-connection-cache"
+    },
+    "front_running_protection": false,
+    "bundle_support": false,
+    "priority_fees": "Not documented (standard Solana priority fees presumably still apply)"
+  },
+  "notes": {
+    "port_443": "Port 443 only works with HTTPS",
+    "recommended_http_config": "Use h2c (HTTP/2 prior knowledge over http://) for lowest latency on RPC path",
+    "recommended_rust_client_settings": {
+      "timeout_seconds": 30,
+      "pool_idle_timeout_seconds": 30,
+      "http2_prior_knowledge": true
+    }
+  }
+}

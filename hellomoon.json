@@ -1,0 +1,214 @@
+{
+  "name": "HelloMoon Lunar Lander",
+  "website": "https://hellomoon.io",
+  "docs": "https://docs.hellomoon.io/reference/lunar-lander",
+  "api_key": {
+    "required": true,
+    "delivery": "query_param",
+    "query_param": "api-key",
+    "how_to_get": "Open a ticket on HelloMoon Discord, or visit https://hellomoon.readme.io/reference/get-your-api-key",
+    "auth_scheme": "bearer (HTTP Bearer for some endpoints), query param for Lunar Lander"
+  },
+  "tip_wallets": [
+    "moon17L6BgxXRX5uHKudAmqVF96xia9h8ygcmG2sL3F",
+    "moon26Sek222Md7ZydcAGxoKG832DK36CkLrS3PQY4c",
+    "moon7fwyajcVstMoBnVy7UBcTx87SBtNoGGAaH2Cb8V",
+    "moonBtH9HvLHjLqi9ivyrMVKgFUsSfrz9BwQ9khhn1u",
+    "moonCJg8476LNFLptX1qrK8PdRsA1HD1R6XWyu9MB93",
+    "moonF2sz7qwAtdETnrgxNbjonnhGGjd6r4W4UC9284s",
+    "moonKfftMiGSak3cezvhEqvkPSzwrmQxQHXuspC96yj",
+    "moonQBUKBpkifLcTd78bfxxt4PYLwmJ5admLW6cBBs8",
+    "moonXwpKwoVkMegt5Bc776cSW793X1irL5hHV1vJ3JA",
+    "moonZ6u9E2fgk6eWd82621eLPHt9zuJuYECXAYjMY1C"
+  ],
+  "min_tip_sol": 0.001,
+  "cost_on_failure": "free (tip is embedded in TX, no land = no payment)",
+  "endpoints": {
+    "send": {
+      "geolocated": "http://lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "frankfurt": "http://fra.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "amsterdam": "http://ams.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "new_york": "http://nyc.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx"
+    },
+    "send_cors": {
+      "note": "Same regions, path /send-cors, adds Access-Control-Allow-Origin: * header",
+      "example": "http://fra.lunar-lander.hellomoon.io/send-cors?api-key=xxxx"
+    },
+    "send_bin": {
+      "note": "Raw binary transaction submission",
+      "example": "http://fra.lunar-lander.hellomoon.io/send-bin?api-key=xxxx",
+      "cors_variant": "http://fra.lunar-lander.hellomoon.io/send-bin-cors?api-key=xxxx"
+    },
+    "send_bundle": {
+      "geolocated": "http://lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "frankfurt": "http://fra.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "amsterdam": "http://ams.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "new_york": "http://nyc.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx"
+    },
+    "send_batch": {
+      "path": "/sendBatch",
+      "note": "Same regional base URLs as /send"
+    },
+    "health": {
+      "method": "GET",
+      "path": "/ping",
+      "response": "200 pong (text/plain)"
+    }
+  },
+  "rate_limits": {
+    "info": "Rate limits in place to prevent abuse and repeatedly failing transactions",
+    "contact_for_higher_limits": true,
+    "http_429_on_limit": true,
+    "specific_limits": "not publicly documented, contact HelloMoon"
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Standard JSON-RPC transaction submission",
+      "path": "/send",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "encoding": "base64",
+      "request_format": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<base64_encoded_signed_transaction>",
+          { "encoding": "base64" }
+        ]
+      },
+      "response": "standard Solana JSON-RPC sendTransaction response"
+    },
+    "sendTransaction_binary": {
+      "description": "Raw binary transaction submission",
+      "path": "/send-bin",
+      "http_method": "POST",
+      "content_type": "application/octet-stream (optional)",
+      "encoding": "raw binary (serialized Solana TX bytes)",
+      "request_body": "raw serialized transaction bytes",
+      "response_200": "transaction signature string",
+      "response_400": "error details"
+    },
+    "sendBundle": {
+      "description": "Atomic multi-transaction execution (all succeed or none committed)",
+      "path": "/sendbundle",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "requires_scope": "sendbundle (must be enabled on API key)",
+      "max_transactions": 4,
+      "min_tip_lamports": 1000000,
+      "sequential_execution": true,
+      "atomic": true,
+      "request_format": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendBundle",
+        "params": [
+          ["<base64_tx_1>", "<base64_tx_2>"],
+          { "encoding": "base64" }
+        ]
+      },
+      "response_format": {
+        "jsonrpc": "2.0",
+        "result": ["<base58_signature_1>", "<base58_signature_2>"],
+        "id": 1
+      },
+      "status_codes": {
+        "200": "bundle validated and accepted",
+        "400": "malformed transactions or invalid data",
+        "403": "API key missing sendbundle scope",
+        "429": "rate limited",
+        "503": "no eligible relay configured"
+      },
+      "notes": [
+        "At least one transaction must include a tip to a Lunar Lander tip account",
+        "All transactions must pass simulation",
+        "All must be fully signed before submission",
+        "If any transaction fails simulation, entire bundle is rejected",
+        "Bundle status tracking not currently available"
+      ]
+    },
+    "sendBatch": {
+      "description": "Submit multiple independent transactions in compact binary wire format",
+      "path": "/sendBatch",
+      "http_method": "POST",
+      "content_type": "application/octet-stream",
+      "max_transactions": 16,
+      "min_payload_bytes": 66,
+      "max_payload_bytes": 1232,
+      "atomic": false,
+      "wire_format": "[u16_be_length][raw_tx_bytes][u16_be_length][raw_tx_bytes]...",
+      "wire_format_detail": "Each TX prefixed with 2-byte big-endian unsigned integer length, followed by raw serialized TX bytes",
+      "streaming": true,
+      "streaming_note": "Each complete frame processed immediately upon arrival, no wait for complete body",
+      "response_format": {
+        "attempted": "number of parsed transactions processed",
+        "accepted": "number passing ingress validation (includes deduped)",
+        "rejected": "number of parsed transactions rejected",
+        "parse_error": "null or error object"
+      },
+      "parse_error_kinds": [
+        "empty_body",
+        "incomplete_length_prefix",
+        "incomplete_payload",
+        "max_batch_exceeded",
+        "body_read_error",
+        "rate_limited"
+      ],
+      "parse_error_format": {
+        "kind": "string",
+        "at_tx_index": "1-based index",
+        "message": "string"
+      },
+      "status_codes": {
+        "200": "all accepted (rejected == 0 and parse_error == null)",
+        "400": "any rejected transaction or parse error present"
+      },
+      "notes": [
+        "Each transaction processed individually, no atomic execution",
+        "Valid transactions before/after rejected ones still attempted"
+      ]
+    }
+  },
+  "submission_formats": {
+    "json_rpc": {
+      "path": "/send",
+      "content_type": "application/json",
+      "encoding": "base64"
+    },
+    "binary": {
+      "path": "/send-bin",
+      "content_type": "application/octet-stream",
+      "encoding": "raw binary"
+    },
+    "batch_binary": {
+      "path": "/sendBatch",
+      "content_type": "application/octet-stream",
+      "encoding": "length-prefixed raw binary (u16 BE)"
+    }
+  },
+  "features": {
+    "staked_connections": true,
+    "tip_payment_in_tx": true,
+    "no_cost_on_failure": true,
+    "atomic_bundles": true,
+    "batch_send": true,
+    "cors_support": true,
+    "geographic_regions": 5,
+    "geolocated_routing": true,
+    "available_regions": ["frankfurt", "amsterdam", "new_york", "ashburn_virginia", "tokyo"],
+    "keep_alive": {
+      "endpoint": "/ping",
+      "recommended_interval_seconds": "30-45",
+      "max_idle_seconds": 60,
+      "nginx_keepalive_timeout_seconds": 75,
+      "note": "Must ping on same TCP connection to be effective"
+    },
+    "transaction_ordering": "by received time and tip amount (higher tips processed faster)",
+    "bundle_status_tracking": false
+  }
+}

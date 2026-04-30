@@ -1,0 +1,144 @@
+{
+  "name": "LightBridge",
+  "provider": "Vision Node",
+  "website": "https://lightbridge.vision-node.com",
+  "docs": "https://lightbridge.vision-node.com/docs",
+  "api_key": {
+    "required": true,
+    "how_to_get": "Request access through their Discord server",
+    "passed_as": "query parameter ?api-key=YOUR_API_KEY"
+  },
+  "tip_wallets": [
+    "vsn7B5w2z1eopfoBmwd1eDakvFUUatmmMwdMJJ37m8e",
+    "vsn7szXXVgeAu6jW7YcCB6vUvYTnWwRgUhhecS87Ynd",
+    "vsnL7iaCzAsfgjBs1RupXmUrYjkVgXzGpzK3WwzSvcr",
+    "vsnQHLdhyfnsH433UsXTwhvN51GHqWxeJa9UqbBSVii",
+    "vsnRAHFiGjQyJ7Yc3dEDXwkeys94AVmKh6zpk3vniQh",
+    "vsnZSeFgToWvR1ZJoMcMqcVYss7vE15yxHxgHnC85Tb",
+    "vsncMHAQEfRXvMkmeWaAk2thDziTVP1wqYqUAR8isqn",
+    "vsncn9qJ31kadx4JNc8mfoX5yQs7GWNf9aELBVhTRPQ",
+    "vsngK2qBBVJZfWhMxruQmDnrzBmD6UaZdiMee6vho4m",
+    "vsnqiBRqfLRviiyNjYZNVzxNB1dAE9JSzVCN3VKkdU4"
+  ],
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_mechanism": "Standard SOL transfer instruction to any designated tip wallet, included in the transaction",
+  "cost_on_failure": "No cost. Tip is part of the transaction — if the transaction doesn't land, the tip is never paid.",
+  "endpoints": {
+    "regional": {
+      "frankfurt": "http://fra.lightbridge.vision-node.com",
+      "amsterdam": "http://ams.lightbridge.vision-node.com",
+      "new_york": "http://nyc.lightbridge.vision-node.com",
+      "tokyo": "http://tyo.lightbridge.vision-node.com",
+      "global": "http://global.lightbridge.vision-node.com"
+    },
+    "note": "All paths below are appended to a regional base URL"
+  },
+  "rate_limits": {
+    "default_tps": 5,
+    "note": "Higher limits available upon request via Discord"
+  },
+  "methods": {
+    "sendTransaction": {
+      "path": "/send",
+      "full_example": "POST http://fra.lightbridge.vision-node.com/send?api-key=YOUR_API_KEY",
+      "method": "POST",
+      "content_type": "application/json",
+      "request_body": {
+        "transaction": "base64-encoded serialized transaction (required)"
+      },
+      "response_200": "Transaction signature as string",
+      "response_400": "Error message as string",
+      "notes": "Always skips preflight checks"
+    },
+    "sendBinary": {
+      "path": "/send-bin",
+      "full_example": "POST http://fra.lightbridge.vision-node.com/send-bin?api-key=YOUR_API_KEY",
+      "method": "POST",
+      "content_type": "application/octet-stream",
+      "request_body": "Raw serialized transaction bytes",
+      "response_200": "Transaction signature as plain text",
+      "response_400": "Error message"
+    },
+    "sendBatch": {
+      "path": "/sendBatch",
+      "full_example": "POST http://fra.lightbridge.vision-node.com/sendBatch?api-key=YOUR_API_KEY",
+      "method": "POST",
+      "content_type": "application/octet-stream",
+      "request_format": "Length-prefixed frames: each transaction preceded by 2-byte big-endian unsigned integer (the tx length)",
+      "constraints": {
+        "max_transactions_per_request": 16,
+        "min_tx_size_bytes": 66,
+        "max_tx_size_bytes": 1232
+      },
+      "response_200": {
+        "attempted": "int",
+        "accepted": "int",
+        "rejected": "int",
+        "parse_error": "null or error string"
+      },
+      "parse_errors": [
+        "empty_body",
+        "incomplete_length_prefix",
+        "incomplete_payload",
+        "max_batch_exceeded",
+        "body_read_error",
+        "rate_limited"
+      ]
+    },
+    "sendTransactionCORS": {
+      "path": "/send-cors",
+      "method": "POST",
+      "content_type": "application/json",
+      "note": "Same as /send but with CORS headers for browser use"
+    },
+    "sendBinaryCORS": {
+      "path": "/send-bin-cors",
+      "method": "POST",
+      "content_type": "application/octet-stream",
+      "note": "Same as /send-bin but with CORS headers for browser use"
+    },
+    "ping": {
+      "path": "/ping",
+      "full_example": "GET http://fra.lightbridge.vision-node.com/ping?api-key=YOUR_API_KEY",
+      "method": "GET",
+      "response_200": "Plain text 'pong'",
+      "note": "Keep-alive / health check endpoint"
+    }
+  },
+  "features": {
+    "skip_preflight": "Always skips preflight checks",
+    "no_landing_no_cost": true,
+    "multi_region": true,
+    "regions": ["frankfurt", "amsterdam", "new_york", "tokyo", "global"],
+    "multi_path_delivery": {
+      "description": "Transactions broadcast across multiple network paths simultaneously",
+      "option_key": "multiPath",
+      "note": "Mentioned on landing page but not yet formally documented in API docs"
+    },
+    "swqos": {
+      "description": "Stake-weighted Quality of Service — priority access through staked validators",
+      "option_key": "swqos",
+      "note": "Mentioned on landing page but not yet formally documented in API docs"
+    },
+    "batch_sending": true,
+    "binary_sending": true,
+    "cors_endpoints": true,
+    "analytics_dashboard": "Coming soon"
+  },
+  "supported_encodings": {
+    "json_endpoint": "base64",
+    "binary_endpoints": "raw serialized bytes",
+    "batch_endpoint": "length-prefixed binary frames (2-byte big-endian length prefix per tx)"
+  },
+  "undocumented_options": {
+    "note": "The landing page shows an options object in the request body with multiPath and swqos booleans, but the /docs page only documents the transaction field. These may be in beta or not yet publicly documented.",
+    "example_from_landing_page": {
+      "transaction": "serializedTx",
+      "options": {
+        "multiPath": true,
+        "swqos": true
+      }
+    }
+  }
+}

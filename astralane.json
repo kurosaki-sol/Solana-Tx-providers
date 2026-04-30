@@ -1,0 +1,140 @@
+{
+  "name": "Astralane",
+  "website": "https://astralane.io",
+  "docs": "https://astralane.gitbook.io/docs/",
+  "api_key": {
+    "required": true,
+    "delivery": "query_param or header",
+    "query_param": "api-key",
+    "header": "x-api-key"
+  },
+  "tip_wallets": [
+    "astrazznxsGUhWShqgNtAdfrzP2G83DzcWVJDxwV9bF",
+    "astra4uejePWneqNaJKuFFA8oonqCE1sqF6b45kDMZm",
+    "astra9xWY93QyfG6yM8zwsKsRodscjQ2uU2HKNL5prk",
+    "astraRVUuTHjpwEVvNBeQEgwYx9w9CFyfxjYoobCZhL",
+    "astraEJ2fEj8Xmy6KLG7B3VfbKfsHXhHrNdCQx7iGJK",
+    "astraubkDw81n4LuutzSQ8uzHCv4BhPVhfvTcYv8SKC",
+    "astraZW5GLFefxNPAatceHhYjfA1ciq9gvfEg2S47xk",
+    "astrawVNP4xDBKT7rAdxrLYiTSTdqtUr63fSMduivXK",
+    "AstrA1ejL4UeXC2SBP4cpeEmtcFPZVLxx3XGKXyCW6to",
+    "AsTra79FET4aCKWspPqeSFvjJNyp96SvAnrmyAxqg5b7",
+    "AstrABAu8CBTyuPXpV4eSCJ5fePEPnxN8NqBaPKQ9fHR",
+    "AsTRADtvb6tTmrsqULQ9Wji9PigDMjhfEMza6zkynEvV",
+    "AsTRAEoyMofR3vUPpf9k68Gsfb6ymTZttEtsAbv8Bk4d",
+    "AStrAJv2RN2hKCHxwUMtqmSxgdcNZbihCwc1mCSnG83W",
+    "Astran35aiQUF57XZsmkWMtNCtXGLzs8upfiqXxth2bz",
+    "AStRAnpi6kFrKypragExgeRoJ1QnKH7pbSjLAKQVWUum",
+    "ASTRaoF93eYt73TYvwtsv6fMWHWbGmMUZfVZPo3CRU9C"
+  ],
+  "min_tip_sol": 0.00001,
+  "cost_on_failure": "free (tip refunds)",
+  "endpoints": {
+    "iris": {
+      "frankfurt": "http://fr.gateway.astralane.io/iris?api-key=xxxx",
+      "frankfurt_2": "http://fr2.gateway.astralane.io/iris?api-key=xxxx",
+      "san_francisco": "http://la.gateway.astralane.io/iris?api-key=xxxx",
+      "tokyo": "http://jp.gateway.astralane.io/iris?api-key=xxxx",
+      "new_york": "http://ny.gateway.astralane.io/iris?api-key=xxxx",
+      "amsterdam": "http://ams.gateway.astralane.io/iris?api-key=xxxx",
+      "amsterdam_2": "http://ams2.gateway.astralane.io/iris?api-key=xxxx",
+      "limburg": "http://lim.gateway.astralane.io/iris?api-key=xxxx",
+      "singapore": "http://sg.gateway.astralane.io/iris?api-key=xxxx",
+      "lithuania": "http://lit.gateway.astralane.io/iris?api-key=xxxx"
+    },
+    "iris2_plaintext": "http://{region}.gateway.astralane.io/iris2?api-key=xxxx",
+    "irisb_binary": "http://{region}.gateway.astralane.io/irisb?api-key=xxxx",
+    "quic": "{region}.gateway.astralane.io:7000",
+    "graphql": "https://graphql.astralane.io/api/v1/",
+    "indexer_admin": "https://indexer.astralane.io/",
+    "websocket_prices": "wss://ws.price.astralane.io/price-by-token"
+  },
+  "rate_limits": {
+    "default": "5 TPS",
+    "quic_max_connections": 10,
+    "quic_concurrent_streams": 64,
+    "quic_stream_timeout_ms": 750,
+    "quic_idle_timeout_s": 30
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Primary transaction submission",
+      "encoding": "base64",
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "integer",
+        "method": "sendTransaction",
+        "params": [
+          "base64_encoded_transaction",
+          { "encoding": "base64", "skipPreflight": true },
+          { "mevProtect": "boolean (optional)" }
+        ]
+      }
+    },
+    "sendBundle": {
+      "description": "Atomic multi-transaction execution",
+      "max_transactions": 4,
+      "sequential_execution": true,
+      "params": {
+        "revertProtection": "boolean (optional)"
+      }
+    },
+    "sendIdeal": {
+      "description": "Dual-path routing with nonce management (one high prio fee + low tip, one high tip + low prio fee)",
+      "uses_durable_nonces": true
+    },
+    "sendBatch": {
+      "description": "Batch processing",
+      "max_transactions": 25,
+      "protocols": ["HTTP/JSON-RPC only"]
+    },
+    "sendPaladin": {
+      "description": "Higher priority routing via Paladin network"
+    },
+    "getNonce": {
+      "description": "Retrieve managed durable nonce accounts (per API key)"
+    },
+    "getHealth": {
+      "description": "Connection status check"
+    }
+  },
+  "uri_params": {
+    "api-key": { "type": "string", "required": true },
+    "mev-protect": { "type": "boolean", "required": false, "default": false },
+    "swqos-only": { "type": "boolean", "required": false, "default": false }
+  },
+  "submission_formats": {
+    "json_rpc": {
+      "path": "/iris",
+      "content_type": "application/json",
+      "encoding": "base64"
+    },
+    "plain_text": {
+      "path": "/iris2",
+      "content_type": "text/plain",
+      "encoding": "base64"
+    },
+    "binary": {
+      "path": "/irisb",
+      "content_type": "application/octet-stream",
+      "encoding": "raw binary"
+    },
+    "quic": {
+      "port": 7000,
+      "library": "astralane-quic-client"
+    }
+  },
+  "features": {
+    "tip_refunds": true,
+    "mev_protection": true,
+    "swqos_routing": true,
+    "paladin_routing": true,
+    "durable_nonce_management": true,
+    "geographic_regions": 10,
+    "recommended_regions": ["frankfurt", "amsterdam"],
+    "latency_improvement": "500ms vs standard RPC",
+    "zero_dropped_transactions": true,
+    "data_indexing": ["dex_pools", "ohlcv", "token_prices", "dex_trades", "pnl", "portfolio", "top_holders"],
+    "keep_alive_pool_idle_timeout_s": 85
+  }
+}

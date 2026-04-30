@@ -1,0 +1,256 @@
+{
+  "name": "NextBlock",
+  "website": "https://nextblock.io",
+  "docs": "https://docs.nextblock.io",
+  "contact": {
+    "email": "contact@nextblock.io",
+    "discord": "https://discord.gg/nextblock"
+  },
+  "description": "Solana's leading transaction sending service with the largest SWQoS stake pool",
+  "api_key": {
+    "required": true,
+    "how_to_get": "Contact NextBlock via website or Discord; not self-service from docs",
+    "keys_per_plan": 1,
+    "header_format": "Authorization: <api-key>",
+    "notes": "Same key used across HTTP, gRPC, and QUIC protocols"
+  },
+  "tip_wallets": [
+    "NextbLoCkVtMGcV47JzewQdvBpLqT9TxQFozQkN98pE",
+    "NexTbLoCkWykbLuB1NkjXgFWkX9oAtcoagQegygXXA2",
+    "NeXTBLoCKs9F1y5PJS9CKrFNNLU1keHW71rfh7KgA1X",
+    "NexTBLockJYZ7QD7p2byrUa6df8ndV2WSd8GkbWqfbb",
+    "neXtBLock1LeC67jYd1QdAa32kbVeubsfPNTJC1V5At",
+    "nEXTBLockYgngeRmRrjDV31mGSekVPqZoMGhQEZtPVG",
+    "NEXTbLoCkB51HpLBLojQfpyVAMorm3zzKg7w9NFdqid",
+    "nextBLoCkPMgmG8ZgJtABeScP35qLa2AMCNKntAP7Xc"
+  ],
+  "min_tip_sol": null,
+  "min_tip_notes": "No fixed minimum documented; use /api/v2/tipfloor to get real-time percentile data. Higher tip = higher priority.",
+  "cost_on_failure": "No tip cost on failed transactions (tip is a SOL transfer instruction in the TX itself)",
+  "encoding": "base64",
+  "endpoints": {
+    "regions": {
+      "frankfurt": "frankfurt.nextblock.io",
+      "amsterdam": "amsterdam.nextblock.io",
+      "london": "london.nextblock.io",
+      "singapore": "singapore.nextblock.io",
+      "tokyo": "tokyo.nextblock.io",
+      "new_york": "ny.nextblock.io",
+      "salt_lake_city": "slc.nextblock.io",
+      "dublin": "dublin.nextblock.io",
+      "vilnius": "vilnius.nextblock.io"
+    },
+    "protocols": {
+      "http": {
+        "port": 443,
+        "scheme": "https",
+        "example": "https://frankfurt.nextblock.io/api/v2/submit"
+      },
+      "grpc": {
+        "port": 443,
+        "auth_metadata_field": "authorization"
+      },
+      "quic": {
+        "port": 11100,
+        "alpn": "nb-tx/1",
+        "max_tx_size_bytes": 1232,
+        "auth_flow": "Open bidirectional stream, send API key as raw UTF-8 bytes, close write side, read 1-byte response (0x00 = success)",
+        "submission": "Open new unidirectional stream per TX, write raw serialized transaction bytes (fire-and-forget)",
+        "limitations": [
+          "No frontRunningProtection flag",
+          "No revertOnFail flag",
+          "No disableRetries flag",
+          "No snipeTransaction flag",
+          "No batch/bundle submission",
+          "Dropped transactions get no error response"
+        ]
+      },
+      "tx_stream_grpc": {
+        "port": 22221,
+        "example_hostname": "fra.stream.nextblock.io",
+        "auth_type": "wallet_signature",
+        "payment": {
+          "recipient": "nextstream.sol",
+          "price_5_sol": "31 days access",
+          "minimum": "0.17 SOL = 1 day",
+          "concurrent_connections": "1 per region per wallet"
+        },
+        "auth_message_format": "{domain}|{publickey}|{nonce}|{timestamp}",
+        "proto_service": "SubscribeNextStream(NextStreamSubscription) returns (stream NextStreamNotification)",
+        "proto_messages": {
+          "NextStreamSubscription": {
+            "authentication_publickey": "string",
+            "authentication_message": "string",
+            "authentication_signature": "string (base58)",
+            "accounts": "repeated string (base58-encoded program/account addresses)"
+          },
+          "NextStreamNotification": {
+            "packet": "NextPacket"
+          },
+          "NextPacket": {
+            "transaction": "bytes (raw Solana transaction)",
+            "slot": "uint64"
+          }
+        }
+      }
+    }
+  },
+  "rate_limits": {
+    "trial": {
+      "cost": "Free",
+      "tps": "1 TX per 10 seconds",
+      "support": "None"
+    },
+    "entry": {
+      "cost": "$249/month",
+      "tps": 5,
+      "support": "Limited"
+    },
+    "intermediate": {
+      "cost": "$749/month",
+      "tps": 20,
+      "support": "Discord Tickets"
+    },
+    "advanced": {
+      "cost": "$1,749/month",
+      "tps": 50,
+      "support": "Direct Message"
+    },
+    "enterprise": {
+      "cost": "Custom",
+      "tps": "100+",
+      "support": "Direct Message"
+    },
+    "all_tiers_include": [
+      "Dedicated SWQoS",
+      "1 Global API Key",
+      "IP/CIDR/HOST Access Controls"
+    ]
+  },
+  "methods": {
+    "submit": {
+      "path": "/api/v2/submit",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "description": "Submit a single transaction",
+      "request": {
+        "transaction": {
+          "content": {
+            "type": "string",
+            "required": true,
+            "description": "Base64-encoded bytes of a fully signed Solana transaction"
+          }
+        },
+        "frontRunningProtection": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable MEV/front-running protection; priority fee becomes irrelevant, only NextBlock tip matters"
+        },
+        "skipPreFlight": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip preflight simulation checks for faster submission"
+        },
+        "disableRetries": {
+          "type": "boolean",
+          "default": false,
+          "description": "Disable intelligent automatic retry system"
+        },
+        "revertOnFail": {
+          "type": "boolean",
+          "default": false,
+          "description": "Revert/drop transaction if it would fail on-chain"
+        },
+        "snipeTransaction": {
+          "type": "boolean",
+          "default": false,
+          "description": "High-priority snipe submission mode"
+        }
+      },
+      "response_success": {
+        "status": 200,
+        "body": {
+          "signature": "string (transaction signature)",
+          "uuid": "string (Jito bundle UUID)"
+        }
+      },
+      "response_error": {
+        "status": 400,
+        "body": {
+          "code": 2,
+          "message": "fee too low; transaction contains low tip",
+          "details": []
+        }
+      }
+    },
+    "submit_batch": {
+      "path": "/api/v2/submit-batch",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "description": "Submit an atomic bundle of 2-4 transactions (all-or-nothing execution)",
+      "constraints": {
+        "min_transactions": 2,
+        "max_transactions": 4,
+        "atomicity": "All transactions execute together or not at all"
+      },
+      "request": {
+        "entries": [
+          {
+            "transaction": {
+              "content": "string (base64-encoded signed transaction)"
+            }
+          }
+        ]
+      },
+      "response_success": {
+        "status": 200,
+        "body": {
+          "signature": "string (bundle signature)"
+        }
+      },
+      "response_error": {
+        "status": 400,
+        "body": {
+          "code": "integer",
+          "message": "string",
+          "details": []
+        }
+      },
+      "protocol_support": ["HTTP", "gRPC"],
+      "not_supported": ["QUIC"]
+    },
+    "tipfloor": {
+      "path": "/api/v2/tipfloor",
+      "http_method": "GET",
+      "description": "Get real-time tip percentile data for current network conditions",
+      "response_fields": {
+        "time": "timestamp",
+        "landed_tips_25th_percentile": "number (SOL, not lamports)",
+        "landed_tips_50th_percentile": "number (SOL, not lamports)",
+        "landed_tips_75th_percentile": "number (SOL, not lamports)",
+        "landed_tips_95th_percentile": "number (SOL, not lamports)",
+        "landed_tips_99th_percentile": "number (SOL, not lamports)",
+        "ema_landed_tips_50th_percentile": "number (SOL, not lamports, exponential moving average)"
+      }
+    }
+  },
+  "features": {
+    "swqos": "Largest SWQoS (Stake-Weighted Quality of Service) stake pool in Solana",
+    "front_running_protection": "Anti-MEV mode: set frontRunningProtection=true to prevent sandwich attacks; priority fee ignored, only NextBlock tip used",
+    "intelligent_retries": "Automatic retry system that adjusts aggressiveness based on network congestion; submit once, service handles retries",
+    "snipe_mode": "snipeTransaction=true for high-priority submission (token launches, etc.)",
+    "revert_on_fail": "revertOnFail=true prevents failed transactions from landing on-chain",
+    "atomic_bundles": "2-4 transactions executed atomically via submit-batch endpoint",
+    "multi_protocol": "HTTP, gRPC, QUIC (fire-and-forget), and TX Stream (real-time transaction feed)",
+    "9_global_regions": "Frankfurt, Amsterdam, London, Singapore, Tokyo, New York, Salt Lake City, Dublin, Vilnius",
+    "ip_access_controls": "IP, CIDR, and HOST-based access controls on all tiers",
+    "tx_stream": "Real-time transaction stream filtered by program/account IDs via gRPC (separate paid service, wallet-auth)"
+  },
+  "transaction_requirements": {
+    "must_include_tip": "Transaction must contain a plain SOL transfer instruction to one of the 8 NextBlock tip wallets",
+    "encoding": "base64",
+    "blockhash_validity": "~60 seconds",
+    "max_size_bytes": 1232
+  },
+  "curl_example": "curl -X POST 'https://frankfurt.nextblock.io/api/v2/submit' -H 'Authorization: YOUR_API_KEY' -H 'Content-Type: application/json' -d '{\"transaction\":{\"content\":\"BASE64_ENCODED_TX\"},\"frontRunningProtection\":true}'"
+}

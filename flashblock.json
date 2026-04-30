@@ -1,0 +1,312 @@
+{
+  "name": "FlashBlock",
+  "website": "https://www.flashblock.trade/",
+  "docs": "https://doc.flashblock.trade/",
+  "description": "Low-latency Solana transaction acceleration service with SwQoS-enabled direct connections, staking-prioritized peer-to-validator access, global private fiber network with dynamic leader-aware routing, and binary protocol to minimize serialization overhead. Reduces latency by ~500ms vs standard RPC nodes and cuts processed TX receipt overhead by 40-50ms. Also supports BSC (BNB Smart Chain) bundle submission.",
+
+  "api_key": {
+    "required": true,
+    "note": "Most endpoints require an API key in the request header, except tip-floor and error-details endpoints.",
+    "how_to_get": "Visit https://www.flashblock.trade/ to register and log in. Create and retrieve your key within the console.",
+    "auth_format": {
+      "type": "header",
+      "format": "Authorization: <Your API Key>"
+    }
+  },
+
+  "tip_wallets": [
+    "FLaShB3iXXTWE1vu9wQsChUKq3HFtpMAhb8kAh1pf1wi",
+    "FLashhsorBmM9dLpuq6qATawcpqk1Y2aqaZfkd48iT3W",
+    "FLaSHJNm5dWYzEgnHJWWJP5ccu128Mu61NJLxUf7mUXU",
+    "FLaSHR4Vv7sttd6TyDF4yR1bJyAxRwWKbohDytEMu3wL",
+    "FLASHRzANfcAKDuQ3RXv9hbkBy4WVEKDzoAgxJ56DiE4",
+    "FLasHstqx11M8W56zrSEqkCyhMCCpr6ze6Mjdvqope5s",
+    "FLAShWTjcweNT4NSotpjpxAkwxUr2we3eXQGhpTVzRwy",
+    "FLasHXTqrbNvpWFB6grN47HGZfK6pze9HLNTgbukfPSk",
+    "FLAshyAyBcKb39KPxSzXcepiS8iDYUhDGwJcJDPX4g2B",
+    "FLAsHZTRcf3Dy1APaz6j74ebdMC6Xx4g6i9YxjyrDybR"
+  ],
+  "tip_wallet_note": "Randomly select an address from the list for your transfer, which helps distribute the load and improves system efficiency.",
+
+  "min_tip_sol": 0.0001,
+  "min_tip_lamports": 100000,
+  "tip_note": "0.0001 SOL minimum. Recommended: 0.0001-0.01 SOL (adjusted based on congestion). High priority: 0.01+ SOL for urgent transactions. Tip floor is dynamically calculated based on network conditions.",
+
+  "cost_on_failure": "Tip is a SOL transfer instruction within your transaction. If the transaction fails/reverts, the tip is not paid (same as Jito model). Transactions array must include at least one transaction to a tip address, otherwise validation fails (error 1011).",
+
+  "tip_strategy": {
+    "minimal": "0.0001 SOL",
+    "recommended": "0.0001 - 0.01 SOL (adjusted based on network congestion)",
+    "high_priority": "0.01+ SOL (urgent transactions)",
+    "adaptive": "Poll tip-floor endpoint periodically. Increase tip by ~10% if P95 confirmation latency exceeds threshold or consecutive failures rise. Decrease slowly (~-5% every 5 min) when metrics recover."
+  },
+
+  "tip_info_endpoints": {
+    "tip_floor": {
+      "url": "https://api.flashblock.trade/api/v2/tip-floor",
+      "method": "GET",
+      "auth_required": false,
+      "response": { "tip": 0.0 },
+      "note": "Returns recommended tip amount in SOL based on current network conditions. Dynamically calculated, query periodically to adapt."
+    }
+  },
+
+  "endpoints": {
+    "solana": {
+      "regions": {
+        "new_york": "http://ny.flashblock.trade",
+        "salt_lake_city": "http://slc.flashblock.trade",
+        "amsterdam": "http://ams.flashblock.trade",
+        "frankfurt": "http://fra.flashblock.trade",
+        "singapore": "http://singapore.flashblock.trade",
+        "london": "http://london.flashblock.trade",
+        "tokyo": "http://tokyo.flashblock.trade"
+      },
+      "note": "Use HTTP2 long connections (Keep-Alive) for best performance. Keep-Alive max duration is 30 seconds; send a GET request to root endpoint every ~30s to maintain connection."
+    },
+    "api": "https://api.flashblock.trade",
+    "bsc": {
+      "amsterdam": "https://bsc-eu.flashblock.trade/proxy",
+      "bundle_status": "https://bsc-eu.flashblock.trade/bundle"
+    }
+  },
+
+  "rate_limits": {
+    "default": "HTTP 429 returned when rate limit exceeded",
+    "error_code_429": "Too Many Requests - rate limit exceeded",
+    "error_code_1006": "Rate Limit Exceeded (application-level)",
+    "bsc_bundle_status": "1 request per second",
+    "note": "Specific Solana rate limits not publicly documented. Error codes 429/1006 indicate limiting; back off and retry."
+  },
+
+  "methods": {
+    "submit_batch_rest": {
+      "path": "/api/v2/submit-batch",
+      "http_method": "POST",
+      "description": "REST API batch transaction submission. Primary recommended method.",
+      "auth_required": true,
+      "request_body": {
+        "transactions": {
+          "type": "array[string]",
+          "description": "Array of base64-encoded signed transactions",
+          "required": true
+        }
+      },
+      "response_success": {
+        "success": true,
+        "code": 200,
+        "message": "The transaction was submitted successfully, but the status of the transaction is pending.",
+        "data": {
+          "signatures": ["5XHA7ofPAf3FaLUAY3kT52c..."]
+        }
+      },
+      "curl_example": "curl -X POST \"https://ny.flashblock.trade/api/v2/submit-batch\" -H \"Content-Type: application/json\" -H \"Authorization: Your API Key\" -d '{\"transactions\": [\"base64_encoded_transaction_1\"]}'"
+    },
+
+    "sendTransaction_jsonrpc": {
+      "path": "/",
+      "http_method": "POST",
+      "description": "JSON-RPC 2.0 compatible sendTransaction for use with existing Solana client libraries.",
+      "auth_required": true,
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          ["base64_encoded_transaction_1"],
+          { "encoding": "base64" }
+        ]
+      },
+      "params": {
+        "param_0": {
+          "type": "array[string]",
+          "description": "Array of base64-encoded signed transactions"
+        },
+        "param_1": {
+          "type": "object",
+          "description": "Options object",
+          "fields": {
+            "encoding": {
+              "type": "string",
+              "values": ["base64"],
+              "default": "base64"
+            }
+          }
+        }
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "result": "5XHA7ofPAf3FaLUAY3kT52c...",
+        "id": 1
+      },
+      "curl_example": "curl -X POST \"https://ny.flashblock.trade/\" -H \"Content-Type: application/json\" -H \"Authorization: Your API Key\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"sendTransaction\",\"params\":[[\"base64_encoded_tx\"],{\"encoding\":\"base64\"}]}'"
+    },
+
+    "get_tip_floor": {
+      "path": "/api/v2/tip-floor",
+      "base_url": "https://api.flashblock.trade",
+      "http_method": "GET",
+      "description": "Returns the recommended tip amount in SOL, dynamically calculated based on current network conditions.",
+      "auth_required": false,
+      "response": { "tip": 0.0 }
+    },
+
+    "get_transaction_error_details": {
+      "path": "/api/v1/tx/error-details/{tx_hash}",
+      "base_url": "https://api.flashblock.trade",
+      "http_method": "GET",
+      "description": "Retrieve error details for a failed transaction by its signature.",
+      "auth_required": false,
+      "params": {
+        "tx_hash": {
+          "type": "string",
+          "required": true,
+          "description": "Transaction Signature (base58)"
+        }
+      },
+      "response_success": {
+        "success": true,
+        "code": 200,
+        "message": ["Transaction failed: Transaction is not recent"]
+      },
+      "response_not_found": {
+        "success": false,
+        "code": 500,
+        "message": "Transaction not found"
+      }
+    },
+
+    "bsc_sendBundle": {
+      "path": "/proxy",
+      "base_url": "https://bsc-eu.flashblock.trade",
+      "http_method": "POST",
+      "description": "Submit a bundle of signed BSC transactions.",
+      "auth_required": true,
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "eth_sendBundle",
+        "params": [{
+          "txs": ["0xsigned_raw_tx..."],
+          "maxBlockNumber": 74925998,
+          "revertingTxHashes": []
+        }]
+      },
+      "note": "Effective gas price for all packets must be >= 0.05 gwei. Priority = weighted avg gas price * 0.9 + BNB transfer to 0xfb888290676ba64063ae7b165dae41511aab36ed"
+    },
+
+    "bsc_bundleStatus": {
+      "path": "/bundle",
+      "base_url": "https://bsc-eu.flashblock.trade",
+      "http_method": "GET",
+      "description": "Check if a BSC bundle has been included on-chain.",
+      "auth_required": true,
+      "params": {
+        "hash": {
+          "type": "string",
+          "required": true,
+          "description": "Bundle hash to query"
+        }
+      },
+      "rate_limit": "1 request per second"
+    }
+  },
+
+  "encoding": {
+    "format": "base64",
+    "note": "Transactions must be correctly encoded in base64 format. Error code 1015 is returned for invalid base64."
+  },
+
+  "features": {
+    "swqos": {
+      "description": "SwQoS-enabled direct connections with staking-prioritized peer-to-validator access"
+    },
+    "private_fiber_network": {
+      "description": "Global private fiber network with dynamic leader-aware routing"
+    },
+    "binary_protocol": {
+      "description": "Binary protocol engineered to minimize serialization overhead"
+    },
+    "latency_reduction": {
+      "description": "~500ms reduction vs standard RPC nodes, 40-50ms reduction in processed TX receipt overhead"
+    },
+    "automatic_retry": {
+      "description": "Automatic retry mechanisms to mitigate packet loss"
+    },
+    "keep_alive": {
+      "description": "HTTP Keep-Alive supported. Max duration 30 seconds. Send GET to root endpoint every ~30s to maintain connection. HTTP/1.1 and HTTP/2 enable keepalive by default.",
+      "ping_endpoint": "GET http://<region>.flashblock.trade/"
+    },
+    "sandwich_protection": {
+      "method": "jitodontfront",
+      "description": "Add any valid Solana public key beginning with 'jitodontfront' to any instruction in your transaction. Any bundle including a TX with this account will be rejected unless the TX is first (index 0) in the batch.",
+      "example_account": "jitodontfront1111111flashblockdottrade",
+      "account_requirements": "Does NOT need to exist on-chain, but MUST be a valid public key. Mark as read-only to optimize landing speed.",
+      "supports_address_lookup_tables": true,
+      "allowed_bundle_modes": [
+        "[tx_with_dont_front, tip]",
+        "[tx_with_dont_front, arbitrage, tip]"
+      ],
+      "disallowed_bundle_modes": [
+        "[tip, tx_with_dont_front]",
+        "[txA_with_dont_front, txB_with_dont_front]",
+        "[txA_with_dont_front, txB_with_dont_front, tip]",
+        "[trade, tx_with_dont_front, arbitrage, tip]"
+      ]
+    },
+    "batch_submission": {
+      "description": "Submit multiple transactions in a single batch request",
+      "max_batch_size": "Limited (error 1007 if exceeded, error 1010 for transaction count exceeded)"
+    },
+    "shred_stream": {
+      "description": "Ultra-low latency Solana data streams before blocks finalize. Push-based UDP delivery model.",
+      "regions": ["Amsterdam", "Frankfurt", "Salt Lake City", "New York"],
+      "tiers": ["SHREDSTREAM CONNECT", "SHREDSTREAM PRO"],
+      "setup": "Log into flashblock.trade/login to configure. Specify receiving IP/port, select region, ensure firewall permits designated UDP port.",
+      "trial": "Free trial available"
+    },
+    "referral_program": {
+      "description": "Up to 30% rebates on friend earnings"
+    }
+  },
+
+  "error_codes": {
+    "401": "Unauthorized - Missing or invalid authentication credentials",
+    "403": "Forbidden - The requested operation is not permitted",
+    "429": "Too Many Requests - Rate limit exceeded",
+    "500": "Internal server error",
+    "502": "Bad Gateway",
+    "1001": "Batch validation error",
+    "1002": "Invalid wallet address",
+    "1003": "Insufficient Funds",
+    "1004": "Network Error",
+    "1005": "Invalid Amount",
+    "1006": "Rate Limit Exceeded",
+    "1007": "Batch size exceeds the limit",
+    "1008": "Transaction Error",
+    "1009": "Missing or invalid Authorization header",
+    "1010": "Transaction Count Exceeded - split the batch and resubmit",
+    "1011": "Tip amount is insufficient",
+    "1012": "Transaction Already - already in the network, do not resubmit",
+    "1013": "This RPC endpoint only allows sendBundle or sendTransaction",
+    "1015": "The requested data is not valid Base64",
+    "1017": "Transaction Too Short",
+    "1030": "User identification information does not exist"
+  },
+
+  "important_notes": [
+    "Transactions array must include at least one transaction to a tip address, otherwise validation fails",
+    "Transactions must be correctly encoded in base64 format",
+    "Batch submissions have quantity limits; exceeding results in error 1007",
+    "Ensure wallet has sufficient funds to avoid error 1003",
+    "Once submitted and confirmed, transactions cannot be reversed",
+    "Use HTTP2 long connections for optimal latency",
+    "Send keep-alive ping every 30 seconds to maintain connection"
+  ],
+
+  "social": {
+    "discord": "https://discord.gg/FgkZ76EbzK",
+    "telegram": "https://t.me/FlashBlock_trade_chat",
+    "twitter": "https://x.com/FlashBlocktrade"
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "name": "BlockRazor",
+  "website": "https://blockrazor.io",
+  "docs": "https://blockrazor.gitbook.io/blockrazor",
+  "api_key": {
+    "required": true,
+    "header": "apikey",
+    "v2_auth": "query parameter ?auth=<token>",
+    "grpc_metadata": "{\"apiKey\": \"<your_auth>\"}",
+    "get_key_url": "https://blockrazor.io (register, verify email, copy auth token from account info)"
+  },
+  "tip_wallets": [
+    "FjmZZrFvhnqqb9ThCuMVnENaM3JGVuGWNyCAxRJcFpg9",
+    "6No2i3aawzHsjtThw81iq1EXPJN6rh8eSJCLaYZfKDTG",
+    "A9cWowVAiHe9pJfKAj3TJiN9VpbzMUq6E4kEvf5mUT22",
+    "Gywj98ophM7GmkDdaWs4isqZnDdFCW7B46TXmKfvyqSm",
+    "68Pwb4jS7eZATjDfhmTXgRJjCiZmw1L7Huy4HNpnxJ3o",
+    "4ABhJh5rZPjv63RBJBuyWzBK3g9gWMUQdTZP2kiW31V9",
+    "B2M4NG5eyZp5SBQrSdtemzk5TqVuaWGQnowGaCBt8GyM",
+    "5jA59cXMKQqZAVdtopv8q3yyw9SYfiE3vUCbt7p8MfVf",
+    "5YktoWygr1Bp9wiS1xtMtUki1PeYuuzuCF98tqwYxf61",
+    "295Avbam4qGShBYK7E9H5Ldew4B3WyJGmgmXfiWdeeyV",
+    "EDi4rSy2LZgKJX74mbLTFk4mxoTgT6F7HxxzG2HBAFyK",
+    "BnGKHAC386n4Qmv9xtpBVbRaUTKixjBe3oagkPFKtoy6",
+    "Dd7K2Fp7AtoN8xCghKDRmyqr5U169t48Tw5fEd3wT9mq",
+    "AP6qExwrbRgBAVaehg4b5xHENX815sMabtBzUzVB4v8S"
+  ],
+  "tip_note": "Rotate tip accounts to prevent performance degradation from address saturation. Place tip transfer preferably at transaction front.",
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "min_priority_fee_microlamports": 1000000,
+  "cost_on_failure": "unknown",
+  "endpoints": {
+    "send_transaction_v1": {
+      "http": {
+        "frankfurt": "http://frankfurt.solana.blockrazor.xyz:443/sendTransaction",
+        "new_york": "http://newyork.solana.blockrazor.xyz:443/sendTransaction",
+        "tokyo": "http://tokyo.solana.blockrazor.xyz:443/sendTransaction",
+        "amsterdam": "http://amsterdam.solana.blockrazor.xyz:443/sendTransaction",
+        "london": "http://london.solana.blockrazor.xyz:443/sendTransaction"
+      },
+      "grpc": {
+        "frankfurt": "frankfurt.solana-grpc.blockrazor.xyz:80",
+        "new_york": "newyork.solana-grpc.blockrazor.xyz:80",
+        "tokyo": "tokyo.solana-grpc.blockrazor.xyz:80",
+        "amsterdam": "amsterdam.solana-grpc.blockrazor.xyz:80",
+        "london": "london.solana-grpc.blockrazor.xyz:80"
+      },
+      "health": "http://frankfurt.solana.blockrazor.xyz:443/health"
+    },
+    "send_transaction_v2": {
+      "http": {
+        "frankfurt": "http://frankfurt.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "new_york": "http://newyork.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "tokyo": "http://tokyo.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "amsterdam": "http://amsterdam.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "london": "http://london.solana.blockrazor.xyz:443/v2/sendTransaction"
+      },
+      "https": {
+        "frankfurt": "https://frankfurt.solana.blockrazor.io/v2/sendTransaction",
+        "new_york": "https://newyork.solana.blockrazor.io/v2/sendTransaction",
+        "tokyo": "https://tokyo.solana.blockrazor.io/v2/sendTransaction"
+      },
+      "health": "http://frankfurt.solana.blockrazor.xyz:443/v2/health?auth=<auth_token>"
+    },
+    "network_fee_stream": {
+      "grpc": "grpc.solana-fee.blockrazor.me:443",
+      "tls": true
+    },
+    "geyser_stream": {
+      "frankfurt": "geyserstream-frankfurt.blockrazor.xyz:443",
+      "amsterdam": "geyserstream-amsterdam.blockrazor.xyz:443",
+      "new_york": "geyserstream-newyork.blockrazor.xyz:443",
+      "tokyo": "geyserstream-tokyo.blockrazor.xyz:443"
+    },
+    "shred_stream": {
+      "regions": ["frankfurt", "amsterdam", "tokyo", "new_york"],
+      "protocol": "UDP",
+      "note": "Provide your IP:Port, receive native UDP shred packets from validators"
+    }
+  },
+  "rate_limits": {
+    "send_transaction": {
+      "default": "1 TPS",
+      "note": "Contact Discord support for TPS increases"
+    },
+    "network_fee_stream": {
+      "tier_4_free": "1 QPS",
+      "tier_3": "5 QPS",
+      "tier_2": "10 QPS",
+      "tier_1": "50 QPS",
+      "tier_0_custom": "100 QPS"
+    },
+    "shred_stream": {
+      "tier_2": "1 stream",
+      "tier_1": "2 streams",
+      "tier_0": "5 streams"
+    }
+  },
+  "methods": {
+    "sendTransaction_v1": {
+      "endpoint": "POST /sendTransaction",
+      "auth_header": "apikey",
+      "content_type": "application/json",
+      "encoding": ["base64", "base58"],
+      "preferred_encoding": "base64",
+      "params": {
+        "transaction": {
+          "type": "string",
+          "required": true,
+          "description": "Fully signed transaction, base64 or base58 encoded"
+        },
+        "mode": {
+          "type": "string",
+          "required": false,
+          "default": "fast",
+          "values": ["fast", "sandwichMitigation"]
+        },
+        "safeWindow": {
+          "type": "integer",
+          "required": false,
+          "default": 3,
+          "range": "3-13",
+          "description": "Number of slots with whitelisted validators; only effective in sandwichMitigation mode"
+        },
+        "revertProtection": {
+          "type": "boolean",
+          "required": false,
+          "default": false,
+          "description": "Enables revert protection; may impact inclusion speed"
+        }
+      },
+      "response": {
+        "success": {"signature": "<txn_hash>", "error": ""},
+        "error": {"signature": "", "error": "<error message>"}
+      },
+      "status_codes": {
+        "200": "OK - Request processed successfully",
+        "400": "BadRequest - Invalid parameters",
+        "403": "Forbidden - Auth empty, invalid, or expired",
+        "500": "InternalServerError"
+      }
+    },
+    "sendTransaction_v2": {
+      "endpoint": "POST /v2/sendTransaction",
+      "auth": "query parameter ?auth=<token>",
+      "content_type": "text/plain",
+      "encoding": ["base64"],
+      "params": {
+        "transaction": {
+          "type": "string",
+          "required": true,
+          "description": "Base64-encoded fully signed transaction"
+        },
+        "mode": {
+          "type": "string",
+          "required": false,
+          "default": "fast",
+          "values": ["fast", "sandwichMitigation"]
+        },
+        "safeWindow": {
+          "type": "integer",
+          "required": false,
+          "default": 3,
+          "range": "3-13"
+        },
+        "revertProtection": {
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      },
+      "response": {
+        "success": {"signature": "<txn_hash>", "error": ""},
+        "error": {"signature": "", "error": "<error message>"}
+      },
+      "status_codes": {
+        "200": "OK",
+        "400": "BadRequest",
+        "403": "Forbidden",
+        "500": "InternalServerError"
+      }
+    },
+    "getTransactionFee": {
+      "endpoint": "gRPC GetTransactionFee",
+      "server": "grpc.solana-fee.blockrazor.me:443",
+      "auth": "gRPC metadata: {\"apiKey\": \"<your_auth>\"}",
+      "params": {
+        "accounts": {
+          "type": "string[]",
+          "required": false,
+          "description": "Filter by specific wallet addresses; omit for all transactions"
+        },
+        "percentile": {
+          "type": "int32",
+          "required": true,
+          "values": [25, 50, 75, 95, 99],
+          "description": "Quantile level for fee calculation"
+        },
+        "slotRange": {
+          "type": "int32",
+          "required": true,
+          "range": "1-150",
+          "description": "Number of recent confirmed slots to analyze"
+        }
+      },
+      "response": {
+        "priorityFee": {
+          "percentile": "int32",
+          "value": "double (micro-lamports)"
+        },
+        "tip": {
+          "percentile": "int32",
+          "value": "double (SOL)"
+        }
+      }
+    },
+    "health_v1": {
+      "endpoint": "POST /health",
+      "auth_header": "apikey"
+    },
+    "health_v2": {
+      "endpoint": "POST /v2/health?auth=<token>",
+      "body": "empty"
+    }
+  },
+  "features": {
+    "sandwich_mitigation": {
+      "description": "Monitors and skips blacklisted validators in real-time",
+      "mode": "sandwichMitigation",
+      "safe_window_range": "3-13 slots"
+    },
+    "revert_protection": {
+      "description": "Prevents failed transactions from landing on-chain; may reduce inclusion speed"
+    },
+    "swqos": "Stake-Weighted Quality of Service from high-stake validators",
+    "geographic_endpoints": ["frankfurt", "new_york", "tokyo", "amsterdam", "london"],
+    "multi_protocol": ["HTTP", "gRPC"],
+    "shred_stream": {
+      "description": "Native UDP shred packets directly from validators with minimal forwarding hops",
+      "regions": ["frankfurt", "amsterdam", "tokyo", "new_york"],
+      "pricing_monthly": "$500/stream/region",
+      "pricing_annual": "$4800/stream/region ($400/mo)"
+    },
+    "geyser_stream": {
+      "description": "High-performance Solana data streaming via gRPC",
+      "replay": "Supports transaction replay for most recent 500 slots (~200 seconds)",
+      "data_allowance_tier_2": "20 TiB/cycle",
+      "data_allowance_tier_1": "50 TiB/cycle",
+      "min_tier": "Tier 2 - Solana"
+    },
+    "gas_sponsor": {
+      "description": "Enables transactions without holding SOL by sponsoring fees and rent",
+      "solana_support": "mentioned but not documented in detail (Ethereum-focused docs)"
+    },
+    "bundle_support_solana": false,
+    "bundle_support_note": "Bundles only supported for BSC and Ethereum, not Solana",
+    "sdk_languages": ["Go", "Rust", "JavaScript", "TypeScript", "CLI"]
+  },
+  "pricing": {
+    "tier_4_free": {
+      "price": "Free",
+      "send_tx_tps": 1,
+      "fee_stream_qps": 1,
+      "shred_stream": false
+    },
+    "tier_3": {
+      "price": "$300/single chain/month",
+      "fee_stream_qps": 5,
+      "shred_stream": false
+    },
+    "tier_2": {
+      "price": "$1500/single chain/month",
+      "fee_stream_qps": 10,
+      "shred_stream": "1 stream included",
+      "geyser_stream": "20 TiB/cycle"
+    },
+    "tier_1": {
+      "price": "$5000/all chains/month",
+      "fee_stream_qps": 50,
+      "shred_stream": "2 streams",
+      "geyser_stream": "50 TiB/cycle"
+    },
+    "tier_0_custom": {
+      "price": "Custom",
+      "description": "All services, custom rate limits, custom optimization, dedicated support",
+      "fee_stream_qps": 100,
+      "shred_stream": "5 streams"
+    }
+  }
+}

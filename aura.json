@@ -1,0 +1,244 @@
+{
+  "name": "AURA Transaction Service",
+  "website": "https://auraboost.io",
+  "docs": "https://auraboost.io/docs/",
+  "api_key": {
+    "required": true,
+    "delivery": {
+      "http": "query parameter ?api-key=YOUR_API_KEY",
+      "quic": "first unidirectional stream on a new QUIC connection contains the 36-byte UUID API key"
+    },
+    "format": "UUID string",
+    "how_to_get": "Contact AURA via Telegram @aurauntouched or Discord.",
+    "note": "Do not commit a real API key. Docs examples use placeholders only."
+  },
+  "tip_wallets": [
+    "aura2NHPnnLkPWPXkcqeHkRisDT2b8vy76eMgXH6TsL",
+    "auraMDpDVVWxwrJDtBz3Nhog4WGtbrGK2v8y3Pda7ei",
+    "auraMkDXGTE678N8LX6cqSV5JJKDpgavVcubPudaVrs",
+    "auraSRE5x8CMKbPKto1AkWjLaH4SowAJeAfGqAtdmDC",
+    "aurahN2ezg2Ktb2vrDVWqe9yunSZJajzPNTevECSGV4",
+    "aurajDJ4Eoq7L6AW36frV8PrrSjf6WMfDjEraU5iFPC",
+    "aurarguyidxqBCVtDdoi1FiKrFr3CyyNELGPaU2MWLy"
+  ],
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_note": "Include a tip of at least 0.001 SOL to one of the 7 Aura tip wallets. Random wallet selection is recommended to distribute load.",
+  "cost_on_failure": "not explicitly documented; tip is a SOL transfer in the submitted transaction, so it is only paid if the transaction lands and executes the tip instruction",
+  "endpoints": {
+    "https": {
+      "frankfurt": {
+        "url": "https://fra.auraboost.wtf",
+        "ip": "62.113.194.74",
+        "status": "available"
+      },
+      "amsterdam": {
+        "url": "https://ams.auraboost.wtf",
+        "ip": "84.32.64.135",
+        "status": "available"
+      },
+      "new_york": {
+        "url": "https://nyc.auraboost.wtf",
+        "ip": "45.63.11.162",
+        "status": "available"
+      }
+    },
+    "http_direct": {
+      "frankfurt": {
+        "url": "http://64.130.32.177:5000",
+        "status": "available"
+      },
+      "amsterdam": {
+        "url": "http://198.13.134.177:5000",
+        "status": "available"
+      },
+      "new_york": {
+        "url": "http://45.63.11.162:5000",
+        "status": "available"
+      },
+      "note": "Docs describe HTTP direct endpoints as lowest latency and recommend HTTP/2 long connections with keep-alive."
+    },
+    "quic": {
+      "frankfurt": "64.130.32.177:5001",
+      "amsterdam": "198.13.134.177:5001",
+      "new_york": "45.63.11.162:5001"
+    }
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "JSON-RPC transaction submission using a base64-encoded transaction.",
+      "http_method": "POST",
+      "path": "/aura",
+      "content_type": "application/json",
+      "full_url_example": "http://64.130.32.177:5000/aura?api-key=YOUR_API_KEY",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "BASE64_ENCODED_TRANSACTION",
+          {
+            "skipPreflight": true,
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "encoding": "base64"
+    },
+    "sendBundle": {
+      "description": "Atomic bundle submission over JSON-RPC. Supports up to 4 transactions.",
+      "http_method": "POST",
+      "path": "/aura",
+      "content_type": "application/json",
+      "full_url_example": "http://64.130.32.177:5000/aura?api-key=YOUR_API_KEY",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendBundle",
+        "params": [
+          [
+            "BASE64_ENCODED_TRANSACTION_1",
+            "BASE64_ENCODED_TRANSACTION_2"
+          ]
+        ]
+      },
+      "max_transactions": 4,
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "note": "Works with the same anti-MEV protection endpoints."
+    },
+    "sendTransactionBatch": {
+      "description": "Non-atomic batch send. Each transaction is processed independently.",
+      "http_method": "POST",
+      "path": "/aura",
+      "content_type": "application/json",
+      "full_url_example": "http://64.130.32.177:5000/aura?api-key=YOUR_API_KEY",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransactionBatch",
+        "params": [
+          "<base64-tx-1>",
+          "<base64-tx-2>",
+          "<base64-tx-3>"
+        ]
+      },
+      "max_transactions": 10,
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": ["sig1...", "sig2...", "sig3..."]
+      },
+      "note": "Unlike sendBundle, transactions go directly in params with no inner array."
+    },
+    "sendTransaction_binary": {
+      "description": "Raw transaction bytes over HTTP. Fastest HTTP option.",
+      "http_method": "POST",
+      "path": "/aura",
+      "content_type": "application/octet-stream",
+      "full_url_example": "http://64.130.32.177:5000/aura?api-key=YOUR_API_KEY",
+      "request_body": "Raw serialized transaction bytes",
+      "response_success": "TRANSACTION_SIGNATURE"
+    },
+    "sendTransaction_quic": {
+      "description": "Raw transaction bytes over a persistent QUIC connection.",
+      "transport": "QUIC over UDP",
+      "endpoint": "<region-ip>:5001",
+      "port": 5001,
+      "alpn": "solana-tpu",
+      "tls": "self-signed; client should skip verification",
+      "idle_timeout_seconds": 30,
+      "keep_alive_seconds": 10,
+      "authentication": {
+        "stream": "The first unidirectional stream on every new connection contains the API key.",
+        "payload": "36-byte UUID string, for example xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "failure": "Invalid or inactive keys cause the server to close the connection immediately."
+      },
+      "submission": {
+        "fire_and_forget": "Open a unidirectional stream, write raw transaction bytes, finish the stream.",
+        "with_confirmation": "Open a bidirectional stream, write raw transaction bytes, finish send side, then read signature or ERR:<reason>.",
+        "transaction_size_bytes": {
+          "min": 65,
+          "max": 1232
+        }
+      },
+      "limitations": [
+        "No bundle support over QUIC; use HTTP sendBundle for atomic bundles.",
+        "Tip requirement still applies."
+      ],
+      "dedup": "Duplicate transactions are dropped silently; only the first copy is forwarded."
+    },
+    "getHealth": {
+      "description": "Health check / keep-alive JSON-RPC method. No API key required.",
+      "http_method": "POST",
+      "path": "/aura",
+      "content_type": "application/json",
+      "full_url_example": "http://64.130.32.177:5000/aura",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "getHealth"
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "ok"
+      }
+    }
+  },
+  "features": {
+    "mev_protection": {
+      "available": true,
+      "mechanism": "Include the Aura MEV protection account in the transaction.",
+      "account": "auradontfront111111111111111111111111111123"
+    },
+    "http2_keep_alive_recommended": true,
+    "binary_submission": true,
+    "quic_submission": true,
+    "bundle_support": true,
+    "batch_support": true,
+    "duplicate_quic_tx_dedup": true,
+    "mainnet": true
+  },
+  "rate_limits": {
+    "documented": false,
+    "rate_limit_error_code": -32003,
+    "note": "Docs list a rate limit error but do not publish default TPS."
+  },
+  "error_codes": {
+    "-32001": "API key required",
+    "-32002": "Invalid API key",
+    "-32003": "Rate limit exceeded",
+    "-32004": "Tip required",
+    "-32005": "Tip too low"
+  },
+  "encoding": {
+    "json_rpc": "base64",
+    "binary_http": "raw serialized transaction bytes",
+    "quic": "raw bincode transaction bytes",
+    "transaction_size_bytes": {
+      "quic_min": 65,
+      "quic_max": 1232
+    }
+  },
+  "sdks": {
+    "rust_quic_client": "https://github.com/aurabooster/aura-quic-client"
+  },
+  "contact": {
+    "telegram": "https://t.me/aurauntouched",
+    "discord": "https://discord.gg/Dn3fUaucVH"
+  },
+  "notes": [
+    "The .stack provider label AURA appears to refer to AURA Transaction Service / AuraBoost.",
+    "Docs recommend direct HTTP endpoints for lowest latency and HTTP/2 long connections.",
+    "Do not push real API keys, private plan limits, or Telegram-provided credentials to GitHub."
+  ]
+}

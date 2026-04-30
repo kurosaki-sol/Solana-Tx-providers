@@ -1,0 +1,110 @@
+{
+  "name": "Node1",
+  "website": "https://node1.me",
+  "docs": "https://node1.me/docs.html",
+  "api_key": {
+    "required": true,
+    "delivery": "header",
+    "header": "api-key",
+    "how_to_get": "Contact sales via Discord (https://discord.com/invite/8tBYkWhH), X (https://x.com/Node1_me), or Telegram (https://t.me/Node1_me). Free tier available."
+  },
+  "tip_wallets": [
+    "node1PqAa3BWWzUnTHVbw8NJHC874zn9ngAkXjgWEej",
+    "node1UzzTxAAeBTpfZkQPJXBAqixsbdth11ba1NXLBG",
+    "node1Qm1bV4fwYnCurP8otJ9s5yrkPq7SPZ5uhj3Tsv",
+    "node1PUber6SFmSQgvf2ECmXsHP5o3boRSGhvJyPMX1",
+    "node1AyMbeqiVN6eoQzEAwCA6Pk826hrdqdAHR7cdJ3",
+    "node1YtWCoTwwVYTFLfS19zquRQzYX332hs1HEuRBjC"
+  ],
+  "min_tip_sol": 0.002,
+  "cost_on_failure": "not documented (tip is a SOL transfer in the TX, so likely lost if TX lands but fails logically; not charged if TX doesn't land)",
+  "endpoints": {
+    "new_york": {
+      "https": "https://ny.node1.me",
+      "http": "http://ny.node1.me"
+    },
+    "amsterdam": {
+      "https": "https://ams.node1.me",
+      "http": "http://ams.node1.me"
+    },
+    "frankfurt": {
+      "https": "https://fra.node1.me",
+      "http": "http://fra.node1.me"
+    },
+    "health_check": "GET /ping (any endpoint)"
+  },
+  "rate_limits": {
+    "entry": {
+      "tps": 5,
+      "cost_per_month": "$0 (free)"
+    },
+    "intermediate": {
+      "tps": 20,
+      "cost_per_month": "contact sales"
+    },
+    "advanced": {
+      "tps": 50,
+      "cost_per_month": "contact sales"
+    }
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Primary transaction submission via JSON-RPC",
+      "http_method": "POST",
+      "content_type": "application/json",
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "string",
+        "method": "sendTransaction",
+        "params": [
+          "base64_encoded_transaction",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "example_curl": "curl -X POST \"https://ny.node1.me\" -H \"Content-Type: application/json\" -H \"api-key: $APIKEY\" -d '{\"jsonrpc\":\"2.0\",\"id\":\"1\",\"method\":\"sendTransaction\",\"params\":[\"\",{\"encoding\":\"base64\"}]}'"
+    },
+    "ping": {
+      "description": "Health check / keep-alive endpoint",
+      "http_method": "GET",
+      "path": "/ping",
+      "recommended_interval_seconds": 60,
+      "purpose": "Prevent idle connection disconnects"
+    }
+  },
+  "features": {
+    "swqos": {
+      "description": "Dedicated Stake-Weighted Quality of Service across all tiers",
+      "all_tiers": true
+    },
+    "geographic_regions": 3,
+    "regions": ["new_york", "amsterdam", "frankfurt"],
+    "built_by": "Operators of top-performing arbitrage bots on Solana",
+    "supports_https_and_http": true,
+    "keep_alive_recommended": true,
+    "keep_alive_interval_seconds": 60,
+    "bundle_support": "not documented",
+    "websocket_support": "not documented",
+    "grpc_support": "not documented",
+    "mev_protection": "not documented",
+    "versioned_transactions": "not documented"
+  },
+  "encoding": {
+    "documented": ["base64"],
+    "base58": "not documented"
+  },
+  "contact": {
+    "discord": "https://discord.com/invite/8tBYkWhH",
+    "x": "https://x.com/Node1_me",
+    "telegram": "https://t.me/Node1_me"
+  },
+  "notes": [
+    "Documentation is minimal - only sendTransaction method is documented",
+    "Tip is a SOL transfer instruction included in the transaction to one of the 6 tip wallets",
+    "Higher tips are stated to correlate with higher success rates",
+    "All tiers include Dedicated SWQoS (Stake-Weighted Quality of Service)",
+    "Free tier (Entry) available at 5 TPS with no monthly cost",
+    "Contact sales for higher tiers (Intermediate 20 TPS, Advanced 50 TPS)"
+  ]
+}

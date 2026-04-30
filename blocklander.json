@@ -1,0 +1,130 @@
+{
+  "name": "Blocklander",
+  "website": "https://blocklander.io",
+  "dashboard": "https://app.blocklander.io",
+  "docs": {
+    "implementation_guide": "https://docs.blocklander.io/docs/implementation-guide",
+    "implementation_guide_markdown": "https://docs.blocklander.io/docs/implementation-guide.md",
+    "llms": "https://docs.blocklander.io/llms.txt"
+  },
+  "api_key": {
+    "required": true,
+    "delivery": "query parameter",
+    "query_param": "api-key",
+    "format": "?api-key=YOUR_API_KEY",
+    "how_to_get": "Create an API key in the Blocklander dashboard at https://app.blocklander.io.",
+    "note": "Do not commit a real API key."
+  },
+  "tip_wallets": [
+    "HYseAPq3ZPYzA35hLsEgmdsKCZQ3P7FBCcCPPytRtyTz"
+  ],
+  "tip_wallets_endpoint": {
+    "url": "https://solana-mainnet.btftx.io/wallets",
+    "http_method": "GET",
+    "response_example": {
+      "wallets": ["HYseAPq3ZPYzA35hLsEgmdsKCZQ3P7FBCcCPPytRtyTz"]
+    },
+    "note": "Docs recommend always using the API to fetch the latest Blocklander wallets instead of relying on hardcoded wallets."
+  },
+  "min_tip_sol": 0.0005,
+  "min_tip_lamports": 500000,
+  "tip_note": "Add a System Program transfer of at least 500,000 lamports to a current Blocklander tip wallet.",
+  "cost_on_failure": "not explicitly documented; tip is a SOL transfer instruction included in the transaction, so it is only paid if the transaction lands and executes the tip instruction",
+  "endpoints": {
+    "global": {
+      "base_url": "https://solana-mainnet.btftx.io",
+      "rpc": "https://solana-mainnet.btftx.io/rpc?api-key=YOUR_API_KEY",
+      "wallets": "https://solana-mainnet.btftx.io/wallets",
+      "ping": "https://solana-mainnet.btftx.io/ping",
+      "note": "Global DNS load-balanced endpoint based on latency."
+    },
+    "regional": {
+      "documented_publicly": false,
+      "source": "Blocklander dashboard",
+      "note": "Docs state that geolocated endpoints closer to users or servers are available in the dashboard, but do not publish the full regional list."
+    }
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "RPC-like JSON-RPC sendTransaction endpoint for accelerated Solana transaction submission.",
+      "http_method": "POST",
+      "path": "/rpc",
+      "content_type": "application/json",
+      "full_url_example": "https://solana-mainnet.btftx.io/rpc?api-key=YOUR_API_KEY",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "BASE64_ENCODED_SIGNED_TRANSACTION",
+          {
+            "skipPreflight": true,
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "result": "TRANSACTION_SIGNATURE",
+        "id": 1
+      },
+      "supported_methods": ["sendTransaction"],
+      "unsupported_methods_note": "The Blocklander URL does not support any RPC method other than sendTransaction.",
+      "encoding": "base64"
+    },
+    "getTipWallets": {
+      "description": "Fetch current Blocklander tip wallets.",
+      "http_method": "GET",
+      "path": "/wallets",
+      "full_url": "https://solana-mainnet.btftx.io/wallets",
+      "response_success": {
+        "wallets": ["HYseAPq3ZPYzA35hLsEgmdsKCZQ3P7FBCcCPPytRtyTz"]
+      }
+    },
+    "ping": {
+      "description": "Keep-alive endpoint for maintaining warm TCP connections.",
+      "http_method": "GET",
+      "path": "/ping",
+      "full_url": "https://solana-mainnet.btftx.io/ping",
+      "response_success": {
+        "message": "pong"
+      },
+      "recommended_interval_seconds": 60
+    }
+  },
+  "features": {
+    "parallel_pipelines": true,
+    "geographically_aware_routing": true,
+    "global_dns_latency_balancing": true,
+    "dashboard_regional_endpoints": true,
+    "rpc_like_send_transaction": true,
+    "read_rpc": false,
+    "mainnet": true
+  },
+  "rate_limits": {
+    "documented": false,
+    "connection_idle_timeout_seconds": 65,
+    "max_requests_per_tcp_connection": 1000,
+    "keep_alive_recommended_interval_seconds": 60,
+    "note": "Docs publish connection keep-alive limits, but no TPS or API request rate limit."
+  },
+  "encoding": {
+    "sendTransaction": "base64 signed transaction string"
+  },
+  "best_practices": {
+    "fetch_tip_wallets_dynamically": true,
+    "include_tip_instruction": true,
+    "set_skip_preflight_true": true,
+    "use_ping_keep_alive": true,
+    "use_dashboard_regional_endpoint_when_available": true
+  },
+  "contact": {
+    "dashboard": "https://app.blocklander.io"
+  },
+  "notes": [
+    "The .stack provider label BLOCKLANDER maps to Blocklander.",
+    "Docs describe Blocklander as sending transactions in parallel across multiple independent pipelines with optimized networking and geographically aware routing.",
+    "The OpenAPI link in llms.txt currently points to a Mintlify sample spec, so the implementation guide is the authoritative source for this entry.",
+    "Do not push dashboard-specific regional endpoints or API keys if they are account-private."
+  ]
+}

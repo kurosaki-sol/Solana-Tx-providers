@@ -1,0 +1,185 @@
+{
+  "name": "Soyas",
+  "website": "https://soyas.xyz/",
+  "docs": "https://soyas.xyz/fast-landing",
+  "description": "Specialized Solana infrastructure provider delivering SWQoS-powered fast transaction landing via private QUIC endpoints and high-velocity Shredstream data feeds. Built for trading platforms, bots, and memecoin developers that need ultra-low latency.",
+  "contact": {
+    "twitter": "https://x.com/soyas_xyz",
+    "telegram": "https://t.me/matt_soyas"
+  },
+
+  "services": {
+    "tx_landing": {
+      "description": "Fast transaction landing service with private QUIC endpoints and whitelisted access. Tips-based model, no subscription required.",
+      "protocol": "QUIC (not HTTP/JSON-RPC)",
+      "alpn_protocol": "solana-tpu",
+      "server_name": "soyas-landing",
+      "registration_required": false,
+      "note": "No registration needed for TX landing. Access is whitelisted via Telegram contact."
+    },
+    "shredstream": {
+      "description": "Ultra-low latency Solana shreds delivered directly to your infrastructure. Perfect for MEV, trading, and high-frequency applications.",
+      "registration_required": true,
+      "pricing": "8 SOL / Month / Region",
+      "free_trial": "1 Day free trial available",
+      "regions": ["Frankfurt", "Amsterdam", "New York", "London", "Tokyo"],
+      "features": [
+        "Ultra-low latency Turbine stream",
+        "Global region support",
+        "Seamless RPC node compatible stream"
+      ]
+    }
+  },
+
+  "api_key": {
+    "required": true,
+    "type": "Solana keypair (base58-encoded secret key)",
+    "format": "Base58-encoded Ed25519 keypair (32-byte seed or 64-byte secret key)",
+    "how_to_get": "Contact @matt_soyas on Telegram. Admin whitelists your Solana public key. You receive a keypair to use as the API key for mutual-TLS authentication.",
+    "auth_mechanism": "Mutual TLS via QUIC — the base58-encoded Solana keypair is used to generate a self-signed X.509 certificate for client authentication. Server verifies the public key is whitelisted.",
+    "env_var": "SOYAS_API_KEY"
+  },
+
+  "tip_wallets": [
+    "soyas4s6L8KWZ8rsSk1mF3d1mQScoTGGAgjk98bF8nP",
+    "soyascXFW5wEEYiwfEmHy2pNwomqzvggJosGVD6TJdY",
+    "soyasDBdKjADwPz3xk82U3TNPRDKEWJj7wWLajNHZ1L",
+    "soyasE2abjBAynmHbGWgEwk4ctBy7JMTUCNrMbjcnyH"
+  ],
+  "tip_wallet_note": "Each VersionedTransaction must carry a System Program transfer to one of these addresses.",
+
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_note": "Each VersionedTransaction must carry a System Program transfer >= 0.001 SOL (1,000,000 lamports) to one of the tip addresses.",
+
+  "cost_on_failure": "Tips-based model — tip is a System Program transfer instruction inside the transaction. If the transaction does not land, no tip is paid.",
+
+  "endpoints": {
+    "tx_landing": {
+      "protocol": "QUIC (port 9000)",
+      "regions": {
+        "frankfurt": "fra.landing.soyas.xyz:9000",
+        "amsterdam": "ams.landing.soyas.xyz:9000",
+        "new_york": "nyc.landing.soyas.xyz:9000",
+        "london": "lon.landing.soyas.xyz:9000",
+        "tokyo": "tyo.landing.soyas.xyz:9000"
+      }
+    },
+    "web_api": {
+      "base_url": "https://soyas.xyz/api",
+      "note": "Web dashboard API for Shredstream subscription management, not for transaction submission.",
+      "paths": {
+        "register": "POST /register",
+        "login": "POST /login",
+        "pricing": "GET /pricing",
+        "subscriptions": "POST /subscriptions",
+        "subscription_update": "POST /subscription/update",
+        "payment_verify": "POST /payment/verify",
+        "payments": "GET /payments"
+      }
+    }
+  },
+
+  "rate_limits": {
+    "tx_landing": "Per-key rate limit configured by admin (rate_limit_per_sec). Default may be unlimited (shown as infinity symbol). Contact Telegram for details.",
+    "note": "Rate limits are set per API public key by admin. Burst limits also configurable."
+  },
+
+  "methods": {
+    "send_transaction": {
+      "description": "Send a signed Solana transaction (VersionedTransaction) to Soyas for fast landing via SWQoS-powered QUIC connection.",
+      "protocol": "QUIC unidirectional stream",
+      "input": "Raw wire bytes of a signed Solana transaction (bincode-serialized VersionedTransaction)",
+      "encoding": "Binary (raw transaction bytes, not base58/base64 encoded)",
+      "behavior": "Opens a new QUIC unidirectional stream per transaction. Auto-reconnects on write failure.",
+      "requirements": [
+        "Transaction must include a System Program transfer >= 0.001 SOL to one of the 4 tip wallets",
+        "API key (Solana keypair) must be whitelisted"
+      ]
+    },
+    "connect": {
+      "description": "Establish a persistent QUIC connection to a Soyas ingress endpoint using mutual-TLS with a whitelisted Solana keypair.",
+      "params": {
+        "endpoint_addr": {
+          "type": "string",
+          "description": "Soyas QUIC endpoint address (e.g. fra.landing.soyas.xyz:9000)",
+          "required": true
+        },
+        "api_key": {
+          "type": "string",
+          "description": "Base58-encoded Solana keypair (32-byte seed or 64-byte secret key)",
+          "required": true
+        }
+      },
+      "auth_check": "300ms timeout — connection is verified immediately after establishment. If rejected, the server closes the connection."
+    }
+  },
+
+  "encoding": {
+    "transaction_format": "Raw binary (bincode-serialized VersionedTransaction)",
+    "api_key_format": "Base58-encoded Ed25519 keypair",
+    "protocol": "QUIC with solana-tpu ALPN",
+    "tls": "Mutual TLS 1.3 with self-signed X.509 certificate derived from Solana keypair"
+  },
+
+  "features": {
+    "swqos": {
+      "description": "Stake-Weighted Quality of Service — transactions are prioritized based on validator stake for deterministic performance."
+    },
+    "quic_transport": {
+      "description": "Private QUIC endpoints (not HTTP/JSON-RPC). Ultra-low latency binary protocol using solana-tpu ALPN.",
+      "keep_alive_interval": "25 seconds",
+      "max_idle_timeout": "30 seconds"
+    },
+    "whitelisted_access": {
+      "description": "Access controlled via whitelisted Solana public keys. Mutual TLS authentication ensures only authorized clients can connect."
+    },
+    "auto_reconnect": {
+      "description": "Client libraries automatically reconnect on write failures. Go client is goroutine-safe with shared QUIC connection."
+    },
+    "tips_based_model": {
+      "description": "No subscription required for TX landing. Pay-per-transaction via SOL tips included in each transaction."
+    },
+    "global_edge_network": {
+      "description": "High-performance nodes in 5 regions: Frankfurt, Amsterdam, New York, London, Tokyo."
+    },
+    "low_latency": {
+      "description": "Optimized for Solana MEV and high-frequency trading. Sub-millisecond propagation for maximum speed."
+    },
+    "native_web3_payments": {
+      "description": "Scale infrastructure instantly with seamless SOL payments. Self-service onboarding."
+    },
+    "shredstream": {
+      "description": "Direct access to Solana shreds with minimal latency. Ultra-low latency Turbine stream with global region support and RPC node compatible streaming."
+    },
+    "multi_language_sdks": {
+      "rust": "Native quinn/QUIC client with solana-sdk integration",
+      "go": "Package soyasclient using quic-go library",
+      "python": "Async client using aioquic library"
+    }
+  },
+
+  "client_libraries": {
+    "rust": {
+      "dependencies": ["quinn", "solana-sdk", "solana-tls-utils", "arc-swap", "bincode", "rustls", "tokio"],
+      "usage": "let client = SoyasClient::connect(\"fra.landing.soyas.xyz:9000\", api_key).await?;\nclient.send_transaction(&tx).await?;"
+    },
+    "go": {
+      "package": "soyasclient",
+      "dependencies": ["github.com/mr-tron/base58", "github.com/quic-go/quic-go"],
+      "usage": "client, _ := soyasclient.Connect(ctx, \"fra.landing.soyas.xyz:9000\", os.Getenv(\"SOYAS_API_KEY\"))\n_ = client.SendTransaction(ctx, txBytes)"
+    },
+    "python": {
+      "dependencies": ["aioquic", "base58", "cryptography"],
+      "usage": "client = await SoyasClient.connect(\"fra.landing.soyas.xyz:9000\", api_key_base58)\nawait client.send_transaction(tx)"
+    }
+  },
+
+  "best_practices": [
+    "Include tip transfer instruction (>= 0.001 SOL) to one of the 4 tip wallets in every transaction",
+    "Use the closest regional endpoint to minimize latency",
+    "Client connections auto-reconnect on failure — safe to share across threads/goroutines",
+    "Contact @matt_soyas on Telegram to get your public key whitelisted",
+    "For Shredstream: free 1-day trial available, then 8 SOL/month/region"
+  ]
+}

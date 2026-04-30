@@ -1,0 +1,277 @@
+{
+  "name": "Jito Block Engine",
+  "website": "https://www.jito.wtf/",
+  "docs": "https://docs.jito.wtf/lowlatencytxnsend/",
+  "explorer": "https://explorer.jito.wtf/",
+  "description": "MEV-optimized transaction and bundle submission service using a modified Agave validator client (Jito-Solana). Bundles are executed sequentially and atomically (all-or-nothing). Tips are redistributed to validators and their stakers.",
+
+  "api_key": {
+    "required": false,
+    "note": "No approved auth key needed for default sends. Optional UUID auth available.",
+    "auth_methods": [
+      { "type": "header", "format": "x-jito-auth: <uuid>" },
+      { "type": "query_param", "format": "?uuid=<uuid>" }
+    ],
+    "rate_limit_increase_form": "https://forms.gle/8jZmKX1KZA71jXp38"
+  },
+
+  "tip_wallets": [
+    "96gYZGLnJYVFmbjzopPSU6QiEV5fGqZNyN9nmNhvrZU5",
+    "HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe",
+    "Cw8CFyM9FkoMi7K7Crf6HNQqf4uEMzpKw6QNghXLvLkY",
+    "ADaUMid9yfUytqMBgopwjb2DTLSokTSzL1zt6iGPaS49",
+    "DfXygSm4jCyNCybVYYK6DwvWqjKee8pbDmJGcLWNDXjh",
+    "ADuUkR4vqLUMWXxW9gh6D6L8pMSawimctcNZ5pGwDcEt",
+    "DttWaMuVvTiduZRnguLF7jNxTgiMBZ1hyAumKUiL2KRL",
+    "3AVi9Tg9Uo68tJfuvoKvqKNWKkC5wPdSSdeBnizKZ6jT"
+  ],
+  "tip_wallet_note": "Select randomly to reduce contention. Do NOT use Address Lookup Tables for tip accounts.",
+
+  "min_tip_sol": 0.000001,
+  "min_tip_lamports": 1000,
+  "tip_note": "1000 lamports minimum for bundles. During high-demand periods, this minimum may not be sufficient. Use tip_floor endpoint for current competitive tips.",
+
+  "cost_on_failure": "No cost if tip instruction is in the same transaction as the MEV logic. If the transaction reverts, the tip is not paid. WARNING: standalone tip transactions in bundles can still land if the bundle is on an uncled block (uncle bandit risk).",
+
+  "tip_strategy": {
+    "sendTransaction": "70% priority fee / 30% Jito tip split recommended",
+    "sendBundle": "Only the Jito tip matters; priority fees are irrelevant for bundles"
+  },
+
+  "tip_info_endpoints": {
+    "tip_floor_rest": "https://bundles.jito.wtf/api/v1/bundles/tip_floor",
+    "tip_stream_websocket": "wss://bundles.jito.wtf/api/v1/bundles/tip_stream",
+    "tip_floor_fields": [
+      "landed_tips_25th_percentile",
+      "landed_tips_50th_percentile",
+      "landed_tips_75th_percentile",
+      "landed_tips_95th_percentile",
+      "landed_tips_99th_percentile",
+      "ema_landed_tips_50th_percentile"
+    ]
+  },
+
+  "endpoints": {
+    "mainnet": {
+      "global": "https://mainnet.block-engine.jito.wtf",
+      "regions": {
+        "amsterdam": {
+          "block_engine": "https://amsterdam.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "74.118.140.240:1002",
+          "ntp": "ntp.amsterdam.jito.wtf"
+        },
+        "dublin": {
+          "block_engine": "https://dublin.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "64.130.61.8:1002",
+          "ntp": "ntp.dublin.jito.wtf"
+        },
+        "frankfurt": {
+          "block_engine": "https://frankfurt.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "64.130.50.14:1002",
+          "ntp": "ntp.frankfurt.jito.wtf"
+        },
+        "london": {
+          "block_engine": "https://london.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "64.130.46.153:1002",
+          "ntp": "ntp.london.jito.wtf"
+        },
+        "new_york": {
+          "block_engine": "https://ny.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "141.98.216.96:1002",
+          "ntp": "ntp.dallas.jito.wtf"
+        },
+        "salt_lake_city": {
+          "block_engine": "https://slc.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "64.130.53.8:1002",
+          "ntp": "ntp.slc.jito.wtf"
+        },
+        "singapore": {
+          "block_engine": "https://singapore.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "202.8.11.224:1002",
+          "ntp": "ntp.singapore.jito.wtf"
+        },
+        "tokyo": {
+          "block_engine": "https://tokyo.mainnet.block-engine.jito.wtf",
+          "shred_receiver": "202.8.9.160:1002",
+          "ntp": "ntp.tokyo.jito.wtf"
+        }
+      }
+    },
+    "testnet": {
+      "global": "https://testnet.block-engine.jito.wtf",
+      "regions": {
+        "dallas": {
+          "block_engine": "https://dallas.testnet.block-engine.jito.wtf",
+          "shred_receiver": "141.98.218.12:1002"
+        },
+        "new_york": {
+          "block_engine": "https://ny.testnet.block-engine.jito.wtf",
+          "shred_receiver": "64.130.35.224:1002"
+        }
+      }
+    }
+  },
+
+  "rate_limits": {
+    "default": "1 request per second per IP per region",
+    "exceeded_response": "HTTP 429",
+    "increase": "Submit form at https://forms.gle/8jZmKX1KZA71jXp38",
+    "note": "No auth key needed for default rate. Rate limits are enforced per-region, so using multiple regions gives higher aggregate throughput."
+  },
+
+  "methods": {
+    "sendTransaction": {
+      "path": "/api/v1/transactions",
+      "http_method": "POST",
+      "description": "Proxies to Solana sendTransaction but forwards directly to the Jito validator. Automatically sets skip_preflight=true. Default MEV protection enabled.",
+      "params": {
+        "params": {
+          "type": "string",
+          "required": true,
+          "description": "Base64 (recommended) or base58 (deprecated) encoded signed transaction"
+        },
+        "encoding": {
+          "type": "string",
+          "required": false,
+          "default": "base58",
+          "values": ["base64", "base58"],
+          "note": "base64 recommended (faster). base58 is DEPRECATED."
+        }
+      },
+      "query_params": {
+        "bundleOnly": {
+          "type": "boolean",
+          "description": "When true, transaction is sent as a single-transaction bundle with revert protection (all-or-nothing). Cost-efficient for MEV protection."
+        }
+      },
+      "returns": "Transaction signature (string)"
+    },
+
+    "sendBundle": {
+      "path": "/api/v1/bundles",
+      "http_method": "POST",
+      "description": "Submits a bundle of up to 5 signed transactions for atomic sequential execution. All-or-nothing: if any transaction fails, the entire bundle is rejected.",
+      "params": {
+        "params": {
+          "type": "array[string]",
+          "required": true,
+          "max_items": 5,
+          "description": "Array of base64 or base58 encoded signed transactions"
+        },
+        "encoding": {
+          "type": "string",
+          "required": false,
+          "default": "base58",
+          "values": ["base64", "base58"]
+        }
+      },
+      "returns": "Bundle ID (SHA-256 hash of transaction signatures)",
+      "requirements": "Minimum tip of 1000 lamports required. Tip must be a SOL transfer to one of the 8 tip wallets.",
+      "auction": "Bundles compete in parallel auctions at 50ms ticks. Priority based on tip/CUs-requested efficiency."
+    },
+
+    "getBundleStatuses": {
+      "path": "/api/v1/bundles",
+      "http_method": "POST",
+      "description": "Returns the status of submitted bundles. Searches recent slots plus up to MAX_RECENT_BLOCKHASHES (300) rooted slots.",
+      "params": {
+        "params": {
+          "type": "array[string]",
+          "required": true,
+          "max_items": 5,
+          "description": "Array of bundle IDs to query"
+        }
+      },
+      "returns": {
+        "bundle_id": "string",
+        "transactions": "array of base-58 encoded signatures",
+        "slot": "u64 - slot where bundle was processed",
+        "confirmationStatus": "processed | confirmed | finalized",
+        "err": "error info (retryable/non-retryable)"
+      }
+    },
+
+    "getInflightBundleStatuses": {
+      "path": "/api/v1/bundles",
+      "http_method": "POST",
+      "description": "Returns status of bundles submitted within the last 5 minutes.",
+      "params": {
+        "params": {
+          "type": "array[string]",
+          "required": true,
+          "max_items": 5,
+          "description": "Array of bundle IDs to query"
+        }
+      },
+      "returns": {
+        "bundle_id": "string",
+        "status": "Invalid | Pending | Failed | Landed",
+        "landed_slot": "u64 (if landed)"
+      },
+      "lookback_window": "5 minutes"
+    },
+
+    "getTipAccounts": {
+      "path": "/api/v1/bundles",
+      "http_method": "POST",
+      "description": "Returns the 8 designated tip account addresses. Use to dynamically fetch tip wallets rather than hardcoding.",
+      "params": "none",
+      "returns": "Array of 8 public key strings"
+    }
+  },
+
+  "encoding": {
+    "recommended": "base64",
+    "deprecated": "base58",
+    "default": "base58",
+    "note": "base64 is faster and recommended. base58 is slower and deprecated."
+  },
+
+  "features": {
+    "bundles": {
+      "max_transactions": 5,
+      "execution": "Sequential and atomic (all-or-nothing)",
+      "slot_boundary": "Bundles cannot cross slot boundaries",
+      "auction_tick": "50ms",
+      "priority": "tip/CUs-requested efficiency",
+      "account_locking": "Bundles with intersecting locking patterns [(w,w), (r,w), (w,r)] compete in the same auction. Non-intersecting bundles run in separate auctions."
+    },
+    "revert_protection": {
+      "description": "bundleOnly=true on sendTransaction gives single-TX bundle revert protection. Full bundles are inherently revert-protected.",
+      "note": "If a bundle transaction lands on an uncled block, it may be rebroadcast WITHOUT atomicity protection (uncle bandit risk)."
+    },
+    "sandwich_protection": {
+      "method": "jitodontfront",
+      "description": "Add any valid Solana pubkey starting with 'jitodontfront' to transaction instructions. Bundle is rejected unless your transaction appears at index 0 (first position).",
+      "account_requirement": "Does not need to exist on-chain",
+      "compatibility": "Works with sendBundle and sendTransaction. Supports AddressLookupTables."
+    },
+    "mev_protection": {
+      "description": "Default MEV protection enabled on sendTransaction"
+    },
+    "shred_stream": {
+      "description": "Low-latency shred delivery service. Each regional endpoint has a shred receiver address (IP:port)."
+    },
+    "skip_preflight": {
+      "description": "sendTransaction automatically sets skip_preflight=true"
+    }
+  },
+
+  "sdks": {
+    "python": "jito-py-rpc",
+    "javascript": "jito-js-rpc",
+    "rust": "jito-rust-rpc",
+    "go": "jito-go-rpc"
+  },
+
+  "best_practices": [
+    "Always include tip instruction in the same transaction as MEV logic to avoid paying on failure",
+    "Do NOT use Address Lookup Tables for tip accounts (reduces validator prioritization)",
+    "Select tip accounts randomly to reduce contention",
+    "Add post-transaction checks and account assertions for safety",
+    "Minimize standalone tip transactions in bundles (increases uncle bandit vulnerability)",
+    "Use base64 encoding (not base58) for faster processing",
+    "For sendTransaction: split 70% priority fee / 30% Jito tip",
+    "For sendBundle: only Jito tip matters, priority fees are irrelevant"
+  ]
+}

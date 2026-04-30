@@ -1,0 +1,175 @@
+{
+  "name": "Corvus Falcon",
+  "website": "https://corvus-labs.io",
+  "docs": "https://docs.corvus-labs.io/falcon",
+  "dashboard": "https://dashboard.corvus-labs.io/falcon",
+  "api_key": {
+    "required": true,
+    "delivery": "query_param",
+    "query_param": "api-key",
+    "format": "UUID",
+    "how_to_get": "Sign up at dashboard.corvus-labs.io/falcon, API key generated automatically on account creation",
+    "quic_auth": "Client certificate with API key UUID as CN (Common Name)"
+  },
+  "tip_wallets": [
+    "Fa1con11xLjPddfzRwRUB16sbFZggp2JeJkCeWREyR8X",
+    "Fa1con11TM1RuAQzbQzYjTy4Ekfap9Lnc9fnEbQYEd6Q",
+    "Fa1con113Bvi76nS5AzUiRDC2fqjfzkNMUNRLgQybMYt",
+    "Fa1con1QGHJK232s8yZpzZZwqPexnAKcoyKj626LNsMv",
+    "Fa1con1zUzb6qJVFz5tNkPq1Ahm8H1qKW7Q48252QbkQ",
+    "Fa1con16d3MSwd3SAiwvr2LwgkpE7ot8zntbpuec8HAx",
+    "Fa1con1i7mpa7Qc6epYJ6r4P9AbU77DFFz173r59Df1x",
+    "Fa1con18nWn8TdAGL7JX8PertfMUGVSc899NawokJ4Bq",
+    "Fa1con1GKusK2EqsfzrDzGPaYZSxQtFGzJiRMMU9Zm2g",
+    "Fa1con1RDwVwM9VrJ53CwVefD3VU9c58EMpDawV7fLMi"
+  ],
+  "tip_instructions": {
+    "type": "System Program transfer instruction",
+    "pick_random": true,
+    "reason": "Random address selection prevents write-lock contention on hot accounts",
+    "position_in_tx": "anywhere (position irrelevant)",
+    "higher_tips_get_priority": true,
+    "b2b_custom_tip_addresses": "Available via Discord for high-volume users"
+  },
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "cost_on_failure": "tip only executes on-chain if TX lands (SOL transfer is part of the TX itself)",
+  "endpoints": {
+    "amsterdam": "http://ams.falcon.wtf",
+    "dublin": "http://dub.falcon.wtf",
+    "frankfurt": "http://fra.falcon.wtf",
+    "london": "http://lon.falcon.wtf",
+    "new_york": "http://nyc.falcon.wtf",
+    "siauliai": "http://sqq.falcon.wtf",
+    "singapore": "http://sgp.falcon.wtf",
+    "tokyo": "http://tyo.falcon.wtf",
+    "providers": {
+      "teraswitch": ["ams", "dub", "fra", "lon", "nyc", "sgp", "tyo"],
+      "cherryservers": ["sqq"]
+    },
+    "guidance": "Always send to the endpoint nearest your servers. Do not spread traffic across multiple regions."
+  },
+  "rate_limits": {
+    "default": "5 TPS",
+    "upgrade_requirements": "One of: 10% landing rate, 100+ TX/hour, or 50%+ success rate",
+    "upgrade_process": "Discord ticket system",
+    "quic_max_connections_per_key": 10,
+    "quic_max_concurrent_streams": 64,
+    "quic_stream_timeout_ms": 750,
+    "quic_handshake_timeout_ms": 3000,
+    "quic_max_concurrent_handshakes": 100,
+    "error_handling": "Exponential backoff on 429 (rate limited) and 503 (service unavailable)"
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Primary transaction submission (drop-in RPC replacement)",
+      "protocol": "JSON-RPC",
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "integer",
+        "method": "sendTransaction",
+        "params": [
+          "base64_encoded_transaction",
+          {
+            "encoding": "base64",
+            "skipPreflight": true
+          }
+        ]
+      },
+      "response": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "<SIGNATURE>"
+      },
+      "notes": "Falcon does not run preflight simulations regardless of skipPreflight setting"
+    }
+  },
+  "submission_formats": {
+    "json_rpc": {
+      "path": "/?api-key=<UUID>",
+      "content_type": "application/json",
+      "encoding": "base64",
+      "method": "POST",
+      "latency": "low",
+      "complexity": "simple",
+      "best_for": "Standard integrations, drop-in RPC replacement",
+      "example_url": "http://fra.falcon.wtf/?api-key=<UUID>"
+    },
+    "http_binary": {
+      "path": "/binary?api-key=<UUID>",
+      "content_type": "application/octet-stream",
+      "encoding": "raw binary bytes",
+      "method": "POST",
+      "max_size_bytes": 1232,
+      "latency": "lower",
+      "complexity": "medium",
+      "best_for": "Pre-serialized systems, Rust/C++ with bincode, latency-critical apps",
+      "response": "plain text bs58-encoded signature",
+      "example_url": "http://fra.falcon.wtf/binary?api-key=<UUID>"
+    },
+    "http_plaintext": {
+      "path": "/plaintext?api-key=<UUID>",
+      "content_type": "text/plain",
+      "encoding": "base64 (no JSON-RPC wrapper)",
+      "method": "POST",
+      "max_size_bytes": 2048,
+      "latency": "lower",
+      "complexity": "medium",
+      "best_for": "Simple scripts, automation, quick testing without JSON-RPC complexity",
+      "response": "plain text bs58-encoded signature",
+      "example_url": "http://fra.falcon.wtf/plaintext?api-key=<UUID>"
+    },
+    "quic": {
+      "port": 5000,
+      "protocol": "QUIC with TLS 1.3",
+      "alpn": "falcon-tx",
+      "encoding": "bincode-serialized on unidirectional stream",
+      "max_tx_size_bytes": 1232,
+      "latency": "lowest",
+      "complexity": "advanced",
+      "best_for": "HFT, latency-critical applications",
+      "auth": "Client certificate with API key UUID as CN",
+      "rust_library": "falcon-client",
+      "example_address": "fra.falcon.wtf:5000",
+      "cert_generation": "openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout client-key.pem -out client-cert.pem -days 365 -nodes -subj '/CN=<YOUR-API-KEY-UUID>'",
+      "error_codes": {
+        "1": "Missing API key in certificate CN",
+        "2": "Invalid or revoked API key",
+        "3": "Connection limit reached (max 10 per key)",
+        "4": "Stream limit reached (max 64 per connection)",
+        "5": "Rate limited"
+      }
+    }
+  },
+  "features": {
+    "swqos_routing": true,
+    "swqos_description": "Stake-weighted quality of service - routes TX through stake-weighted channels directly to slot leaders, bypassing public RPC congestion",
+    "jito_integration": true,
+    "jito_description": "Leverages both internal stake-weighted channels and Jito Bundle Engine",
+    "tip_backed_forwarding": true,
+    "regional_endpoints": 8,
+    "recommended_regions_for_solana": ["frankfurt", "amsterdam"],
+    "protocols_supported": ["JSON-RPC", "HTTP Binary", "HTTP Plaintext", "QUIC"],
+    "no_preflight_simulation": true,
+    "dashboard_telemetry": true,
+    "dashboard_landing_rate_monitoring": true,
+    "managed_service_only": true,
+    "no_self_hosting": true,
+    "transport_security": "plaintext (http://) by default; TLS available via QUIC submission"
+  },
+  "telemetry": {
+    "data_collected": [
+      "raw transaction payloads",
+      "signatures, slots, confirmation status",
+      "tip amounts and distribution",
+      "ingress/egress rates",
+      "acceptance, forwarding, and landing latencies",
+      "error counts and queue pressure",
+      "regional and endpoint health",
+      "API key usage patterns"
+    ],
+    "data_retention": "as long as needed for operations",
+    "data_selling": false,
+    "privacy_note": "Avoid including secrets in transactions; protect API keys"
+  }
+}

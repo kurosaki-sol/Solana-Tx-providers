@@ -1,0 +1,235 @@
+{
+  "name": "Syncro Sender",
+  "provider": "P2P.org",
+  "website": "https://www.p2p.org/products/syncro-solana-transaction-sender",
+  "docs": {
+    "overview": "https://docs.p2p.org/docs/syncro-sender-overview",
+    "quick_start": "https://docs.p2p.org/docs/syncro-sender-quick-start",
+    "optimizing_performance": "https://docs.p2p.org/docs/syncro-sender-optimizing-performance",
+    "pricing_rate_limits": "https://docs.p2p.org/docs/syncro-sender-pricing-rate-limits"
+  },
+  "api_key": {
+    "required_for_public": false,
+    "required_for_private": true,
+    "how_to_get": "Request access through P2P.org Syncro Sender or contact P2P.org via Telegram.",
+    "private_endpoint_auth": [
+      {
+        "type": "bearer",
+        "header": "Authorization",
+        "format": "Authorization: Bearer <API_KEY>",
+        "priority": 1
+      },
+      {
+        "type": "header",
+        "header": "X-Api-Key",
+        "format": "X-Api-Key: <API_KEY>",
+        "priority": 2
+      }
+    ],
+    "note": "If both private auth headers are present, Authorization: Bearer takes priority."
+  },
+  "tip_wallets": [
+    "BPZrtYhdoAhiHWV5EgGLoV7bZFbMamBZurGDq4DmST8v",
+    "7D5pdbkV75Sr73M1YFNZwXMed6DenwkdfbJwVWrX6drQ",
+    "ELpn2NryEW4B3psG36eSjF45YcGMQpGGuu9J2AgAccbV",
+    "FnckAPC9PitnRpGZM2M4WLwb3w9odRLJ7EDRZDngjvd6",
+    "3ZnDTgvVfwzqwWoqAUmDkgVtXvXqjmeb5t9zxD5pMbmv",
+    "3SLDFcdCzMbcFNguZhzmV4zqEAUvcPoKY13akpE4Tq1p",
+    "48tT6LJqrsoFrLpzZSHkjGdGTWtsJ1PvjgWZjh8qF1RK",
+    "7GM9fpVMHHcrK4cgzfVdzJvjiy1bSyfwSYzhxvgbfVLg",
+    "CBd8GE3ffMJKf3iCCcNNBEifMxH1WpgtTzRnXPxxbjGE"
+  ],
+  "min_tip_lamports": {
+    "public": 100000,
+    "private": 1000000
+  },
+  "min_tip_sol": {
+    "public": 0.0001,
+    "private": 0.001
+  },
+  "tip_note": "A System Program transfer to one Syncro tip account is required for both public and private endpoints. Public endpoint requires at least 100,000 lamports; private endpoint requires at least 1,000,000 lamports.",
+  "cost_on_failure": "not explicitly documented; Syncro Sender charges through the tip embedded in the submitted transaction, so the tip is only paid if the transaction lands and executes the tip instruction",
+  "endpoints": {
+    "public": {
+      "global_example": "https://sfls.l2.p2p.org/public",
+      "frankfurt": "http://sfls-geo-fra.l2.p2p.org/public",
+      "new_york": "http://sfls-geo-nyc.l2.p2p.org/public",
+      "london": "http://sfls-geo-lon.l2.p2p.org/public",
+      "tokyo": "http://sfls-geo-tky.l2.p2p.org/public",
+      "singapore": "http://sfls-geo-sgp.l2.p2p.org/public",
+      "amsterdam": "http://sfls-eu1.l2.p2p.org/"
+    },
+    "private": {
+      "global_example": "https://sfls.l2.p2p.org",
+      "paths": ["/", "/rpc"],
+      "note": "Private endpoint URL and client profile are arranged by P2P.org."
+    }
+  },
+  "methods": {
+    "sendTransaction_public": {
+      "description": "Public Syncro Sender transaction submission. No API key; transaction must include a sufficient tip.",
+      "http_method": "POST",
+      "path": "/public",
+      "content_type": "application/json",
+      "full_url_example": "https://sfls.l2.p2p.org/public",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<BASE64_ENCODED_TX_WITH_TIP>",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "result": "TRANSACTION_SIGNATURE",
+        "id": 1
+      },
+      "supported_methods": ["sendTransaction"],
+      "min_tip_lamports": 100000
+    },
+    "sendTransaction_private": {
+      "description": "Private Syncro Sender transaction submission. Requires API key and a sufficient tip.",
+      "http_method": "POST",
+      "path": "/ or /rpc",
+      "content_type": "application/json",
+      "full_url_example": "https://sfls.l2.p2p.org",
+      "headers": {
+        "preferred": "Authorization: Bearer YOUR_API_KEY",
+        "fallback": "X-Api-Key: YOUR_API_KEY"
+      },
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<BASE64_ENCODED_TX>",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "result": "TRANSACTION_SIGNATURE",
+        "id": 1
+      },
+      "min_tip_lamports": 1000000
+    },
+    "standard_rpc_private": {
+      "description": "Private endpoints can proxy standard Solana RPC methods when enabled on the client profile.",
+      "availability": "private endpoint only, client-profile dependent",
+      "examples": ["getBalance", "getTransaction", "getSlot"],
+      "note": "Public endpoint supports sendTransaction only."
+    }
+  },
+  "features": {
+    "swqos": {
+      "description": "Transactions are sent directly to validator leaders via staked TPU connections.",
+      "available": true
+    },
+    "multi_channel_delivery": true,
+    "parallel_routing": true,
+    "p2p_validator_infrastructure": true,
+    "priority_fee_recommended": true,
+    "read_rpc": {
+      "public": false,
+      "private": "available only when enabled on the client profile"
+    },
+    "confirmation_tracking": "Use a separate standard Solana RPC getSignatureStatuses flow; Syncro Sender handles delivery, not confirmation tracking."
+  },
+  "rate_limits": {
+    "algorithm": "Fixed 1-second window counter",
+    "public": {
+      "default_tps": 1,
+      "scope": "per source IP",
+      "customizable": false
+    },
+    "private": {
+      "default_tps": 50,
+      "scope": "per client",
+      "customizable": true
+    },
+    "headers_on_429": [
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining",
+      "Retry-After"
+    ]
+  },
+  "error_codes": {
+    "-32700": {
+      "name": "PARSE_ERROR",
+      "http_status": 400,
+      "description": "Malformed JSON-RPC request body"
+    },
+    "-32600": {
+      "name": "INVALID_REQUEST",
+      "http_status": "400 / 403",
+      "description": "Invalid request structure or authentication failure"
+    },
+    "-32601": {
+      "name": "METHOD_NOT_FOUND",
+      "http_status": 200,
+      "description": "Unsupported method, for example non-sendTransaction on public endpoint"
+    },
+    "-32602": {
+      "name": "INVALID_PARAMS",
+      "http_status": "200 / 400",
+      "description": "Invalid parameters, missing tip, or insufficient tip amount"
+    },
+    "-32603": {
+      "name": "INTERNAL_ERROR",
+      "http_status": 500,
+      "description": "Server-side processing error"
+    },
+    "-32000": {
+      "name": "SERVER_ERROR",
+      "http_status": 500,
+      "description": "General server error"
+    },
+    "-32005": {
+      "name": "RATE_LIMIT",
+      "http_status": 429,
+      "description": "Rate limit exceeded"
+    }
+  },
+  "encoding": {
+    "recommended": "base64",
+    "request_param": {
+      "encoding": "base64"
+    },
+    "notes": [
+      "Always pass {\"encoding\":\"base64\"} in sendTransaction params.",
+      "Transaction bytes should be serialized, signed, and base64 encoded."
+    ]
+  },
+  "best_practices": {
+    "skip_preflight": true,
+    "include_priority_fee": true,
+    "include_tip": true,
+    "reuse_http_connections": true,
+    "server_keep_alive_timeout_seconds": 30,
+    "respect_retry_after_on_429": true,
+    "retry_strategy": {
+      "429": "Wait for Retry-After seconds, then retry.",
+      "400": "Fix request; do not retry.",
+      "500": "Retry with exponential backoff.",
+      "network_error": "Retry with backoff.",
+      "signature_returned": "Monitor confirmation separately."
+    },
+    "safe_to_resubmit": "Solana transaction signatures are idempotent; submitting the same signed transaction multiple times is safe."
+  },
+  "contact": {
+    "telegram": "https://t.me/P2Pstaking",
+    "product_page": "https://www.p2p.org/products/syncro-solana-transaction-sender"
+  },
+  "notes": [
+    "Syncro Sender is a transaction forwarding service; public endpoint is not a general-purpose RPC.",
+    "Tips pay for Syncro Sender access; priority fees pay Solana validators for scheduling priority.",
+    "A single sendTransaction call already routes through multiple channels, so client-side delivery retries are usually unnecessary unless there is a rate limit, server error, or network error.",
+    "The .stack provider label SYNCRON appears to refer to P2P.org Syncro Sender."
+  ]
+}

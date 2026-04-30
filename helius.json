@@ -1,0 +1,214 @@
+{
+  "name": "Helius Sender",
+  "website": "https://www.helius.dev",
+  "docs": "https://www.helius.dev/docs/sending-transactions/sender",
+  "api_reference": "https://www.helius.dev/docs/api-reference/sender/llms.txt",
+
+  "api_key": {
+    "required": false,
+    "required_for": "elevated TPS limits beyond 50 TPS",
+    "how_to_get": "Sign up at https://dashboard.helius.dev, go to API Keys section, click Create New API Key",
+    "format": "query parameter: ?api-key=YOUR_API_KEY",
+    "note": "Sender API key is separate from RPC API key; contact Helius sales for custom TPS sender key"
+  },
+
+  "tip_wallets": [
+    "4ACfpUFoaSD9bfPdeu6DBt89gB6ENTeHBXCAi87NhDEE",
+    "D2L6yPZ2FmmmTKPgzaMKdhu6EWZcTpLy1Vhx8uvZe7NZ",
+    "9bnz4RShgq1hAnLnZbP8kbgBg1kEmcJBYQq3gQbmnSta",
+    "5VY91ws6B2hMmBFRsXkoAAdsPHBJwRfBht4DXox3xkwn",
+    "2nyhqdwKcJZR2vcqCyrYsaPVdAnFoJjiksCXJ7hfEYgD",
+    "2q5pghRs6arqVjRvT5gfgWfWcHWmw1ZuCzphgd5KfWGJ",
+    "wyvPkWjVZz1M8fHQnMMCDTQDbkManefNNhweYk5WkcF",
+    "3KCKozbAaF75qEU33jtzozcJ29yJuaLJTy2jFdzUY8bT",
+    "4vieeGHPYPG2MmyPRcYjdiDmmhN3ww7hsFNap8pVN3Ey",
+    "4TQLFNWK8AovT1gFvda5jfw2oJeRMKEmw7aH6MGBJ3or"
+  ],
+
+  "min_tip_sol": {
+    "dual_routing": 0.0002,
+    "swqos_only": 0.000005,
+    "note": "Tip is a native SOL transfer to one of the tip wallet addresses above"
+  },
+
+  "cost_on_failure": "no cost — 0 credits consumed, no SOL lost (tip only transfers on successful landing)",
+
+  "endpoints": {
+    "sender": {
+      "frontend_https": {
+        "global": "https://sender.helius-rpc.com/fast",
+        "note": "Auto-routes to nearest region. Use for browser/frontend."
+      },
+      "backend_http_regional": {
+        "salt_lake_city": "http://slc-sender.helius-rpc.com/fast",
+        "newark": "http://ewr-sender.helius-rpc.com/fast",
+        "london": "http://lon-sender.helius-rpc.com/fast",
+        "frankfurt": "http://fra-sender.helius-rpc.com/fast",
+        "amsterdam": "http://ams-sender.helius-rpc.com/fast",
+        "singapore": "http://sg-sender.helius-rpc.com/fast",
+        "tokyo": "http://tyo-sender.helius-rpc.com/fast",
+        "note": "HTTP (not HTTPS) for lower latency from servers. Pick closest to your VPS."
+      },
+      "ping": {
+        "global": "https://sender.helius-rpc.com/ping",
+        "regional_pattern": "http://{region}-sender.helius-rpc.com/ping",
+        "note": "GET request to warm connection. Use if idle > 1 minute."
+      }
+    },
+    "rpc": {
+      "mainnet": "https://mainnet.helius-rpc.com/?api-key=YOUR_API_KEY",
+      "devnet": "https://devnet.helius-rpc.com/?api-key=YOUR_API_KEY",
+      "beta": "https://beta.helius-rpc.com/?api-key=YOUR_API_KEY"
+    },
+    "websocket": {
+      "mainnet": "wss://mainnet.helius-rpc.com/?api-key=YOUR_API_KEY",
+      "devnet": "wss://devnet.helius-rpc.com/?api-key=YOUR_API_KEY"
+    },
+    "query_params": {
+      "api-key": "YOUR_SENDER_API_KEY (optional, for elevated TPS)",
+      "swqos_only": "true (optional, routes exclusively via SWQOS, lower min tip)"
+    }
+  },
+
+  "rate_limits": {
+    "sender": {
+      "default_all_plans": "50 TPS",
+      "elevation": "Contact Helius sales for custom TPS",
+      "credits_consumed": 0
+    },
+    "priority_fee_api": {
+      "free": "10 req/s",
+      "developer_49": "50 req/s",
+      "business_499": "200 req/s",
+      "professional_999": "500 req/s",
+      "credits_consumed": "1 per request"
+    }
+  },
+
+  "methods": {
+    "sendTransaction": {
+      "description": "Submit a serialized transaction via dual routing (staked validators + Jito) or SWQOS-only",
+      "http_method": "POST",
+      "path": "/fast",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "unique-request-id",
+        "method": "sendTransaction",
+        "params": [
+          "BASE64_OR_BASE58_ENCODED_TRANSACTION",
+          {
+            "encoding": "base64 | base58",
+            "skipPreflight": true,
+            "maxRetries": 0
+          }
+        ]
+      },
+      "params_detail": {
+        "transaction": "Serialized versioned (v0) transaction as base64 or base58 string",
+        "encoding": "base64 (recommended) or base58",
+        "skipPreflight": "MUST be true (mandatory)",
+        "maxRetries": "MUST be 0 (mandatory)"
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "response_error": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "error": {
+          "code": -32602,
+          "message": "error description"
+        }
+      },
+      "requirements": [
+        "Transaction MUST include a native SOL transfer to one of the tip wallets",
+        "Transaction MUST include ComputeBudgetProgram.setComputeUnitPrice instruction",
+        "Transaction MUST include ComputeBudgetProgram.setComputeUnitLimit instruction",
+        "Compute budget instructions should be at the beginning of the transaction"
+      ]
+    },
+    "ping": {
+      "description": "Warm the connection to prevent idle timeouts",
+      "http_method": "GET",
+      "path": "/ping",
+      "response": "ok (200)"
+    },
+    "getPriorityFeeEstimate": {
+      "description": "Get recommended priority fee for a transaction or set of accounts",
+      "endpoint": "https://mainnet.helius-rpc.com/?api-key=YOUR_API_KEY",
+      "http_method": "POST",
+      "request": {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "getPriorityFeeEstimate",
+        "params": [
+          {
+            "transaction": "base58 or base64 encoded tx (optional)",
+            "accountKeys": ["pubkey1", "pubkey2"],
+            "options": {
+              "priorityLevel": "Min | Low | Medium | High | VeryHigh | UnsafeMax",
+              "includeAllPriorityFeeLevels": false,
+              "transactionEncoding": "Base58 | Base64",
+              "lookbackSlots": 150,
+              "includeVote": false,
+              "recommended": true,
+              "evaluateEmptySlotAsZero": false
+            }
+          }
+        ]
+      },
+      "response": {
+        "priorityFeeEstimate": "number (microlamports)"
+      },
+      "priority_levels": {
+        "Min": "0-20th percentile",
+        "Low": "20-40th percentile",
+        "Medium": "40-60th percentile",
+        "High": "60-80th percentile",
+        "VeryHigh": "80-95th percentile",
+        "UnsafeMax": "100th percentile"
+      }
+    }
+  },
+
+  "error_codes": {
+    "-32602": {"status": 400, "message": "Invalid request (missing tip, priority fee, invalid params)"},
+    "-32005": {"status": 429, "message": "Rate limit exceeded"},
+    "-32603": {"status": 500, "message": "Server error"},
+    "-32002": {"status": 503, "message": "Service unavailable"},
+    "-32003": {"status": 504, "message": "Gateway timeout"}
+  },
+
+  "features": {
+    "dual_routing": "Transactions are routed to both Solana validators (via staked connections) and Jito infrastructure simultaneously for maximum landing probability",
+    "swqos_only_mode": "Optional ?swqos_only=true parameter routes exclusively through SWQOS (Stake-Weighted Quality of Service) — lower min tip (0.000005 SOL) but no Jito bundle inclusion",
+    "staked_connections": "Direct routing to block leaders via Solana's largest validator, bypassing public queues. Paid plans only.",
+    "regional_endpoints": "7 global regions (SLC, EWR, LON, FRA, AMS, SG, TYO) for lowest latency from backend servers",
+    "connection_warming": "Ping endpoint to maintain active connections during idle periods > 1 minute",
+    "priority_fee_api": "Built-in getPriorityFeeEstimate RPC method with 6 fee tiers and recommended mode",
+    "zero_credits": "Sender service consumes 0 API credits on all plans",
+    "transaction_rebates": "Automatic SOL rebates via post-trade backruns available as an option",
+    "smart_transactions": "SDK method (Node.js v1.3.2+, Rust v0.1.5+) that auto-handles blockhash, CU simulation, fee estimation, optimization, and confirmation polling",
+    "v0_transactions": "Supports versioned v0 transaction format with address lookup tables"
+  },
+
+  "encoding": {
+    "supported": ["base64", "base58"],
+    "recommended": "base64",
+    "transaction_format": "Versioned v0 transaction messages"
+  },
+
+  "sdks": {
+    "nodejs": "https://github.com/helius-labs/helius-sdk (v1.3.2+ for smart transactions)",
+    "rust": "https://github.com/helius-labs/helius-rust-sdk (v0.1.5+ for smart transactions)"
+  },
+
+  "best_practices": {
+    "compute_units": "Simulate transaction first, set CU limit to actual consumption * 1.1 rounded up",
+    "blockhash": "Use commitment level 'confirmed' when fetching latest blockhash",
+    "retry": "Set maxRetries=0 and implement custom retry logic. Blockhash valid for ~150 slots (~60 seconds).",
+    "timeout": "60-second overall timeout, poll confirmation every 5 seconds for up to 15 seconds"
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "name": "Merkle QuickSlot",
+  "website": "https://merkle.io",
+  "docs": "https://docs.merkle.io/quickslot/send-transactions",
+  "dashboard": "https://mbs.merkle.io",
+  "api_key": {
+    "required_for_quickslot": false,
+    "required_for_svm_rpc": true,
+    "delivery": "url_path (SVM RPC) or header (API)",
+    "svm_rpc_format": "https://svm.merkle.io/<api_key>",
+    "api_header": "Token sk_mbs_xxxxxxxxxxx",
+    "api_header_name": "Authorization",
+    "mempool_api_header": "X-MBS-Key",
+    "obtain": "https://mbs.merkle.io (API Keys tab in dashboard)"
+  },
+  "tip_wallets": {
+    "quickslot": [
+      "TJzUUoKA3ngRDkgf6g42r2tv4uUNnf2S2mngawi61fi",
+      "Eqd6r1pThnbYgtn6kLy4a7zFELFHkyiFesiYaC6eYg9v",
+      "9xSYXtWXX2Gv6x3QA8Ffv1mGeLzn2oV2Sh3ZLrcxF8EX",
+      "ARFWuFgvNjjAyw8Sb77JjZF2kQvduCh9uWyYU9wrdgNp",
+      "AKAikQvacoWtK3TC6Wx4TUappTw6NuTnPqWHBA6WymgP",
+      "5yhYeqTB7tNXJUEopfCMX43pcFdCaQFjdUxb3RqAg5yY",
+      "2NASvutUxvRWuvVygtVyT2vsNgFDbg5Gbe8K8mzZAkje",
+      "FGtPX6qVePUPwYJ29tENeDu7ucFVLQmkeNDthYjPYPeB",
+      "8B6Ayvfq2yNnAai3dkdmoExpxcyBbwhptTQTdndPZUUG",
+      "Aru6VYgVEvz2Bki6Sm4fjNuJAc1XVbD7gyRBLsNe3MoB",
+      "BgNWpV557p3fPUmHCREg1qwUdDRKtzKpndJijs4sWd3u",
+      "A9Hk5FtpHvED5TN49y4ahmBtc1sNWoFEnPiXXGPxAmNj",
+      "H5DNFugVFjFRkPhcTkVCRfTugVzGYa3jATa7zed4pbFg",
+      "8h2PSH4XaMp28JWRDEwDmXyQWMyLWT5RYA9WKkcCiPvZ",
+      "Hjaq8W4h4RBKx11YNRyQMRJtU7ccVoXv46cgLAbgMEjV",
+      "G7bdAL1cykNJaSnfCZGGVfuBeKf3R1dx2H1JjQhhKsRf",
+      "3GHLrYyEPsfVnFwcPg1EJst1rkLhxRHaYuS7UL36kwtA",
+      "CPh9BMcZfzYd5NJf2ucDAAz5PWK32EgJY9qRGm2rQNAy",
+      "9YS3QR6o8JEfsvyNHNuG5NqxaFsJnRr6t6itM7b73YjD",
+      "6TbHNfUpLpGjn1R7PiPMsxsffivE3noMMJ8oCTyxiuPQ"
+    ],
+    "solana_boost": [
+      "mkLkJUvg6yNULmMvEHW4rQvoTGNZWLSeYdMswPMNpVD"
+    ],
+    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account."
+  },
+  "min_tip_sol": 0.001,
+  "cost_on_failure": "unknown (no docs on refunds; tip is via SOL transfer instruction so it executes if TX lands)",
+  "endpoints": {
+    "quickslot": {
+      "url": "https://quicksol.merkle.io",
+      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed.",
+      "method": "POST",
+      "protocol": "JSON-RPC"
+    },
+    "svm_rpc": {
+      "url": "https://svm.merkle.io/<api_key>",
+      "description": "Solana RPC endpoint for sending transactions with API key auth",
+      "method": "POST",
+      "protocol": "JSON-RPC"
+    },
+    "solana_tx_status": {
+      "url": "https://svm.merkle.io/transaction/<hash>",
+      "description": "Check Solana transaction status",
+      "method": "GET"
+    },
+    "mempool_api": {
+      "url": "https://mempool.merkle.io/transactions",
+      "description": "Private mempool API (primarily EVM, but endpoint exists)",
+      "method": "POST",
+      "auth_header": "X-MBS-Key"
+    },
+    "api_base": {
+      "url": "https://api.merkle.io",
+      "description": "General API base URL",
+      "auth": "Token sk_mbs_xxxxxxxxxxx"
+    }
+  },
+  "rate_limits": {
+    "quickslot": "not documented",
+    "svm_rpc": "not documented",
+    "note": "No rate limits specified in docs"
+  },
+  "methods": {
+    "sendTransaction_quickslot": {
+      "endpoint": "https://quicksol.merkle.io",
+      "description": "Send transaction via QuickSlot (no API key). Must include a SOL transfer tip of >= 0.001 SOL to one of the tip wallets.",
+      "request": {
+        "method": "sendTransaction",
+        "id": 1,
+        "params": ["<base64_or_base58_encoded_transaction>"]
+      },
+      "response": {
+        "id": 1,
+        "result": "<transaction_signature>"
+      },
+      "encoding": ["base64", "base58"]
+    },
+    "sendTransaction_svm_rpc": {
+      "endpoint": "https://svm.merkle.io/<api_key>",
+      "description": "Send transaction via SVM RPC (requires API key in URL path)",
+      "request": {
+        "method": "sendTransaction",
+        "id": 1,
+        "params": ["<base64_or_base58_encoded_transaction>"]
+      },
+      "response": {
+        "id": 1,
+        "result": "<transaction_signature_base58>"
+      },
+      "encoding": ["base64", "base58"]
+    },
+    "getTransactionStatus": {
+      "endpoint": "https://svm.merkle.io/transaction/<hash>",
+      "method": "GET",
+      "description": "Check status of a Solana transaction",
+      "response_fields": {
+        "boosted": "boolean - whether transaction received Solana Boost priority",
+        "hash": "string - transaction hash",
+        "includedAt": "string - ISO 8601 timestamp of inclusion",
+        "mineTimeMs": "number - unix timestamp in milliseconds",
+        "receivedAt": "string - ISO 8601 timestamp of receipt",
+        "status": "string - pending | mined | expired",
+        "tip": "number - tip amount"
+      },
+      "statuses": {
+        "pending": "Transaction is pending",
+        "mined": "Transaction was mined",
+        "expired": "Transaction did not get mined and its blockhash is too old"
+      }
+    },
+    "sendTransactions_mempool_api": {
+      "endpoint": "https://mempool.merkle.io/transactions",
+      "description": "Private mempool transaction submission (advanced, primarily EVM)",
+      "auth_header": "X-MBS-Key",
+      "request_body": {
+        "transactions": ["array of signed raw transaction strings"],
+        "privacy": "string (default: 'default')",
+        "hints": "string array (required if privacy='custom')",
+        "bundle_types": "string array (default: ['backrun'])",
+        "prevent_reverts": "boolean (default: false)",
+        "max_block_number": "number (optional expiration)",
+        "source": "string (optional tracking tag)",
+        "release_targets": "string array ('public' or 'private')"
+      }
+    }
+  },
+  "features": {
+    "quickslot": {
+      "no_api_key_required": true,
+      "automatic_datacenter_routing": true,
+      "landing_speed": "~0.4 slots",
+      "performance_claim": "Faster than Bloxroute, Temporal, and 0slot 70% of the time",
+      "validator_partnerships": true
+    },
+    "solana_boost": {
+      "description": "Stake Weight Quality of Service (SWQoS) transaction broadcasting via Solana validator partnerships",
+      "tip_account": "mkLkJUvg6yNULmMvEHW4rQvoTGNZWLSeYdMswPMNpVD",
+      "min_tip_sol": 0.001,
+      "claimed_better_than_jito": true,
+      "verification": "Check boosted field in transaction status response"
+    },
+    "private_mempool": {
+      "description": "Transactions held privately until block inclusion; auction with searchers for backrun MEV",
+      "auction_types": ["backrun"],
+      "privacy_profiles": ["default", "custom"],
+      "revert_protection": true
+    },
+    "mev_protection": true,
+    "user_cashback": {
+      "description": "Revenue sharing from MEV auctions back to users",
+      "dashboard": "https://mbs.merkle.io",
+      "source_tracking": true
+    },
+    "transaction_status_tracking": true,
+    "supported_chains": ["Solana", "Ethereum", "BSC"],
+    "mevswap_dex": {
+      "description": "Natively MEV-protected DEX by Merkle"
+    }
+  }
+}

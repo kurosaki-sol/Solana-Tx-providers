@@ -1,0 +1,199 @@
+{
+  "name": "Glaive",
+  "website": "https://glaive.trade",
+  "docs": "https://glaive.trade/docs",
+  "api_key": {
+    "required": true,
+    "type": "UUID v4",
+    "how_to_get": "Contact the Glaive team via Telegram or Discord.",
+    "delivery": {
+      "json_rpc": "query parameter ?key=YOUR_API_KEY",
+      "plain": "query parameter ?api-key=YOUR_API_KEY",
+      "binary": "query parameter ?api-key=YOUR_API_KEY",
+      "quic": "17-byte auth frame after QUIC handshake: 16-byte UUID as big-endian u128, followed by 1 flags byte"
+    },
+    "notes": [
+      "Treat the key as a secret and do not commit it to source control.",
+      "Each API key has an individually configured TPS limit."
+    ]
+  },
+  "tip_wallets": [
+    "GLaiv4GMRYQmthatDS98uQT4HoucgxWT8NeJz6oSwxeU",
+    "GLaivL5uPrDpvd1wTtvat38KGqb5WLhEdqQfnmNd3oNr",
+    "GLaivinAWh21NaJMhtExtD5G2gZs1xnvaYVZmwqobWZL",
+    "GLaivJSUL71FcocYa8tks5vpVyYzvaDMHtyrzfQF2ABr",
+    "GLaivRU6eDKrta3p3psFAWPEFLzCjeMHGpPUuQqTjtyv",
+    "GLaivq5dU8qHayz9Qf13LjPfVy3SmUhbmickfGiZdmfh"
+  ],
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_note": "Transactions must include a SOL transfer of at least 0.001 SOL to one Glaive tip account. Missing or invalid tips are rejected.",
+  "cost_on_failure": "not explicitly documented; tip is included in the submitted transaction, so it is only transferred if the transaction lands and executes the tip instruction",
+  "endpoints": {
+    "regions": {
+      "amsterdam_1": {
+        "host": "ams1.glaive.trade",
+        "http": "http://ams1.glaive.trade",
+        "quic": "ams1.glaive.trade:4000",
+        "status": "live"
+      },
+      "amsterdam_2": {
+        "host": "ams2.glaive.trade",
+        "http": "http://ams2.glaive.trade",
+        "quic": "ams2.glaive.trade:4000",
+        "status": "live"
+      },
+      "frankfurt": {
+        "host": "fra.glaive.trade",
+        "http": "http://fra.glaive.trade",
+        "quic": "fra.glaive.trade:4000",
+        "status": "live"
+      },
+      "new_york": {
+        "host": "ny.glaive.trade",
+        "http": "http://ny.glaive.trade",
+        "quic": "ny.glaive.trade:4000",
+        "status": "live",
+        "note": "Newark"
+      }
+    },
+    "health": "GET https://<region>.glaive.trade/health",
+    "note": "Use the region closest to your infrastructure. Mainnet-beta only; no testnet endpoint is documented."
+  },
+  "methods": {
+    "sendTransaction_jsonrpc": {
+      "description": "Standard Solana JSON-RPC sendTransaction format. Drop-in replacement only for sending transactions.",
+      "http_method": "POST",
+      "path": "/",
+      "content_type": "application/json",
+      "full_url_example": "http://ams1.glaive.trade?key=YOUR_API_KEY",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<BASE64_OR_BASE58_ENCODED_TX>",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "supported_encodings": ["base64", "base58"],
+      "recommended_encoding": "base64"
+    },
+    "sendTransaction_plain": {
+      "description": "Lightweight HTTP endpoint. Body is the base64-encoded transaction as plain text.",
+      "http_method": "POST",
+      "path": "/plain",
+      "content_type": "text/plain",
+      "full_url_example": "http://ams1.glaive.trade/plain?api-key=YOUR_API_KEY",
+      "request_body": "<BASE64_ENCODED_TX>",
+      "response_success": {
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "response_error": {
+        "error": "error message"
+      }
+    },
+    "sendTransaction_binary": {
+      "description": "Lowest-overhead HTTP endpoint. Body is raw serialized transaction bytes.",
+      "http_method": "POST",
+      "path": "/binary",
+      "content_type": "application/octet-stream",
+      "full_url_example": "http://ams1.glaive.trade/binary?api-key=YOUR_API_KEY",
+      "request_body": "Raw serialized transaction bytes",
+      "response_success": {
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "response_error": {
+        "error": "error message"
+      }
+    },
+    "sendTransaction_quic": {
+      "description": "Persistent QUIC connection streaming raw transactions. Intended for latency-sensitive workloads.",
+      "transport": "QUIC over UDP",
+      "endpoint": "udp://<region>.glaive.trade:4000",
+      "port": 4000,
+      "alpn": "solana-tpu",
+      "sni": "glaive-intake",
+      "tls": "self-signed Solana-style X.509; server certificate verification should be skipped by the client",
+      "authentication": {
+        "stream": "Open one unidirectional stream immediately after handshake.",
+        "frame_bytes": 17,
+        "offset_0_15": "API key UUID as big-endian u128, with dashes stripped and hex decoded",
+        "offset_16": "flags byte; bit 0 enables MEV protection for every transaction on the connection"
+      },
+      "submission": {
+        "stream": "Open one unidirectional stream per transaction.",
+        "body": "Raw serialized transaction bytes",
+        "max_tx_size_bytes": 1232
+      },
+      "keep_alive": {
+        "recommended_seconds": 10,
+        "server_idle_timeout_seconds": 30
+      }
+    },
+    "health": {
+      "description": "Unauthenticated keep-alive / health endpoint.",
+      "http_method": "GET",
+      "path": "/health",
+      "full_url_example": "https://ams1.glaive.trade/health",
+      "response": "200 OK",
+      "recommended_interval_seconds": "15-30"
+    }
+  },
+  "features": {
+    "json_rpc_compatible": true,
+    "drop_in_send_transaction_only": true,
+    "leader_fanout": "Maintains persistent connections to current and upcoming slot leaders.",
+    "mev_protection": {
+      "available": true,
+      "default": false,
+      "json_rpc_query_param": "mev_protect=true",
+      "plain_binary_query_param": "mev-protect=true",
+      "quic_flag_bit": 0,
+      "description": "Skips leaders on Glaive's sandwiching validator blacklist."
+    },
+    "submission_formats": ["json-rpc", "plain base64", "raw binary", "quic raw binary"],
+    "mainnet_beta_only": true,
+    "read_rpc": false
+  },
+  "rate_limits": {
+    "scope": "per_api_key",
+    "configured_individually": true,
+    "exceeded_response": "HTTP 429 Too Many Requests"
+  },
+  "error_codes": {
+    "http": {
+      "200": "Request processed; check JSON-RPC result or error body",
+      "401": "Missing or invalid API key",
+      "429": "Rate limit exceeded"
+    },
+    "json_rpc": {
+      "-32600": "Invalid request / malformed JSON-RPC",
+      "-32601": "Method not found; only sendTransaction is supported",
+      "-32000": "Transaction rejected, including invalid encoding or missing tip"
+    }
+  },
+  "encoding": {
+    "json_rpc": ["base64", "base58"],
+    "plain": "base64 text body",
+    "binary": "raw serialized bytes",
+    "quic": "raw serialized bytes",
+    "recommended": "base64 for JSON-RPC/plain; raw bytes for binary/QUIC"
+  },
+  "contact": {
+    "telegram": "https://t.me/",
+    "discord": "glaivetrade"
+  },
+  "notes": [
+    "Glaive does not replace a normal RPC provider for reads, blockhash fetching, simulation, or non-sendTransaction methods.",
+    "HTTP examples in the docs use http:// regional endpoints for transaction submission and https:// for /health.",
+    "The docs use ?key= for JSON-RPC and ?api-key= for /plain and /binary; preserve this distinction unless confirmed otherwise by Glaive."
+  ]
+}

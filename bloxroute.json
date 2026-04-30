@@ -1,0 +1,769 @@
+{
+  "name": "bloXroute Solana Trader API",
+  "website": "https://bloxroute.com",
+  "docs": "https://docs.bloxroute.com/solana/trader-api",
+  "api_key": {
+    "required": true,
+    "header": "Authorization",
+    "header_format": "Authorization: <AUTH_HEADER>",
+    "how_to_get": "Create account at bloxroute.com, retrieve auth header from account portal. Existing customers can reuse their Cloud API auth header.",
+    "env_var": "AUTH_HEADER",
+    "note": "SDKs auto-load from AUTH_HEADER env var"
+  },
+  "tip_wallets": [
+    "HWEoBxYs7ssKuudEjzjmpfJVX7Dvi7wescFsVx2L5yoY",
+    "95cfoy472fcQHaw4tPGBTKpn6ZQnfEPfBgDQx6gcRmRg",
+    "3UQUKjhMKaY2S6bjcQD6yHB7utcZt5bfarRCmctpRtUd",
+    "FogxVNs6Mm2w9rnGL1vkARSwJxvLE8mujTv3LK8RnUhF"
+  ],
+  "tip_wallet_sns": {
+    "HWEoBxYs7ssKuudEjzjmpfJVX7Dvi7wescFsVx2L5yoY": "bloxroute.sol",
+    "95cfoy472fcQHaw4tPGBTKpn6ZQnfEPfBgDQx6gcRmRg": "bloxroute1.sol"
+  },
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_type": "system_transfer",
+  "tip_note": "Rotate among tip addresses for better performance and reduced contention. Higher tips may accelerate inclusion.",
+  "cost_on_failure": "free_if_revert_protection_enabled",
+  "revert_protection": "Prevents failed transactions from landing on-chain, preserving priority fees. Enable via revertProtection=true on submit.",
+  "endpoints": {
+    "full_service_regions": {
+      "england": {
+        "host": "uk.solana.dex.blxrbdn.com",
+        "http": "http://uk.solana.dex.blxrbdn.com",
+        "https": "https://uk.solana.dex.blxrbdn.com",
+        "ws": "wss://uk.solana.dex.blxrbdn.com/ws",
+        "swagger": "https://uk.solana.dex.blxrbdn.com/swagger/"
+      },
+      "new_york": {
+        "host": "ny.solana.dex.blxrbdn.com",
+        "http": "http://ny.solana.dex.blxrbdn.com",
+        "https": "https://ny.solana.dex.blxrbdn.com",
+        "ws": "wss://ny.solana.dex.blxrbdn.com/ws",
+        "swagger": "https://ny.solana.dex.blxrbdn.com/swagger/"
+      }
+    },
+    "submit_only_regions": {
+      "global": {
+        "host": "global.solana.dex.blxrbdn.com",
+        "http": "http://global.solana.dex.blxrbdn.com",
+        "note": "Auto-routes to closest instance. Use http:// not https:// for best performance."
+      },
+      "los_angeles": {
+        "host": "la.solana.dex.blxrbdn.com",
+        "http": "http://la.solana.dex.blxrbdn.com"
+      },
+      "frankfurt": {
+        "host": "germany.solana.dex.blxrbdn.com",
+        "http": "http://germany.solana.dex.blxrbdn.com"
+      },
+      "amsterdam": {
+        "host": "amsterdam.solana.dex.blxrbdn.com",
+        "http": "http://amsterdam.solana.dex.blxrbdn.com"
+      },
+      "tokyo": {
+        "host": "tokyo.solana.dex.blxrbdn.com",
+        "http": "http://tokyo.solana.dex.blxrbdn.com"
+      }
+    },
+    "pumpfun_beta": {
+      "new_york": "https://pump-ny.solana.dex.blxrbdn.com",
+      "england": "https://pump-uk.solana.dex.blxrbdn.com",
+      "ws_ny": "wss://pump-ny.solana.dex.blxrbdn.com/ws",
+      "ws_uk": "wss://pump-uk.solana.dex.blxrbdn.com/ws"
+    }
+  },
+  "rate_limits": {
+    "reset_interval_seconds": 60,
+    "cost_per_submit": 1,
+    "error_code": 429,
+    "tiers": {
+      "Introductory": {
+        "credits_per_60s": 60
+      },
+      "Enterprise": {
+        "credits_per_60s": 660
+      },
+      "Enterprise-Elite": {
+        "credits_per_60s": 3060
+      },
+      "Ultra": {
+        "credits_per_60s": 9960
+      },
+      "Build Your Own": {
+        "credits_per_60s": "60 + (150 * X)",
+        "note": "X = number of $250/month bundles"
+      }
+    },
+    "check_endpoint": "GET /api/v2/rate-limit"
+  },
+  "methods": {
+    "core": {
+      "submit": {
+        "method": "POST",
+        "path": "/api/v2/submit",
+        "description": "Submit a single signed transaction",
+        "protocols": ["HTTP", "WebSocket"],
+        "ws_method": "PostSubmit",
+        "parameters": {
+          "transaction": {
+            "type": "TransactionMessage",
+            "required": true,
+            "description": "Contains 'content' field with base64-encoded raw signed transaction bytes"
+          },
+          "skipPreFlight": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Disables transaction simulation"
+          },
+          "frontRunningProtection": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Delays/skips high-risk validators to reduce front-running risk"
+          },
+          "revertProtection": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Prevents failed transactions from landing on-chain"
+          },
+          "submitProtection": {
+            "type": "enum",
+            "required": false,
+            "default": "SP_MEDIUM",
+            "values": ["SP_LOW", "SP_MEDIUM", "SP_HIGH"],
+            "description": "MEV protection level"
+          },
+          "useStakedRPCs": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Send directly to leaders via staked validator connections. Requires tip >= 0.001 SOL and frontRunningProtection=false"
+          },
+          "allowBackRun": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Enables OFA submission for MEV rebates"
+          },
+          "revenueAddress": {
+            "type": "string",
+            "required": false,
+            "description": "Wallet address for MEV rebate (required if allowBackRun=true)"
+          }
+        },
+        "response": {
+          "signature": "string (Solana transaction signature)"
+        }
+      },
+      "submit_plain_text": {
+        "method": "POST",
+        "path": "/api/v2/submit-plain-text",
+        "description": "Submit transaction as plain text base64 payload",
+        "content_type": "text/plain",
+        "body": "Base64-encoded transaction payload directly in body",
+        "parameters_in_uri": {
+          "skipPreFlight": { "type": "boolean", "default": true },
+          "frontRunningProtection": { "type": "boolean", "default": false },
+          "revertProtection": { "type": "boolean", "default": false },
+          "submitProtection": { "type": "string", "default": "medium", "values": ["low", "medium", "high"] },
+          "useStakedRPCs": { "type": "boolean" },
+          "allowBackRun": { "type": "boolean" },
+          "revenueAddress": { "type": "string" }
+        },
+        "response": {
+          "signature": "string"
+        }
+      },
+      "submit_batch": {
+        "method": "POST",
+        "path": "/api/v2/submit-batch",
+        "description": "Submit multiple signed transactions as a batch/bundle",
+        "protocols": ["HTTP", "WebSocket"],
+        "ws_method": "PostSubmitBatch",
+        "parameters": {
+          "entries": {
+            "type": "PostSubmitRequestEntry[]",
+            "required": true,
+            "description": "List of signed transactions, each with 'transaction' (TransactionMessage with base64 content) and optional 'skipPreFlight' (default true)"
+          },
+          "submitStrategy": {
+            "type": "enum",
+            "required": false,
+            "default": "P_UNKNOWN",
+            "values": ["P_SUBMIT_ALL", "P_ABORT_ON_FIRST_ERROR", "P_WAIT_FOR_CONFIRMATION"],
+            "description": "Execution strategy for the batch"
+          },
+          "useBundle": {
+            "type": "boolean",
+            "required": false,
+            "default": false,
+            "description": "Execute as atomic bundle"
+          }
+        },
+        "response": {
+          "transactions": [
+            {
+              "signature": "string",
+              "error": "string (conditional)",
+              "submitted": "boolean"
+            }
+          ]
+        }
+      },
+      "submit_snipe": {
+        "method": "POST",
+        "path": "/api/v2/submit-snipe",
+        "description": "Dual-path submission: first TX to Jito, second TX to bloXroute. Designed for sniping.",
+        "parameters": {
+          "entries": {
+            "type": "PostSubmitRequestEntry[]",
+            "required": true,
+            "description": "Array of transactions. First goes to Jito (needs Jito tip >= 0.001 SOL + bloXroute tip >= 0.0001 SOL, no priority fee needed). Second goes to bloXroute (needs priority fee + bloXroute tip)."
+          },
+          "useStakedRPCs": {
+            "type": "boolean",
+            "required": false,
+            "default": false
+          }
+        },
+        "tip_requirements": {
+          "first_tx_jito_tip": ">=0.001 SOL",
+          "first_tx_bloxroute_tip": ">=0.0001 SOL",
+          "second_tx": "priority fee + bloXroute tip"
+        },
+        "response": {
+          "transactions": [
+            {
+              "signature": "string",
+              "submitted": "boolean",
+              "error": "string (if applicable)"
+            }
+          ]
+        }
+      },
+      "balance": {
+        "method": "GET",
+        "path": "/api/v2/balance",
+        "description": "Fetch token balances for a wallet",
+        "parameters": {
+          "ownerAddress": {
+            "type": "string",
+            "required": true,
+            "description": "Address to fetch token balance details"
+          }
+        },
+        "response": {
+          "tokens": [
+            {
+              "symbol": "string",
+              "token_mint": "string",
+              "settled_amount": "number",
+              "unsettled_amount": "number (Openbook only)",
+              "open_orders_amount": "number (Openbook only)"
+            }
+          ]
+        }
+      },
+      "rate_limit": {
+        "method": "GET",
+        "path": "/api/v2/rate-limit",
+        "description": "Check current rate limit usage",
+        "parameters": {},
+        "response": {
+          "accountID": "string",
+          "tier": "string",
+          "interval": "string",
+          "intervalNum": "uint64",
+          "limit": "uint64",
+          "count": "uint64",
+          "reset": "uint64 (unix timestamp)"
+        }
+      },
+      "transaction": {
+        "method": "GET",
+        "path": "/api/v2/transaction",
+        "description": "Get transaction status and details",
+        "parameters": {
+          "signature": {
+            "type": "string",
+            "required": true,
+            "description": "Signature of a Solana transaction"
+          }
+        },
+        "response": {
+          "status": "string (not_found | success | failed)",
+          "metadata": {
+            "err": "string",
+            "errored": "uint64",
+            "fee": "uint64",
+            "pre_balances": "uint64",
+            "post_balances": "uint64",
+            "inner_instructions": "array",
+            "log_messages": "string",
+            "pre_token_balances": "array",
+            "post_token_balances": "array"
+          },
+          "slot": "uint64",
+          "block_time": "uint64",
+          "version": "int32"
+        }
+      },
+      "slot_info": {
+        "method": "GET",
+        "path": "/api/v2/system/slot-info",
+        "description": "Get slot leader and maliciousness info (Ultra tier only)",
+        "tier_required": "Ultra",
+        "parameters": {
+          "slot": {
+            "type": "uint64",
+            "required": true,
+            "description": "Target slot number"
+          }
+        },
+        "response": {
+          "slot": "uint64",
+          "leader": "string",
+          "malicious": "boolean"
+        }
+      },
+      "trace": {
+        "method": "GET",
+        "path": "/api/v2/system/trace",
+        "description": "Trace a submitted transaction's journey (Ultra tier only)",
+        "tier_required": "Ultra",
+        "parameters": {
+          "signature": {
+            "type": "string",
+            "required": true,
+            "description": "Signature of a submitted transaction"
+          }
+        },
+        "response": {
+          "signature": "string",
+          "firstReceivedTime": "google.protobuf.Timestamp",
+          "firstReleasedTime": "google.protobuf.Timestamp",
+          "firstReceivedSlot": "int64",
+          "firstReleasedSlot": "int64",
+          "firstReceivedRegion": "string",
+          "firstReleasedRegion": "string",
+          "delayed": "boolean",
+          "delayedSlots": "int64"
+        }
+      },
+      "priority_fee": {
+        "method": "GET",
+        "path": "/api/v2/system/priority-fee",
+        "description": "Get recommended priority fee based on recent slots",
+        "parameters": {
+          "project": {
+            "type": "enum",
+            "required": true,
+            "values": ["P_ALL", "P_JUPITER", "P_RAYDIUM"],
+            "description": "Which project to query"
+          },
+          "percentile": {
+            "type": "double",
+            "required": false,
+            "default": 55,
+            "description": "Percentile of previous 100 slots' priority fees"
+          }
+        },
+        "response": {
+          "project": "enum",
+          "percentile": "double",
+          "feeAtPercentile": "uint64 (micro lamports)"
+        },
+        "note": "Recommended fees capped at 0.1 SOL. Does not guarantee inclusion."
+      }
+    },
+    "streams": {
+      "GetPriorityFeeStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "description": "Real-time priority fee updates",
+        "parameters": {
+          "project": { "type": "enum", "values": ["P_JUPITER", "P_RAYDIUM"] },
+          "percentile": { "type": "double", "default": 55 }
+        },
+        "response": {
+          "project": "enum",
+          "percentile": "double",
+          "feeAtPercentile": "uint64 (micro lamports)"
+        }
+      },
+      "GetBundleTipStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "description": "Real-time bundle tip percentile data",
+        "parameters": {},
+        "response": {
+          "timestamp": "string",
+          "percentile25": "uint64",
+          "percentile50": "uint64",
+          "percentile75": "uint64",
+          "percentile95": "uint64",
+          "percentile99": "uint64",
+          "emaPercentile50": "uint64 (1-min EMA of 50th percentile)"
+        }
+      },
+      "GetPumpFunNewTokensStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "endpoint": "wss://pump-{region}.solana.dex.blxrbdn.com/ws",
+        "description": "Stream of new PumpFun token launches",
+        "parameters": {},
+        "response": {
+          "slot": "int64",
+          "txnHash": "string",
+          "name": "string",
+          "symbol": "string",
+          "uri": "string",
+          "mint": "string",
+          "bondingCurve": "string",
+          "creator": "string",
+          "creatorVault": "string",
+          "timestamp": "google.protobuf.Timestamp"
+        }
+      },
+      "GetPumpFunSwapsStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "endpoint": "wss://pump-{region}.solana.dex.blxrbdn.com/ws",
+        "description": "Stream of PumpFun bonding curve swap events",
+        "parameters": {
+          "tokens": {
+            "type": "string[]",
+            "description": "List of token addresses to track"
+          }
+        },
+        "response": {
+          "slot": "int64",
+          "txnHash": "string",
+          "mintAddress": "string",
+          "userAddress": "string",
+          "userTokenAccountAddress": "string",
+          "bondingCurveAddress": "string",
+          "tokenVaultAddress": "string",
+          "solAmount": "uint64 (lamports)",
+          "tokenAmount": "uint64",
+          "isBuy": "boolean",
+          "virtualSolReserves": "uint64",
+          "virtualTokenReserves": "uint64",
+          "creator": "string",
+          "timestamp": "google.protobuf.Timestamp"
+        }
+      },
+      "GetPumpFunAMMSwapsStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "endpoint": "wss://pump-{region}.solana.dex.blxrbdn.com/ws",
+        "description": "Stream of PumpFun AMM pool swap events",
+        "parameters": {
+          "pools": {
+            "type": "string[]",
+            "description": "List of pool addresses to track"
+          }
+        },
+        "response": {
+          "slot": "int64",
+          "pool": "string",
+          "user": "string",
+          "isBuy": "boolean",
+          "quoteMint": "string",
+          "baseMint": "string",
+          "inAmount": "uint64",
+          "outAmount": "uint64",
+          "txHash": "string",
+          "timestamp": "google.protobuf.Timestamp"
+        }
+      }
+    },
+    "pumpfun": {
+      "quotes": {
+        "method": "GET",
+        "path": "/api/v2/pumpfun/quotes",
+        "description": "Get PumpFun bonding curve quote",
+        "base_urls": ["https://pump-ny.solana.dex.blxrbdn.com", "https://pump-uk.solana.dex.blxrbdn.com"],
+        "parameters": {
+          "quoteType": { "type": "string", "values": ["BUY", "SELL"] },
+          "mintAddress": { "type": "string" },
+          "bondingCurveAddress": { "type": "string" },
+          "amount": { "type": "double" }
+        },
+        "response": {
+          "quoteType": "string",
+          "inTokenAddress": "string",
+          "inAmount": "number",
+          "outTokenAddress": "string",
+          "outAmount": "number"
+        }
+      },
+      "swap": {
+        "method": "POST",
+        "path": "/api/v2/pumpfun/swap",
+        "description": "Build PumpFun bonding curve swap transaction (does NOT submit)",
+        "base_urls": ["https://pump-ny.solana.dex.blxrbdn.com", "https://pump-uk.solana.dex.blxrbdn.com"],
+        "parameters": {
+          "userAddress": { "type": "string", "required": true },
+          "bondingCurveAddress": { "type": "string", "required": true },
+          "tokenAddress": { "type": "string", "required": true },
+          "tokenAmount": { "type": "double", "required": true },
+          "solThreshold": { "type": "double", "required": true, "description": "Max SOL for buys, min SOL for sells" },
+          "isBuy": { "type": "boolean", "required": true },
+          "slippage": { "type": "double", "required": true, "description": "0-1000" },
+          "creator": { "type": "string", "required": true },
+          "computeLimit": { "type": "uint64", "required": false },
+          "computePrice": { "type": "uint64", "required": false },
+          "tip": { "type": "uint64", "required": false }
+        },
+        "response": {
+          "transaction": { "content": "base64 encoded transaction" }
+        }
+      },
+      "swap_sol": {
+        "method": "POST",
+        "path": "/api/v2/pumpfun/swap-sol",
+        "description": "Build PumpFun swap by SOL amount (does NOT submit)",
+        "base_urls": ["https://pump-ny.solana.dex.blxrbdn.com", "https://pump-uk.solana.dex.blxrbdn.com"],
+        "parameters": {
+          "userAddress": { "type": "string", "required": true },
+          "bondingCurveAddress": { "type": "string", "required": true },
+          "tokenAddress": { "type": "string", "required": true },
+          "solAmount": { "type": "double", "required": true },
+          "creator": { "type": "string", "required": true },
+          "slippage": { "type": "double", "required": true, "description": "0-1000" },
+          "computeLimit": { "type": "uint32", "required": false },
+          "computePrice": { "type": "uint64", "required": false },
+          "tip": { "type": "uint64", "required": false }
+        },
+        "response": {
+          "transaction": { "content": "base64 encoded unsigned transaction" }
+        }
+      },
+      "amm_quotes": {
+        "method": "GET",
+        "path": "/api/v2/pumpfun/amm/quotes",
+        "description": "Get PumpFun AMM pool quote",
+        "base_urls": ["https://pump-ny.solana.dex.blxrbdn.com", "https://pump-uk.solana.dex.blxrbdn.com"],
+        "parameters": {
+          "inToken": { "type": "string", "required": true },
+          "inAmount": { "type": "double", "required": true },
+          "outToken": { "type": "string", "required": true },
+          "pool": { "type": "string", "required": true },
+          "slippage": { "type": "double", "required": true }
+        },
+        "response": {
+          "quoteType": "string (BUY|SELL)",
+          "inToken": "string",
+          "inAmount": "double",
+          "outToken": "string",
+          "outAmount": "string"
+        }
+      },
+      "amm_swap": {
+        "method": "POST",
+        "path": "/api/v2/pumpfun/amm/swap",
+        "description": "Build PumpFun AMM swap transaction (does NOT submit)",
+        "base_urls": ["https://pump-ny.solana.dex.blxrbdn.com", "https://pump-uk.solana.dex.blxrbdn.com"],
+        "parameters": {
+          "ownerAddress": { "type": "string", "required": true },
+          "inToken": { "type": "string", "required": true },
+          "outToken": { "type": "string", "required": true },
+          "pool": { "type": "string", "required": true },
+          "inAmount": { "type": "double", "required": true },
+          "slippage": { "type": "double", "required": true },
+          "computeLimit": { "type": "uint64", "required": false },
+          "computePrice": { "type": "uint64", "required": false },
+          "tip": { "type": "uint64", "required": false }
+        },
+        "response": {
+          "transactions": [{ "content": "base64", "isCleanup": "boolean" }],
+          "buyQuoteAmountIn": "number",
+          "buyBaseAmountOut": "number",
+          "fees": [{ "amount": "float", "mint": "string", "percent": "float" }]
+        }
+      }
+    },
+    "jupiter": {
+      "quotes": {
+        "method": "GET",
+        "path": "/api/v2/jupiter/quotes",
+        "description": "Get Jupiter swap quote",
+        "parameters": {
+          "inToken": { "type": "string", "required": true },
+          "outToken": { "type": "string", "required": true },
+          "inAmount": { "type": "double", "required": true },
+          "slippage": { "type": "double", "required": true },
+          "fastMode": { "type": "boolean", "required": false, "description": "Lower latency without Raydium pools" }
+        },
+        "response": {
+          "inToken": "string",
+          "inTokenAddress": "string",
+          "outToken": "string",
+          "outTokenAddress": "string",
+          "inAmount": "double",
+          "quotes": [
+            {
+              "project": "string",
+              "routes": [
+                {
+                  "inAmount": "double",
+                  "outAmount": "double",
+                  "steps": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "swap": {
+        "method": "POST",
+        "path": "/api/v2/jupiter/swap",
+        "description": "Build Jupiter swap transaction (does NOT submit)",
+        "parameters": {
+          "ownerAddress": { "type": "string", "required": true },
+          "inToken": { "type": "string", "required": true },
+          "outToken": { "type": "string", "required": true },
+          "inAmount": { "type": "number", "required": true },
+          "slippage": { "type": "number", "required": true },
+          "computePrice": { "type": "number", "required": false }
+        },
+        "response": {
+          "transaction": "TransactionMessage[] (base64 unsigned transaction)",
+          "outAmount": "double",
+          "outAmountMin": "double",
+          "priceImpact": { "percent": "double", "infinity": "string" },
+          "fee": { "amount": "float", "mint": "string", "percent": "float" }
+        }
+      },
+      "swap_instructions": {
+        "method": "POST",
+        "path": "/api/v2/jupiter/swap-instructions",
+        "description": "Get Jupiter swap as individual instructions (for custom TX building)",
+        "parameters": {
+          "ownerAddress": { "type": "string", "required": true },
+          "inToken": { "type": "string", "required": true },
+          "outToken": { "type": "string", "required": true },
+          "inAmount": { "type": "number", "required": true },
+          "slippage": { "type": "number", "required": true },
+          "computePrice": { "type": "uint64", "required": false },
+          "tip": { "type": "uint64", "required": false }
+        },
+        "response": {
+          "transaction": "InstructionJupiter[] (programID, accounts, data)",
+          "addressLookupTables": "map<string, PublicKeys>",
+          "outAmount": "number",
+          "outAmountMin": "number",
+          "priceImpact": { "percent": "double", "infinity": "string" },
+          "fees": [{ "amount": "float", "mint": "string", "percent": "float" }]
+        }
+      },
+      "route_swap": {
+        "method": "POST",
+        "path": "/api/v2/jupiter/route-swap",
+        "description": "Build Jupiter swap from a specific route (does NOT submit). Tip not supported here, use bundle.",
+        "parameters": {
+          "ownerAddress": { "type": "string", "required": true },
+          "steps": {
+            "type": "JupiterRouteStep[]",
+            "required": true,
+            "fields": {
+              "inToken": "string",
+              "outToken": "string",
+              "inAmount": "double",
+              "outAmount": "double",
+              "fee": { "amount": "float", "mint": "string", "percent": "float" },
+              "project": { "label": "string", "id": "string (pool address, mandatory)" }
+            }
+          },
+          "slippage": { "type": "double", "required": true },
+          "computePrice": { "type": "uint64", "required": false }
+        },
+        "response": {
+          "transactions": "TransactionMessage[] (base64)",
+          "outAmount": "double",
+          "outAmountMin": "double",
+          "priceImpact": { "percent": "double", "infinity": "string" },
+          "fee": [{ "amount": "float", "mint": "string", "percent": "float" }]
+        }
+      }
+    }
+  },
+  "features": {
+    "front_running_protection": {
+      "description": "Scores slot leaders for malicious ordering risk. High-risk leaders are delayed/skipped. Low-risk leaders receive accelerated submission via staked connections.",
+      "parameter": "frontRunningProtection=true",
+      "note": "Best-effort, no absolute guarantee against attacks."
+    },
+    "revert_protection": {
+      "description": "Prevents failed transactions from landing on-chain, preserving priority fees.",
+      "parameter": "revertProtection=true"
+    },
+    "staked_rpcs": {
+      "description": "Send directly to leaders via staked validator connections for fastest inclusion.",
+      "parameter": "useStakedRPCs=true",
+      "requires": "tip >= 0.001 SOL and frontRunningProtection=false"
+    },
+    "submit_protection_levels": {
+      "SP_LOW": "Fastest, minimal protection",
+      "SP_MEDIUM": "Default, balanced",
+      "SP_HIGH": "Maximum protection, may delay more slots"
+    },
+    "ofa_backrun": {
+      "description": "Order Flow Auction - allows MEV searchers to backrun your TX, with rebates to your revenueAddress.",
+      "parameters": ["allowBackRun=true", "revenueAddress=<wallet>"]
+    },
+    "atomic_bundles": {
+      "description": "Multiple transactions executed atomically via submit-batch with useBundle=true. Sequential, atomic, all-or-nothing modes.",
+      "strategies": ["P_SUBMIT_ALL", "P_ABORT_ON_FIRST_ERROR", "P_WAIT_FOR_CONFIRMATION"]
+    },
+    "snipe_mode": {
+      "description": "Dual-path submission via submit-snipe: first TX goes to Jito, second TX goes to bloXroute. Designed for token sniping.",
+      "path": "/api/v2/submit-snipe"
+    },
+    "pumpfun_integration": {
+      "description": "Native PumpFun bonding curve + AMM swap building, quotes, and real-time streams for new tokens and swaps.",
+      "beta": true
+    },
+    "jupiter_integration": {
+      "description": "Native Jupiter quote, swap, swap-instructions, and route-swap endpoints.",
+      "supports_custom_routes": true
+    },
+    "priority_fee_stream": {
+      "description": "Real-time priority fee recommendations from recent slots."
+    },
+    "bundle_tip_stream": {
+      "description": "Real-time bundle tip percentile data with EMA."
+    },
+    "malicious_validator_detection": {
+      "description": "Historical behavior analysis to identify malicious slot leaders. Available via slot-info endpoint (Ultra tier)."
+    },
+    "transaction_tracing": {
+      "description": "Full trace of TX journey: received time, released time, regions, delays. Ultra tier only.",
+      "tier_required": "Ultra"
+    },
+    "sdks": ["Go", "Python", "TypeScript", "Rust"],
+    "protocols": ["HTTP", "HTTPS", "WebSocket (WSS)", "gRPC"],
+    "encoding": "base64 (transaction content)",
+    "keep_alive_seconds": 60,
+    "performance_tips": {
+      "use_http_not_https": "HTTP has lower latency than HTTPS",
+      "submit_to_global_and_nearest": "Submit to both global endpoint and 1-2 nearest regional endpoints in parallel",
+      "dns": "Use DNS resolvers supporting EDNS Client Subnet (Google DNS 8.8.8.8, OpenDNS)",
+      "recommended_config": {
+        "frontRunningProtection": false,
+        "useStakedRPCs": true,
+        "submitProtection": "SP_LOW"
+      }
+    }
+  },
+  "pricing": {
+    "minimum_tier": "Professional (at least)",
+    "note": "Pricing per blockchain network, based on concurrent streams/connections. Longer contracts get discounts. Contact bloXroute for specific rates.",
+    "tiers_known": ["Introductory", "Enterprise", "Enterprise-Elite", "Ultra", "Build Your Own"],
+    "ultra_exclusive_features": ["slot-info (malicious validator detection)", "trace (transaction tracing)"]
+  }
+}

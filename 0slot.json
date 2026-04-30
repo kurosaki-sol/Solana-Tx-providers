@@ -1,0 +1,255 @@
+{
+  "name": "0slot",
+  "website": "https://0slot.trade",
+  "docs": "https://0slot.trade/docs.php",
+  "cookbook": "https://github.com/0slot-trade/cookbook",
+  "examples": "https://github.com/0slot-trade/example",
+  "contact": {
+    "discord": "https://discord.gg/8MKNPs6T",
+    "twitter": "https://x.com/0slot_trade",
+    "telegram": "https://t.me/kurt0slot"
+  },
+  "api_key": {
+    "required": true,
+    "header": null,
+    "query_param": "api-key",
+    "format": "query string: ?api-key=YOUR_TOKEN",
+    "get_key_url": "https://0slot.trade (contact sales via Discord/Telegram)"
+  },
+  "tip_wallets": {
+    "primary": [
+      "6fQaVhYZA4w3MBSXjJ81Vf6W1EDYeUPXpgVQ6UQyU1Av",
+      "4HiwLEP2Bzqj3hM2ENxJuzhcPCdsafwiet3oGkMkuQY4",
+      "7toBU3inhmrARGngC7z6SjyP85HgGMmCTEwGNRAcYnEK",
+      "8mR3wB1nh4D6J9RUCugxUpc6ya8w38LPxZ3ZjcBhgzws",
+      "6SiVU5WEwqfFapRuYCndomztEwDjvS5xgtEof3PLEGm9",
+      "TpdxgNJBWZRL8UXF5mrEsyWxDWx9HQexA9P1eTWQ42p",
+      "D8f3WkQu6dCF33cZxuAsrKHrGsqGP2yvAHf8mX6RXnwf",
+      "GQPFicsy3P3NXxB5piJohoxACqTvWE9fKpLgdsMduoHE",
+      "Ey2JEr8hDkgN8qKJGrLf2yFjRhW7rab99HVxwi5rcvJE",
+      "4iUgjMT8q2hNZnLuhpqZ1QtiV8deFPy2ajvvjEpKKgsS",
+      "3Rz8uD83QsU8wKvZbgWAPvCNDU6Fy8TSZTMcPm3RB6zt"
+    ],
+    "primary_labels": {
+      "6fQaVhYZA4w3MBSXjJ81Vf6W1EDYeUPXpgVQ6UQyU1Av": "0slot_dot_trade.sol",
+      "4HiwLEP2Bzqj3hM2ENxJuzhcPCdsafwiet3oGkMkuQY4": "0slot_dot_trade_tip15.sol",
+      "7toBU3inhmrARGngC7z6SjyP85HgGMmCTEwGNRAcYnEK": "0slot_dot_trade_tip16.sol",
+      "8mR3wB1nh4D6J9RUCugxUpc6ya8w38LPxZ3ZjcBhgzws": "0slot_dot_trade_tip17.sol",
+      "6SiVU5WEwqfFapRuYCndomztEwDjvS5xgtEof3PLEGm9": "0slot_dot_trade_tip18.sol",
+      "TpdxgNJBWZRL8UXF5mrEsyWxDWx9HQexA9P1eTWQ42p": "0slot_dot_trade_tip19.sol",
+      "D8f3WkQu6dCF33cZxuAsrKHrGsqGP2yvAHf8mX6RXnwf": "0slot_dot_trade_tip20.sol",
+      "GQPFicsy3P3NXxB5piJohoxACqTvWE9fKpLgdsMduoHE": "0slot_dot_trade_tip21.sol",
+      "Ey2JEr8hDkgN8qKJGrLf2yFjRhW7rab99HVxwi5rcvJE": "0slot_dot_trade_tip22.sol",
+      "4iUgjMT8q2hNZnLuhpqZ1QtiV8deFPy2ajvvjEpKKgsS": "0slot_dot_trade_tip23.sol",
+      "3Rz8uD83QsU8wKvZbgWAPvCNDU6Fy8TSZTMcPm3RB6zt": "0slot_dot_trade_tip24.sol"
+    },
+    "additional": [
+      "DiTmWENJsHQdawVUUKnUXkconcpW4Jv52TnMWhkncF6t",
+      "HRyRhQ86t3H4aAtgvHVpUJmw64BDrb61gRiKcdKUXs5c",
+      "Eb2KpSC8uMt9GmzyAEm5Eb1AAAgTjRaXWFjKyFXHZxF3",
+      "FCjUJZ1qozm1e8romw216qyfQMaaWKxWsuySnumVCCNe",
+      "ENxTEjSQ1YabmUpXAdCgevnHQ9MHdLv8tzFiuiYJqa13",
+      "6rYLG55Q9RpsPGvqdPNJs4z5WTxJVatMB8zV3WJhs5EK",
+      "Cix2bHfqPcKcM233mzxbLk14kSggUUiz2A87fJtGivXr",
+      "7y4whZmw388w1ggjToDLSBLv47drw5SUXcLk6jtmwixd",
+      "J9BMEWFbCBEjtQ1fG5Lo9kouX1HfrKQxeUxetwXrifBw",
+      "8U1JPQh3mVQ4F5jwRdFTBzvNRQaYFQppHQYoH38DJGSQ"
+    ]
+  },
+  "min_tip_sol": 0.0001,
+  "min_tip_lamports": 100000,
+  "min_tip_note": "0.0001 SOL for Advanced plan; 0.001 SOL for Trial/Entry/Intermediate plans. Higher tip = higher priority.",
+  "cost_on_failure": "free (tip is SOL transfer instruction in TX; if TX fails on-chain, tip transfer also fails)",
+  "endpoints": {
+    "new_york": {
+      "https": "https://ny.0slot.trade",
+      "http": "http://ny.0slot.trade"
+    },
+    "frankfurt": {
+      "https": "https://de.0slot.trade",
+      "http": "http://de.0slot.trade"
+    },
+    "amsterdam": {
+      "https": "https://ams.0slot.trade",
+      "http": "http://ams.0slot.trade"
+    },
+    "tokyo": {
+      "https": "https://jp.0slot.trade",
+      "http": "http://jp.0slot.trade"
+    },
+    "los_angeles": {
+      "https": "https://la.0slot.trade",
+      "http": "http://la.0slot.trade"
+    },
+    "health_check": "http://de.0slot.trade/health",
+    "binary_tx_path": "/txb",
+    "note": "HTTP is slightly faster than HTTPS per their docs. Use ?api-key=TOKEN as query param on all endpoints."
+  },
+  "rate_limits": {
+    "trial": "5 TPS",
+    "entry": "5 TPS",
+    "intermediate": "20 TPS",
+    "advanced": "50 TPS",
+    "health_checks": "unlimited (do not count toward TPS)"
+  },
+  "pricing": {
+    "trial": {
+      "cost": "free",
+      "tps": 5,
+      "min_tip_sol": 0.001
+    },
+    "entry": {
+      "cost": "free (contact sales)",
+      "tps": 5,
+      "min_tip_sol": 0.001
+    },
+    "intermediate": {
+      "cost": "free (contact sales)",
+      "tps": 20,
+      "min_tip_sol": 0.001
+    },
+    "advanced": {
+      "cost": "free (contact sales)",
+      "tps": 50,
+      "min_tip_sol": 0.0001
+    }
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Submit a signed transaction for landing on Solana via SWQoS",
+      "http_method": "POST",
+      "path": "/",
+      "query_params": {
+        "api-key": "required - your API token",
+        "anti-mev": "optional - set to 'true' (case-sensitive) to enable anti-MEV protection",
+        "secure": "optional - set to 'true' for secure mode"
+      },
+      "content_type": "application/json",
+      "request_format": {
+        "jsonrpc": "2.0",
+        "id": "string (UUID recommended)",
+        "method": "sendTransaction",
+        "params": [
+          "<base64_encoded_signed_transaction>",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": "string",
+        "result": "transaction_signature"
+      },
+      "error_codes": {
+        "403_expired": {
+          "code": 403,
+          "message": "api-key has expired"
+        },
+        "403_invalid_method": {
+          "code": 403,
+          "message": "only support sendTransaction method"
+        },
+        "419_rate_limit": {
+          "code": 419,
+          "message": "rate limit exceeded"
+        }
+      }
+    },
+    "sendTransaction_binary": {
+      "description": "Submit a signed transaction as raw binary bytes (RECOMMENDED - fastest method)",
+      "http_method": "POST",
+      "path": "/txb",
+      "query_params": {
+        "api-key": "required",
+        "anti-mev": "optional - 'true' for anti-MEV",
+        "secure": "optional - 'true' for secure mode"
+      },
+      "content_type": "application/octet-stream",
+      "request_format": "raw binary transaction bytes (e.g. tx.MarshalBinary() in Go, transaction.serialize() in JS)",
+      "url_example": "http://de.0slot.trade/txb?api-key=YOUR_KEY",
+      "response_codes": {
+        "200": "ok - transaction submitted successfully",
+        "403": "API key null, nonexistent, or expired",
+        "419": "rate limit exceeded",
+        "500": "ok - submission failed"
+      },
+      "note": "Avoids base64 encoding overhead (~30% size increase). Keeps TX within single TCP packet. Strongly recommended for lowest latency."
+    },
+    "sendTransaction_plaintext": {
+      "description": "Submit a base64-encoded transaction as plain text (simpler than JSON-RPC)",
+      "http_method": "POST",
+      "path": "/",
+      "content_type": "text/plain",
+      "request_format": "base64-encoded transaction string as plain text body",
+      "note": "Simpler than JSON but still has base64 overhead. Binary method preferred."
+    }
+  },
+  "features": {
+    "swqos": {
+      "name": "Stake-Weighted Quality of Service",
+      "description": "Uses staked validator connections for priority transaction landing",
+      "available": true
+    },
+    "anti_mev": {
+      "name": "Anti-MEV Protection",
+      "description": "Maintains real-time blacklist of malicious validators. When enabled, withholds transactions from compromised leaders and resubmits to next safe leader.",
+      "parameter": "&anti-mev=true",
+      "value_must_be": "true (case-sensitive; '1' and 'yes' do NOT work)",
+      "guarantee": "No 100% guarantee against sandwich attacks",
+      "latency_impact": "May slightly delay transactions if malicious leaders detected"
+    },
+    "jito_sandwich_mitigation": {
+      "name": "Jito Sandwich Mitigation (jitodontfront)",
+      "description": "Add a pubkey starting with 'jitodontfront' to any instruction. Jito rejects bundles unless the protected TX is at index 0.",
+      "example_keys": [
+        "jitodontfront111111111111111111111111111111",
+        "jitodontfront111111111111111111111111111123"
+      ],
+      "impact_on_speed": "none"
+    },
+    "durable_nonce": {
+      "name": "Durable Nonce Support",
+      "description": "Supports durable nonce transactions for multi-landing. Can submit same signed TX to multiple endpoints concurrently.",
+      "nonce_account_data_layout": {
+        "version": "bytes 0-3 (4 bytes)",
+        "authorized_pubkey": "bytes 8-39 (32 bytes)",
+        "nonce_hash": "bytes 40-71 (32 bytes)",
+        "fee_calculator": "bytes 72-79 (8 bytes)"
+      }
+    },
+    "keepalive": {
+      "name": "HTTP Keep-Alive",
+      "timeout_seconds": 65,
+      "recommended_ping_interval_seconds": 60,
+      "health_endpoint": "http://{region}.0slot.trade/health",
+      "note": "Health checks are unrestricted and do not count toward TPS limits"
+    },
+    "binary_tx": {
+      "name": "Binary Transaction Submission",
+      "description": "Raw binary TX bytes via /txb endpoint. Eliminates base64 encoding overhead (~30% size reduction). Keeps TX in single TCP packet.",
+      "recommended": true
+    },
+    "cors_skip": {
+      "name": "CORS Preflight Skip",
+      "description": "Skips CORS preflight checks, saving tens of milliseconds"
+    },
+    "multi_region": {
+      "name": "Multi-Region Servers",
+      "regions": ["New York", "Frankfurt", "Amsterdam", "Tokyo", "Los Angeles"],
+      "note": "Contact support for optimal server selection based on your location"
+    },
+    "http_faster": {
+      "name": "HTTP vs HTTPS",
+      "description": "HTTP is slightly faster than HTTPS. Both supported. Use HTTP for lowest latency."
+    }
+  },
+  "supported_encodings": ["base64", "binary (raw bytes via /txb)"],
+  "tip_instruction": {
+    "program": "SystemProgram (11111111111111111111111111111111)",
+    "instruction": "transfer",
+    "amount_lamports": 1000000,
+    "amount_sol": 0.001,
+    "example_js": "SystemProgram.transfer(fromPublicKey, '6fQaVhYZA4w3MBSXjJ81Vf6W1EDYeUPXpgVQ6UQyU1Av', 1000000)"
+  }
+}

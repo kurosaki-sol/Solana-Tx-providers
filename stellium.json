@@ -1,0 +1,134 @@
+{
+  "name": "Stellium",
+  "website": "https://stellium.dev",
+  "docs": "https://docs.stellium.dev/products/fast-tx-landing",
+  "description": "Fast transaction landing service for Solana using staked connections to validators and multi-path submission with low-latency networking.",
+  "api_key": {
+    "required": true,
+    "location": "URL path (https://STELLIUM_ENDPOINT/$APIKEY)",
+    "how_to_get": "Contact via Telegram @StelliumIntern"
+  },
+  "tip_wallets": [
+    "ste11JV3MLMM7x7EJUM2sXcJC1H7F4jBLnP9a9PG8PH",
+    "ste11MWPjXCRfQryCshzi86SGhuXjF4Lv6xMXD2AoSt",
+    "ste11p5x8tJ53H1NbNQsRBg1YNRd4GcVpxtDw8PBpmb",
+    "ste11p7e2KLYou5bwtt35H7BM6uMdo4pvioGjJXKFcN",
+    "ste11TMV68LMi1BguM4RQujtbNCZvf1sjsASpqgAvSX",
+    "ste111J5Lq54fgZtmCYZTM8emu2UbeDeN9qwhs69hqA",
+    "ste113yP33KzDSqBFUErdbZJ3PGRojHToTPSthUkNTq",
+    "ste11681PDwyYiQUUtFNoujLY3tUqThLMY4yKJrxPtj",
+    "ste11eZvF5bebo6EVyGMJHV6LtPtx7e6TzNZtxPfXGy"
+  ],
+  "tip_strategy": "Alternate between different tip addresses for consecutive transactions",
+  "min_tip_sol": 0.001,
+  "cost_on_failure": "Not documented - unclear if tip is consumed on failed transactions",
+  "endpoints": {
+    "base_url_format": "https://STELLIUM_ENDPOINT/$APIKEY",
+    "http_method": "POST",
+    "content_type": "application/json",
+    "protocol": "JSON-RPC 2.0",
+    "note": "Actual endpoint hostname provided after contacting Stellium via Telegram",
+    "regions": [
+      "Frankfurt",
+      "Amsterdam",
+      "New York",
+      "London",
+      "Tokyo",
+      "Dublin",
+      "Singapore",
+      "Lithuania"
+    ]
+  },
+  "rate_limits": {
+    "applies": true,
+    "scope": "Total transactions sent by API key, regardless of individual or batch submission",
+    "specific_limits": "Not documented"
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Submit a single transaction for fast landing",
+      "endpoint": "POST https://STELLIUM_ENDPOINT/$APIKEY",
+      "encoding": "base64",
+      "request_format": {
+        "jsonrpc": "2.0",
+        "id": "<unique UUID>",
+        "method": "sendTransaction",
+        "params": [
+          "<base64_encoded_transaction>",
+          {
+            "encoding": "base64"
+          }
+        ]
+      },
+      "response_success": {
+        "jsonrpc": "2.0",
+        "result": "<transaction_signature>",
+        "id": "<request_id>"
+      },
+      "response_error": {
+        "jsonrpc": "2.0",
+        "error": {
+          "code": "<error_code>",
+          "message": "<error_description>"
+        },
+        "id": "<request_id>"
+      },
+      "requirements": [
+        "Transaction must include a system transfer instruction to a Stellium tip address",
+        "Minimum tip: 0.001 SOL",
+        "Alternate tip addresses for consecutive transactions"
+      ]
+    },
+    "sendTransaction_batch": {
+      "description": "Submit multiple transactions in a single HTTP request",
+      "endpoint": "POST https://STELLIUM_ENDPOINT/$APIKEY",
+      "encoding": "base64",
+      "request_format": "Array of JSON-RPC 2.0 sendTransaction request objects, each with a unique id",
+      "request_example": [
+        {
+          "jsonrpc": "2.0",
+          "id": "<unique_uuid_1>",
+          "method": "sendTransaction",
+          "params": [
+            "<base64_encoded_tx_1>",
+            {
+              "encoding": "base64"
+            }
+          ]
+        },
+        {
+          "jsonrpc": "2.0",
+          "id": "<unique_uuid_2>",
+          "method": "sendTransaction",
+          "params": [
+            "<base64_encoded_tx_2>",
+            {
+              "encoding": "base64"
+            }
+          ]
+        }
+      ],
+      "response_format": "Array of JSON-RPC 2.0 response objects in the same order as the request array",
+      "behavior": [
+        "Each transaction in a batch is processed independently",
+        "Individual transactions can succeed or fail independently",
+        "Responses maintain the same order as requests",
+        "Each request must have a unique id for correct response matching",
+        "Rate limits apply to total transactions across batch and individual submissions"
+      ]
+    }
+  },
+  "features": {
+    "staked_connections": "Uses staked connections to validators for faster landing",
+    "multi_path_submission": "Submits via multiple paths with low-latency networking",
+    "regional_endpoints": "8 regions available: Frankfurt, Amsterdam, New York, London, Tokyo, Dublin, Singapore, Lithuania",
+    "batch_support": "Multiple transactions in a single HTTP POST",
+    "standard_rpc_format": "Uses standard Solana JSON-RPC format (sendTransaction)",
+    "native_staking": "Also offers native staking product (Maximum returns through Stellium Engine)",
+    "referral_program": "Referral program available"
+  },
+  "supported_encodings": ["base64"],
+  "contact": {
+    "telegram": "@StelliumIntern"
+  }
+}

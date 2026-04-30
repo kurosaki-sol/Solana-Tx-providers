@@ -1,0 +1,173 @@
+{
+  "name": "BlockSprint",
+  "website": "https://blocksprint.io",
+  "docs": "https://docs.blocksprint.io",
+  "api_key": {
+    "required": true,
+    "prefix": "bs_",
+    "delivery": "query_param or header or bearer or url_path",
+    "query_param": "api_key",
+    "header": "X-API-Key",
+    "bearer": "Authorization: Bearer YOUR_API_KEY",
+    "url_path": "/api/v1/YOUR_API_KEY",
+    "dashboard": "https://blocksprint.io/dashboard/api-keys"
+  },
+  "tip_wallets": [
+    "Sp1x2AqpQckPLaWnWCJUNg8k6qQexfaEWcSRKf5JcDV",
+    "Sp4JHSh9cksfzXbgK7Pq2ovtn8LirLQydaJKTsiNT77",
+    "Sp1xMS2cbw83SZDNr4AGqkBYYLjb3LvVnmDSrTMaHkr",
+    "SpagSJmnh8E9cGT5Y431xPPaS2c1xLREGGCWN9yDeUf",
+    "SpWrza9E63MQuHeGnnfzmtLVCs3pBdjyKPXUABPo9nq"
+  ],
+  "min_tip_sol": 0.001,
+  "tip_priority_tiers": {
+    "standard": 0.001,
+    "high": 0.005,
+    "maximum": 0.01
+  },
+  "cost_on_failure": "free (tip placed last in TX, only executes on success)",
+  "endpoints": {
+    "global": "https://global.blocksprint.io",
+    "frankfurt": "https://fra.blocksprint.io",
+    "frankfurt_2": "https://fra2.blocksprint.io",
+    "amsterdam": "https://ams.blocksprint.io",
+    "amsterdam_2": "https://ams2.blocksprint.io",
+    "london": "https://lon.blocksprint.io",
+    "new_york": "https://nyc.blocksprint.io",
+    "los_angeles": "https://la.blocksprint.io",
+    "singapore": "https://sgp.blocksprint.io",
+    "tokyo": "https://jp.blocksprint.io",
+    "lithuania": "https://lit.blocksprint.io",
+    "quic": "{region}.blocksprint.io:10000",
+    "quic_alpn": "solana-tpu",
+    "json_rpc": "POST /",
+    "bundle": "POST /bundle",
+    "health": "GET /health",
+    "ping": "GET /ping"
+  },
+  "endpoint_providers": {
+    "frankfurt": "Teraswitch",
+    "frankfurt_2": "Vultr",
+    "amsterdam": "Cherry Servers",
+    "amsterdam_2": "Teraswitch",
+    "london": "Teraswitch",
+    "new_york": "Teraswitch",
+    "los_angeles": "Vultr",
+    "singapore": "Vultr",
+    "tokyo": "Teraswitch",
+    "lithuania": "Cherry Servers"
+  },
+  "rate_limits": {
+    "transactions_per_second": 50,
+    "bundles_per_second": 10,
+    "upgrade": "contact via https://t.me/blocksprint",
+    "rate_limit_error_code": -32003,
+    "http_rate_limit_status": 429
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Primary transaction submission via JSON-RPC",
+      "path": "POST /",
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "integer",
+        "method": "sendTransaction",
+        "params": [
+          "base64_or_base58_encoded_transaction",
+          {
+            "encoding": "base64 | base58",
+            "skipPreflight": true,
+            "maxRetries": "integer (optional)"
+          }
+        ]
+      },
+      "query_params": {
+        "api_key": "string (required)",
+        "mevProtect": "boolean (optional, routes through trusted validators)",
+        "swqosOnly": "boolean (optional, limits to SWQOS network)"
+      },
+      "auto_retry": true,
+      "auto_retry_behavior": "retries until confirmation or blockhash expiry"
+    },
+    "sendBundle": {
+      "description": "Atomic multi-transaction bundle submission",
+      "path": "POST /bundle",
+      "max_transactions": 5,
+      "params": {
+        "jsonrpc": "2.0",
+        "id": "integer",
+        "method": "sendBundle",
+        "params": [
+          ["base64_encoded_tx_1", "base64_encoded_tx_2"]
+        ]
+      },
+      "query_params": {
+        "revertProtection": "boolean (optional, enables atomic execution)"
+      },
+      "response": {
+        "bundleId": "string",
+        "signatures": ["string"]
+      },
+      "auto_tipping": true
+    },
+    "getHealth": {
+      "description": "Health status check via JSON-RPC",
+      "response": {
+        "status": "string",
+        "slot": "integer",
+        "latency": "number",
+        "region": "string"
+      }
+    },
+    "health_http": {
+      "description": "Simple HTTP health check",
+      "path": "GET /health",
+      "auth_required": false
+    },
+    "ping": {
+      "description": "Keep-alive ping endpoint",
+      "path": "GET /ping",
+      "auth_required": false,
+      "rate_limited": false,
+      "quota_cost": 0,
+      "response": "pong"
+    }
+  },
+  "features": {
+    "mev_protection": true,
+    "mev_protection_param": "?mevProtect=true",
+    "swqos_only_mode": true,
+    "swqos_only_param": "?swqosOnly=true",
+    "revert_protection_bundles": true,
+    "revert_protection_param": "?revertProtection=true",
+    "auto_retry": true,
+    "auto_retry_detail": "retries until confirmation or blockhash expiry",
+    "tip_on_failure": false,
+    "tip_placement": "last instruction in transaction",
+    "keep_alive": {
+      "protocol": "HTTP/1.1 persistent connections",
+      "idle_timeout_s": 90,
+      "max_requests_per_connection": 1000,
+      "recommended_ping_interval_s": 60,
+      "latency_saved_ms": "50-150 per request (TCP+TLS handshake eliminated)"
+    },
+    "quic_support": {
+      "port": 10000,
+      "alpn_protocol": "solana-tpu",
+      "languages": ["Rust", "Go"]
+    },
+    "supported_encodings": ["base64", "base58"],
+    "geographic_regions": 11,
+    "global_auto_routing": true
+  },
+  "http_status_codes": {
+    "200": "Transaction accepted and forwarded",
+    "401": "Authentication failure (invalid API key)",
+    "429": "Rate limit exceeded",
+    "5xx": "Server-side error (retry with exponential backoff)"
+  },
+  "contact": {
+    "telegram": "https://t.me/blocksprint",
+    "email": "support@blocksprint.io"
+  }
+}

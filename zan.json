@@ -1,0 +1,205 @@
+{
+  "name": "ZAN Trading Boost",
+  "provider": "ZAN",
+  "website": "https://zan.top",
+  "docs": {
+    "llms": "https://docs.zan.top/llms.txt",
+    "quickstart_reference": "https://docs.zan.top/reference/tradingboost",
+    "booster_transaction_reference": "https://docs.zan.top/reference/booster-transaction",
+    "introduction": "https://docs.zan.top/docs/introduction-trading-boost.md",
+    "endpoints_regions": "https://docs.zan.top/docs/endpoints-regions.md",
+    "send_transaction": "https://docs.zan.top/docs/sendtransaction.md",
+    "tips_mode": "https://docs.zan.top/docs/tips-mode.md",
+    "quic": "https://docs.zan.top/docs/quic.md",
+    "mev_protection": "https://docs.zan.top/docs/mev-protection.md",
+    "rate_limits": "https://docs.zan.top/docs/rate-limits.md",
+    "pricing_billing": "https://docs.zan.top/docs/pricing-billing.md",
+    "common_errors": "https://docs.zan.top/docs/common-errors.md"
+  },
+  "api_key": {
+    "required": true,
+    "delivery": {
+      "http": "URL path segment: /node/v1/solana/mainnet/{apiKey}/tips",
+      "https": "URL path segment: /node/v1/solana/mainnet/{apiKey}/tips",
+      "quic": "API key authorization with mTLS mutual authentication; docs indicate CN = api_key for the generated client certificate"
+    },
+    "how_to_get": "Create or use a ZAN Chain RPC API key with Trading Boost access.",
+    "note": "Trading Boost shares the ZAN Chain RPC service API key and throughput limits. Do not commit a real API key."
+  },
+  "tip_wallets": [
+    "7HkiWXe5deJvzn4D6kgMUFCADwX9Z4DMrdjNSSxN6bPp",
+    "zanrUknLZXzT9JPj968A7RfgCjp77Lx1W1xKRAtfshb",
+    "zanHbk2UsiT3jKsKjD7UuEqS5Vgpmcd4pG9HycAAV8g",
+    "zanNazKCXNRoKnPS9BBbFTELTpNwUDJxeKEb1JtZJer",
+    "zan3gbFhXCjGLHhRe2vaXRDta5fCrYiYr3Dq4RLvpfU",
+    "zan6WoE3DX5aK7FMQT1vSGsGrgZG1ngns3oCsFMnBHU",
+    "zan8Nb9fB4zMDsuTRP9R65QZbc9v2Cjn5a4Hjwnj8D3",
+    "zanJgoR7ALJAJ6ohoKs6aS9T71D9ZkNN9gYM5xUsi3u",
+    "zanAtYifQP7Bo6kStB97mJvzqSDW1toKNibWibwcKDd"
+  ],
+  "primary_tip_wallet": "7HkiWXe5deJvzn4D6kgMUFCADwX9Z4DMrdjNSSxN6bPp",
+  "min_tip_sol": 0.0003,
+  "min_tip_lamports": 300000,
+  "tip_note": "Tips Mode requires a System Program transfer of at least 0.0003 SOL / 300,000 lamports. Higher tips receive higher priority. The primary HTTP docs name 7Hki... as the required tip account; QUIC docs list additional ZAN tip accounts.",
+  "cost_on_failure": "No Trading Boost charge if acceleration fails; tips are only deducted when the transaction successfully reaches chain. Normal Solana transaction fees still apply.",
+  "endpoints": {
+    "http_recommended": {
+      "singapore": "http://booster-sg.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "hong_kong": "http://booster-hk.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "germany": "http://booster-de.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "north_america": "http://booster-us.zan.top/node/v1/solana/mainnet/{apiKey}/tips"
+    },
+    "https": {
+      "singapore": "https://booster-sg.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "hong_kong": "https://booster-hk.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "germany": "https://booster-de.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "north_america": "https://booster-us.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "global_gateway": "https://api.zan.top/node/v1/solana/mainnet/{apiKey}/tips"
+    },
+    "read_rpc": {
+      "mainnet": "https://api.zan.top/node/v1/solana/mainnet/{apiKey}",
+      "note": "Use standard ZAN RPC endpoints for read methods such as getLatestBlockhash, getBalance, and simulateTransaction."
+    },
+    "quic": {
+      "frankfurt": "fra.zan.top:21000",
+      "singapore": "sgp.zan.top:21000"
+    },
+    "notes": [
+      "HTTP is recommended for backend/bots because it avoids TLS handshake overhead.",
+      "HTTPS is suitable for frontend/browser or compliance-sensitive usage.",
+      "Testnet is not supported; Trading Boost is Solana mainnet only."
+    ]
+  },
+  "methods": {
+    "sendTransaction": {
+      "description": "Trading Boost HTTP/HTTPS endpoint. Only sendTransaction is supported on Trading Boost endpoints.",
+      "http_method": "POST",
+      "path": "/node/v1/solana/mainnet/{apiKey}/tips",
+      "content_type": "application/json",
+      "full_url_example": "http://booster-sg.zan.top/node/v1/solana/mainnet/{apiKey}/tips",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<BASE64_ENCODED_SIGNED_TRANSACTION>",
+          {
+            "encoding": "base64",
+            "skipPreflight": true
+          }
+        ]
+      },
+      "supported_extra_params": ["preflightCommitment", "maxRetries", "minContextSlot"],
+      "response_success": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "result": "TRANSACTION_SIGNATURE"
+      },
+      "encoding": {
+        "required": "base64",
+        "base58": "deprecated / not recommended"
+      },
+      "requirements": [
+        "Signed transaction must include a tip transfer of at least 300,000 lamports.",
+        "Use standard RPC for read operations; Trading Boost endpoints only support sendTransaction."
+      ]
+    },
+    "sendTransaction_quic": {
+      "description": "High-performance transaction submission through private QUIC endpoints.",
+      "transport": "QUIC",
+      "endpoints": ["fra.zan.top:21000", "sgp.zan.top:21000"],
+      "alpn": "solana-tpu",
+      "keep_alive_seconds": 10,
+      "max_idle_timeout_seconds": 30,
+      "authentication": {
+        "type": "mTLS mutual authentication plus API key authorization",
+        "certificate_common_name": "api_key",
+        "note": "Docs' Rust example generates an mTLS certificate using the api_key as CN."
+      },
+      "features": ["auto_reconnect", "connection_health_checks", "pay_as_you_go_tips_mode"],
+      "requirements": [
+        "Real Solana account with enough SOL to sign and pay fees.",
+        "Transaction must include at least 300,000 lamports to a ZAN tip account."
+      ]
+    }
+  },
+  "features": {
+    "swqos": {
+      "available": true,
+      "description": "Transactions route through ZAN staked validator nodes for stake-weighted priority."
+    },
+    "jito_integration": true,
+    "mev_protection": {
+      "available": true,
+      "additional_cost": false,
+      "enable_http_query": "anti-mev=true",
+      "jito_protection_account_prefix": "jitodontfront",
+      "description": "Routes through Jito private channels and ZAN's malicious validator avoidance system."
+    },
+    "pay_for_success": true,
+    "multi_region_deployment": ["singapore", "hong_kong", "germany", "north_america"],
+    "quic_submission": true,
+    "read_rpc": false,
+    "mainnet_only": true
+  },
+  "rate_limits": {
+    "scope": "shares ZAN Chain RPC API key and throughput limits",
+    "note": "Trading Boost uses these documented ZAN Chain RPC service throughput limits for the same API key.",
+    "plans": {
+      "free": {
+        "credits_per_second": 270,
+        "approx_requests_per_second": 20
+      },
+      "growth": {
+        "credits_per_second": 2700,
+        "approx_requests_per_second": 200
+      },
+      "pro": {
+        "credits_per_second": 6700,
+        "approx_requests_per_second": 500
+      },
+      "enterprise": {
+        "custom": true
+      }
+    },
+    "increase_limits": "Upgrade Chain RPC plan or contact ZAN solutions team."
+  },
+  "error_codes": {
+    "http_status": {
+      "401": "authentication failure; apiKey does not exist or has insufficient permissions",
+      "400": "parameter error such as missing tip, invalid transaction, or non-base64 encoding"
+    },
+    "json_rpc": {
+      "-32600": "Invalid request format",
+      "-32602": "Invalid parameters, missing/insufficient tip, expired/invalid API key, transaction format error, or decoding failure",
+      "-32603": "Internal server error"
+    }
+  },
+  "encoding": {
+    "http": "base64 signed transaction string",
+    "quic": "serialized signed transaction bytes in the QUIC client flow",
+    "recommended": "base64 for HTTP/HTTPS; QUIC for lower-latency private endpoints"
+  },
+  "best_practices": {
+    "use_http_for_backend": true,
+    "use_https_for_frontend": true,
+    "separate_read_and_write": true,
+    "enable_keep_alive": true,
+    "keep_alive_interval_seconds": 10,
+    "set_skip_preflight_true": true,
+    "set_max_retries_zero": true,
+    "optimize_compute_units": true,
+    "incremental_tip_retry": "Start at 0.0003 SOL and increase by about 50% on each retry.",
+    "broadcast_multi_region": true
+  },
+  "contact": {
+    "business": "https://zan.top/home/contact",
+    "telegram": "ZANTeam_official",
+    "discord": "ZAN Discord"
+  },
+  "notes": [
+    "The .stack provider label ZAN maps to ZAN Trading Boost.",
+    "The older API Reference pages exist, but llms.txt points to the Trading Boost markdown guides as the clean source for landing details.",
+    "Do not push real ZAN API keys or private enterprise limits to GitHub."
+  ]
+}
