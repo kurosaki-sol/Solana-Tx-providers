@@ -27,9 +27,33 @@
       "https": "https://ams.node1.me",
       "http": "http://ams.node1.me"
     },
-    "frankfurt": {
+    "london": {
+      "https": "https://lon.node1.me",
+      "http": "http://lon.node1.me"
+    },
+    "frankfurt-tsw": {
       "https": "https://fra.node1.me",
       "http": "http://fra.node1.me"
+    },
+    "frankfurt-cherry": {
+      "https": "https://fra2.node1.me",
+      "http": "http://fra2.node1.me"
+    },
+    "toronto": {
+      "https": "https://tor.node1.me",
+      "http": "http://tor.node1.me"
+    },
+    "dublin": {
+      "https": "https://dub.node1.me",
+      "http": "http://dub.node1.me"
+    },
+    "tokyo": {
+      "https": "https://tk.node1.me",
+      "http": "http://tk.node1.me"
+    },
+    "singapore": {
+      "https": "https://sgp.node1.me",
+      "http": "http://sgp.node1.me"
     },
     "health_check": "GET /ping (any endpoint)"
   },
@@ -78,8 +102,18 @@
       "description": "Dedicated Stake-Weighted Quality of Service across all tiers",
       "all_tiers": true
     },
-    "geographic_regions": 3,
-    "regions": ["new_york", "amsterdam", "frankfurt"],
+    "geographic_regions": 9,
+    "regions": [
+      "new_york",
+      "amsterdam",
+      "london",
+      "frankfurt",
+      "frankfurt-cherry",
+      "toronto",
+      "dublin",
+      "tokyo",
+      "singapore"
+    ],
     "built_by": "Operators of top-performing arbitrage bots on Solana",
     "supports_https_and_http": true,
     "keep_alive_recommended": true,
