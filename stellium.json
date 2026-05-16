@@ -5,7 +5,7 @@
   "description": "Fast transaction landing service for Solana using staked connections to validators and multi-path submission with low-latency networking.",
   "api_key": {
     "required": true,
-    "location": "URL path (https://STELLIUM_ENDPOINT/$APIKEY)",
+    "location": "URL path appended to the regional flashrpc.com host (e.g. https://fra1.flashrpc.com/$APIKEY)",
     "how_to_get": "Contact via Telegram @StelliumIntern"
   },
   "tip_wallets": [
@@ -23,11 +23,25 @@
   "min_tip_sol": 0.001,
   "cost_on_failure": "Not documented - unclear if tip is consumed on failed transactions",
   "endpoints": {
-    "base_url_format": "https://STELLIUM_ENDPOINT/$APIKEY",
+    "base_url_format": "https://<region-host>/$APIKEY",
     "http_method": "POST",
     "content_type": "application/json",
     "protocol": "JSON-RPC 2.0",
-    "note": "Actual endpoint hostname provided after contacting Stellium via Telegram",
+    "infrastructure_note": "Stellium's sender infrastructure is operated under the flashrpc.com domain. The API key is appended as the URL path on each regional host.",
+    "hosts": {
+      "frankfurt": "fra1.flashrpc.com",
+      "amsterdam": "ams1.flashrpc.com",
+      "new_york": "ewr1.flashrpc.com",
+      "london": "lhr1.flashrpc.com",
+      "tokyo": "tyo1.flashrpc.com"
+    },
+    "region_routing": {
+      "dublin": "lhr1.flashrpc.com (routed via London)",
+      "singapore": "tyo1.flashrpc.com (routed via Tokyo)",
+      "salt_lake_city": "ewr1.flashrpc.com (routed via New York)",
+      "los_angeles": "ewr1.flashrpc.com (routed via New York)",
+      "lithuania": "Not yet mapped to a flashrpc host; contact Stellium"
+    },
     "regions": [
       "Frankfurt",
       "Amsterdam",
@@ -37,6 +51,13 @@
       "Dublin",
       "Singapore",
       "Lithuania"
+    ],
+    "example_urls": [
+      "https://fra1.flashrpc.com/$APIKEY",
+      "https://ewr1.flashrpc.com/$APIKEY",
+      "https://ams1.flashrpc.com/$APIKEY",
+      "https://lhr1.flashrpc.com/$APIKEY",
+      "https://tyo1.flashrpc.com/$APIKEY"
     ]
   },
   "rate_limits": {
@@ -47,7 +68,7 @@
   "methods": {
     "sendTransaction": {
       "description": "Submit a single transaction for fast landing",
-      "endpoint": "POST https://STELLIUM_ENDPOINT/$APIKEY",
+      "endpoint": "POST https://<region>.flashrpc.com/$APIKEY (e.g. https://fra1.flashrpc.com/$APIKEY)",
       "encoding": "base64",
       "request_format": {
         "jsonrpc": "2.0",
@@ -81,7 +102,7 @@
     },
     "sendTransaction_batch": {
       "description": "Submit multiple transactions in a single HTTP request",
-      "endpoint": "POST https://STELLIUM_ENDPOINT/$APIKEY",
+      "endpoint": "POST https://<region>.flashrpc.com/$APIKEY (e.g. https://fra1.flashrpc.com/$APIKEY)",
       "encoding": "base64",
       "request_format": "Array of JSON-RPC 2.0 sendTransaction request objects, each with a unique id",
       "request_example": [
