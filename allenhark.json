@@ -1,0 +1,117 @@
+{
+  "name": "AllenHark Relay (Slipstream)",
+  "website": "https://allenhark.com",
+  "docs": "https://allenhark.com/docs/infrastructure/relay",
+  "llms": "https://allenhark.com/llm-relay.txt",
+  "description": "Institutional-grade Solana transaction relay (marketed as Slipstream / AllenHark Relay). Bypasses the public mempool and routes directly to current and upcoming leaders for same-slot inclusion and MEV protection. Sender-agnostic with QUIC and HTTPS submission.",
+  "api_key": {
+    "required": true,
+    "delivery": {
+      "http": "header x-api-key: YOUR_API_KEY (or query parameter ?api-key=YOUR_API_KEY)",
+      "quic": "First stream line 'api-key: YOUR_API_KEY\\n' followed by the JSON payload"
+    },
+    "how_to_get": "Contact AllenHark via Discord (https://discord.gg/JpzS72MAKG) or Telegram (https://t.me/antonyAllenHark).",
+    "note": "Do not commit a real API key; load from environment variables. Keys can be rotated on request."
+  },
+  "tip_wallets": [
+    "hark1zxc5Rz3K8Kquz79WPWFEgNCFeJnsMJ16f22uNP",
+    "harkm2BTWxZuszoNpZnfe84jRbQTg6KGHaQBmWzDGQQ",
+    "hark4CwtTnN2y9FaxjcFBAJdJqQrpouu5pgEixfqdEz",
+    "harkoJfnM6dxrJydx5eVmDVwAgwC94KbhuxF69UbXwP",
+    "hark6hUDUTekc1DGxWdJcuyDZwf6pJdCxd4SXAVtta6",
+    "harkoTvFpKSrEQduYrNHXCurARVT19Ud3BnFhVxabos",
+    "harkEpXoJv5qVzHaN7HSuUAd6PHjyMcFMcDYBMDJCEQ",
+    "harkyXDdZSoJGyCxa24t2QXx1poPyp8YfghbtpzGSzK",
+    "harkR2YJ4Dpt4UDJTcBirjnSPBhNpQFcoFkNpCkVqNk",
+    "harkRBygM8pHYe4K8eBjfxyEX19oJn3LepFjvNbLbyi",
+    "harkYFxB6DuUFNwDLvA5CQ66KpfRvFgUoVypMagNcmd"
+  ],
+  "tip_wallet_note": "Select one tip wallet randomly per transaction. The transfer must be a top-level instruction, not nested in a CPI (static analysis may miss it).",
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "tip_note": "During extreme congestion, 0.001 SOL may be insufficient; try 0.002-0.005 SOL.",
+  "cost_on_failure": "not explicitly documented; tip is a SOL transfer instruction in the transaction, so it only executes if the transaction lands",
+  "endpoints": {
+    "quic": {
+      "host": "84.32.223.83",
+      "port": 4433,
+      "address": "84.32.223.83:4433",
+      "sni": "relay.allenhark.com",
+      "protocol": "QUIC (UDP)",
+      "note": "Recommended for production: persistent connections, multiplexing, 0-RTT resumption, ~0.1ms internal processing, up to 80% latency reduction vs HTTPS."
+    },
+    "https": {
+      "url": "https://relay.allenhark.com/v1/sendTx",
+      "http_method": "POST",
+      "note": "Fallback. ~1-5ms due to TCP/TLS overhead. Use for testing/scripts; prefer QUIC for live trading."
+    }
+  },
+  "rate_limits": {
+    "default": "100 requests/second",
+    "burst": "up to 150/s",
+    "exceeded_response": "HTTP 429 rate_limit_exceeded",
+    "enterprise": "Co-location/enterprise plans effectively unlimited (10,000+ tx/s)"
+  },
+  "methods": {
+    "sendTransaction_https": {
+      "description": "Submit a signed transaction over HTTPS.",
+      "http_method": "POST",
+      "path": "/v1/sendTx",
+      "content_type": "application/json",
+      "auth_header": "x-api-key",
+      "request_body": {
+        "tx": "BASE64_ENCODED_TRANSACTION_STRING",
+        "simulate": false
+      },
+      "params_detail": {
+        "tx": "Signed transaction, base64-encoded",
+        "simulate": "MUST be false; setting it true returns simulate_forbidden"
+      },
+      "response_success": { "status": "accepted", "request_id": "string" },
+      "response_error": { "status": "error", "code": "string", "message": "string" }
+    },
+    "sendTransaction_quic": {
+      "description": "Submit a signed transaction over a QUIC bidirectional stream.",
+      "protocol": "QUIC (UDP)",
+      "endpoint": "84.32.223.83:4433 (SNI relay.allenhark.com)",
+      "wire_format": "Write 'api-key: YOUR_API_KEY\\n' then the JSON payload {\"tx\": \"<base64>\", \"simulate\": false}, then finish the stream and read the response.",
+      "keep_alive_seconds": 3
+    }
+  },
+  "error_codes": {
+    "accepted": { "status": 200, "message": "Transaction received and queued for broadcast" },
+    "tip_missing": { "status": 400, "message": "No transfer to an AllenHark tip wallet found" },
+    "tip_insufficient": { "status": 400, "message": "Tip is below 0.001 SOL" },
+    "simulate_forbidden": { "status": 400, "message": "simulate parameter was set to true" },
+    "invalid_api_key": { "status": 401, "message": "API key is missing or invalid" },
+    "rate_limit_exceeded": { "status": 429, "message": "Plan rate limit exceeded" }
+  },
+  "features": {
+    "zero_slot_execution": "Transactions can land in the same slot they are sent",
+    "zero_hop_delivery": "Direct connections to current and upcoming leaders (broadcast to current + next 4 leaders)",
+    "mev_protection": "Private transaction routing via leader TPU ports; never broadcast to public gossip until landed",
+    "no_simulation": "Pure propagation engine; server-side validation only, simulate flag forbidden",
+    "transports": ["QUIC", "HTTPS"]
+  },
+  "best_practices": [
+    "Use QUIC for live trading; HTTPS only for testing/scripts",
+    "Place the tip transfer at the top level of the transaction (not in a CPI)",
+    "Skip client-side preflight; validation happens server-side",
+    "Reuse QUIC connections with a 3s keep-alive ping",
+    "Fetch the latest blockhash from a fast RPC or AllenHark gRPC before sending"
+  ],
+  "encoding": {
+    "supported": ["base64"],
+    "transaction_format": "Signed Solana transaction, base64-encoded"
+  },
+  "contact": {
+    "discord": "https://discord.gg/JpzS72MAKG",
+    "telegram": "https://t.me/antonyAllenHark",
+    "twitter": "https://twitter.com/allenhark",
+    "github": "https://github.com/AllenHark-Inc"
+  },
+  "notes": [
+    "AllenHark also offers staked RPC, Yellowstone gRPC, ShredStream, 0-slot landing, co-location, and managed validator products; this entry covers the Slipstream / AllenHark Relay transaction relay only.",
+    "The QUIC endpoint is documented as a bare IP (84.32.223.83) with SNI relay.allenhark.com."
+  ]
+}
