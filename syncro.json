@@ -57,7 +57,7 @@
       "london": "http://sfls-geo-lon.l2.p2p.org/public",
       "tokyo": "http://sfls-geo-tky.l2.p2p.org/public",
       "singapore": "http://sfls-geo-sgp.l2.p2p.org/public",
-      "amsterdam": "http://sfls-eu1.l2.p2p.org/"
+      "amsterdam": "http://sfls-ams-plain.l2.p2p.org/"
     },
     "private": {
       "global_example": "https://sfls.l2.p2p.org",

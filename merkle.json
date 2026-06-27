@@ -39,7 +39,10 @@
     "solana_boost": [
       "mkLkJUvg6yNULmMvEHW4rQvoTGNZWLSeYdMswPMNpVD"
     ],
-    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account."
+    "sponsor": [
+      "7czf8vVLjGUaLqn9DBneEz1sNwP3gLx8Usrq3zMctify"
+    ],
+    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account. The 'sponsor' wallet is used by the active gas-sponsorship feature (pm_isSponsorable): append a transfer of activeSponsorAmount (0.005 SOL / 5,000,000 lamports) to it, distinct from landing tips."
   },
   "min_tip_sol": 0.001,
   "cost_on_failure": "unknown (no docs on refunds; tip is via SOL transfer instruction so it executes if TX lands)",

@@ -44,7 +44,13 @@
     "soyas4s6L8KWZ8rsSk1mF3d1mQScoTGGAgjk98bF8nP",
     "soyascXFW5wEEYiwfEmHy2pNwomqzvggJosGVD6TJdY",
     "soyasDBdKjADwPz3xk82U3TNPRDKEWJj7wWLajNHZ1L",
-    "soyasE2abjBAynmHbGWgEwk4ctBy7JMTUCNrMbjcnyH"
+    "soyasE2abjBAynmHbGWgEwk4ctBy7JMTUCNrMbjcnyH",
+    "soyasi59njacMUPvo3TM5paHjeK8pYSdovXgFi32gRt",
+    "soyasQYhJxv8uZgWDxhg72td6piAf7XTkoyWHtSATEz",
+    "soyastP66xyYC8XADXZjdMM5BAVGD2YRvz8dwtLsqb8",
+    "soyasvdgUJWYcUCzDxpmjUnNjH7KamXLXTzLwFvdVPE",
+    "soyasvxAunisNxaoRxkKGjNir7KmbwYnr37JmefkX9G",
+    "soyas5doVFUwH8s5zK8gEvCL5KR5ogDmf52LsrJEZ9h"
   ],
   "tip_wallet_note": "Each VersionedTransaction must carry a System Program transfer to one of these addresses.",
 

@@ -27,6 +27,13 @@
     "AStRAnpi6kFrKypragExgeRoJ1QnKH7pbSjLAKQVWUum",
     "ASTRaoF93eYt73TYvwtsv6fMWHWbGmMUZfVZPo3CRU9C"
   ],
+  "shreds_tip_wallets": [
+    "ASTZHptaMgYVMX6DAocDr1vVXLran5PpfKfQtVTSWkfE",
+    "AStZiY6EE532nQBBogmvcWemc2bwg2kHuR4Jrd5Cqaq5",
+    "AStzprSDj14m1pdMuuomjLQwUL5X4d4yEKwiFfzfUSeC",
+    "ASTzWqJ1irGmrWZAkc1UUfVYbJknsxh7R3Jo4jYZ7Mbd"
+  ],
+  "shreds_tip_note": "Dedicated tip addresses for the Astralane Shreds product (raw shred streaming via /shred-pay), distinct from the sendTransaction landing tip_wallets above.",
   "min_tip_sol": 0.00001,
   "cost_on_failure": "free (tip refunds)",
   "endpoints": {

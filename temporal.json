@@ -84,7 +84,7 @@
       },
       "tokyo": {
         "direct": "https://tyo1.nozomi.temporal.xyz",
-        "cloudflare": "https://tyo1.nozomi.temporal.xyz"
+        "cloudflare": "https://tyo.nozomi.temporal.xyz"
       },
       "singapore": {
         "direct": "https://sgp1.nozomi.temporal.xyz",

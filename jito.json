@@ -171,7 +171,7 @@
     },
 
     "getBundleStatuses": {
-      "path": "/api/v1/bundles",
+      "path": "/api/v1/getBundleStatuses",
       "http_method": "POST",
       "description": "Returns the status of submitted bundles. Searches recent slots plus up to MAX_RECENT_BLOCKHASHES (300) rooted slots.",
       "params": {
@@ -192,7 +192,7 @@
     },
 
     "getInflightBundleStatuses": {
-      "path": "/api/v1/bundles",
+      "path": "/api/v1/getInflightBundleStatuses",
       "http_method": "POST",
       "description": "Returns status of bundles submitted within the last 5 minutes.",
       "params": {
@@ -212,7 +212,7 @@
     },
 
     "getTipAccounts": {
-      "path": "/api/v1/bundles",
+      "path": "/api/v1/getTipAccounts",
       "http_method": "POST",
       "description": "Returns the 8 designated tip account addresses. Use to dynamically fetch tip wallets rather than hardcoding.",
       "params": "none",
