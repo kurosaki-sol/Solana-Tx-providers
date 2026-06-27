@@ -187,7 +187,7 @@
       "payout": "paid directly to a configured Solana wallet"
     },
     "supported_encodings": ["base64", "base58"],
-    "geographic_regions": 11,
+    "geographic_regions": 13,
     "global_auto_routing": true
   },
   "error_codes": {
