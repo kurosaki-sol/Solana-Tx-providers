@@ -1,0 +1,29 @@
+{
+  "name": "FlashBlock",
+  "auth": "required",
+  "min_tip_sol": 0.0001,
+  "tip_wallets": [
+    "FLaShB3iXXTWE1vu9wQsChUKq3HFtpMAhb8kAh1pf1wi",
+    "FLashhsorBmM9dLpuq6qATawcpqk1Y2aqaZfkd48iT3W",
+    "FLaSHJNm5dWYzEgnHJWWJP5ccu128Mu61NJLxUf7mUXU",
+    "FLaSHR4Vv7sttd6TyDF4yR1bJyAxRwWKbohDytEMu3wL",
+    "FLASHRzANfcAKDuQ3RXv9hbkBy4WVEKDzoAgxJ56DiE4",
+    "FLasHstqx11M8W56zrSEqkCyhMCCpr6ze6Mjdvqope5s",
+    "FLAShWTjcweNT4NSotpjpxAkwxUr2we3eXQGhpTVzRwy",
+    "FLasHXTqrbNvpWFB6grN47HGZfK6pze9HLNTgbukfPSk",
+    "FLAshyAyBcKb39KPxSzXcepiS8iDYUhDGwJcJDPX4g2B",
+    "FLAsHZTRcf3Dy1APaz6j74ebdMC6Xx4g6i9YxjyrDybR"
+  ],
+  "endpoints": {
+    "solana.regions.new_york": "http://ny.flashblock.trade",
+    "solana.regions.salt_lake_city": "http://slc.flashblock.trade",
+    "solana.regions.amsterdam": "http://ams.flashblock.trade",
+    "solana.regions.frankfurt": "http://fra.flashblock.trade",
+    "solana.regions.singapore": "http://singapore.flashblock.trade",
+    "solana.regions.london": "http://london.flashblock.trade",
+    "solana.regions.tokyo": "http://tokyo.flashblock.trade",
+    "api": "https://api.flashblock.trade",
+    "bsc.amsterdam": "https://bsc-eu.flashblock.trade/proxy",
+    "bsc.bundle_status": "https://bsc-eu.flashblock.trade/bundle"
+  }
+}

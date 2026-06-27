@@ -1,0 +1,31 @@
+{
+  "name": "landX",
+  "auth": "required \u2014 http: API key in the URL path (query-string and header auth are NOT supported); udp: API key in the first 12 bytes of the packet body",
+  "min_tip_sol": 0.001,
+  "tip_wallets": [
+    "LandX1EMgYtrfi4jVJ7ryby4mDpZcef6sVH9b9U1cog",
+    "LandX2gHE7y6RejuvoLJK4hJiKkrAwcrJJ34u19Gmo1",
+    "LandX3uK1cSUF7hbefKo3oL1j4FhvhxitiMRKut99Z6",
+    "LandX4wXzvDyWfq1XXn4StRjwPjzqb7je2kqDGLoT9L",
+    "LandX5T4jfRASrcn76owxHM4q9bduNGj24ev4Ufc5fP",
+    "LandX6RsjjnfaxfYAFTZX1TW9Cgfe9HFStj9nRDd5SK",
+    "LandX7LsdzXDAbbyBjAq5FxLTnGQaU3LojGQMLZCvkt",
+    "LandX8Gv3UkhjmgKdSEg4F7yG7Z2tiqhNDYDtxazydN",
+    "LandX9fhNN5S7fuBgekKBYeYvK1Sy9hbGvDmHsBGYFh",
+    "LandXXxDXaSS8MjrqG9nri51htrfM6V4R3zXDVCeV8R"
+  ],
+  "endpoints": {
+    "regions.amsterdam.host": "ams1.landx.dev",
+    "regions.amsterdam_2.host": "ams2.landx.dev",
+    "regions.frankfurt_1.host": "fra1.landx.dev",
+    "regions.frankfurt_2.host": "fra2.landx.dev",
+    "regions.frankfurt_3.host": "fra3.landx.dev",
+    "regions.new_york.host": "ny1.landx.dev",
+    "regions.tokyo.host": "tyo1.landx.dev",
+    "regions.london.host": "lon1.landx.dev",
+    "regions.singapore.host": "sgp1.landx.dev",
+    "regions.salt_lake_city.host": "slc1.landx.dev",
+    "regions.dublin.host": "dub1.landx.dev",
+    "regions.toronto.host": "toro1.landx.dev"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Glaive",
+  "auth": "required \u2014 json_rpc: query parameter ?key=YOUR_API_KEY; plain: query parameter ?api-key=YOUR_API_KEY; binary: query parameter ?api-key=YOUR_API_KEY; quic: 17-byte auth frame after QUIC handshake: 16-byte UUID as big-endian u128, followed by 1 flags byte",
+  "min_tip_sol": 0.0001,
+  "tip_wallets": [
+    "GLaiv4GMRYQmthatDS98uQT4HoucgxWT8NeJz6oSwxeU",
+    "GLaivL5uPrDpvd1wTtvat38KGqb5WLhEdqQfnmNd3oNr",
+    "GLaivinAWh21NaJMhtExtD5G2gZs1xnvaYVZmwqobWZL",
+    "GLaivJSUL71FcocYa8tks5vpVyYzvaDMHtyrzfQF2ABr",
+    "GLaivRU6eDKrta3p3psFAWPEFLzCjeMHGpPUuQqTjtyv",
+    "GLaivq5dU8qHayz9Qf13LjPfVy3SmUhbmickfGiZdmfh"
+  ],
+  "endpoints": {
+    "regions.amsterdam_1.host": "ams1.glaive.trade",
+    "regions.amsterdam_1.http": "http://ams1.glaive.trade",
+    "regions.amsterdam_1.quic": "ams1.glaive.trade:4000",
+    "regions.amsterdam_2.host": "ams2.glaive.trade",
+    "regions.amsterdam_2.http": "http://ams2.glaive.trade",
+    "regions.amsterdam_2.quic": "ams2.glaive.trade:4000",
+    "regions.frankfurt.host": "fra.glaive.trade",
+    "regions.frankfurt.http": "http://fra.glaive.trade",
+    "regions.frankfurt.quic": "fra.glaive.trade:4000",
+    "regions.new_york.host": "ny.glaive.trade",
+    "regions.new_york.http": "http://ny.glaive.trade",
+    "regions.new_york.quic": "ny.glaive.trade:4000"
+  }
+}

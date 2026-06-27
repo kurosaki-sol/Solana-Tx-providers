@@ -1,0 +1,23 @@
+# LightBridge
+
+**Auth:** required
+**Min tip:** 0.001 SOL
+
+## Tip wallets
+- `vsn7B5w2z1eopfoBmwd1eDakvFUUatmmMwdMJJ37m8e`
+- `vsn7szXXVgeAu6jW7YcCB6vUvYTnWwRgUhhecS87Ynd`
+- `vsnL7iaCzAsfgjBs1RupXmUrYjkVgXzGpzK3WwzSvcr`
+- `vsnQHLdhyfnsH433UsXTwhvN51GHqWxeJa9UqbBSVii`
+- `vsnRAHFiGjQyJ7Yc3dEDXwkeys94AVmKh6zpk3vniQh`
+- `vsnZSeFgToWvR1ZJoMcMqcVYss7vE15yxHxgHnC85Tb`
+- `vsncMHAQEfRXvMkmeWaAk2thDziTVP1wqYqUAR8isqn`
+- `vsncn9qJ31kadx4JNc8mfoX5yQs7GWNf9aELBVhTRPQ`
+- `vsngK2qBBVJZfWhMxruQmDnrzBmD6UaZdiMee6vho4m`
+- `vsnqiBRqfLRviiyNjYZNVzxNB1dAE9JSzVCN3VKkdU4`
+
+## Endpoints
+- **regional.frankfurt**: `http://fra.lightbridge.vision-node.com`
+- **regional.amsterdam**: `http://ams.lightbridge.vision-node.com`
+- **regional.new_york**: `http://nyc.lightbridge.vision-node.com`
+- **regional.tokyo**: `http://tyo.lightbridge.vision-node.com`
+- **regional.global**: `http://global.lightbridge.vision-node.com`

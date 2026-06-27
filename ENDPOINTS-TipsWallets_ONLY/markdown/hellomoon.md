@@ -1,0 +1,51 @@
+# HelloMoon Lunar Lander
+
+**Auth:** required — query_param
+**Min tip:** 0.001 SOL
+
+## Tip wallets
+- `moon17L6BgxXRX5uHKudAmqVF96xia9h8ygcmG2sL3F`
+- `moon26Sek222Md7ZydcAGxoKG832DK36CkLrS3PQY4c`
+- `moon7fwyajcVstMoBnVy7UBcTx87SBtNoGGAaH2Cb8V`
+- `moonBtH9HvLHjLqi9ivyrMVKgFUsSfrz9BwQ9khhn1u`
+- `moonCJg8476LNFLptX1qrK8PdRsA1HD1R6XWyu9MB93`
+- `moonF2sz7qwAtdETnrgxNbjonnhGGjd6r4W4UC9284s`
+- `moonKfftMiGSak3cezvhEqvkPSzwrmQxQHXuspC96yj`
+- `moonQBUKBpkifLcTd78bfxxt4PYLwmJ5admLW6cBBs8`
+- `moonXwpKwoVkMegt5Bc776cSW793X1irL5hHV1vJ3JA`
+- `moonZ6u9E2fgk6eWd82621eLPHt9zuJuYECXAYjMY1C`
+
+## Endpoints
+- **send.geolocated**: `http://lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.frankfurt**: `http://fra.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.amsterdam**: `http://ams.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.new_york**: `http://nyc.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.ashburn_virginia**: `http://ash.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.tokyo**: `http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.chicago**: `http://chi.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.dallas**: `http://dal.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.dubai**: `http://uae.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.london**: `http://lon.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.los_angeles**: `http://lax.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.seattle**: `http://sea.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.singapore**: `http://sgp.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.sydney**: `http://syd.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send.vilnius**: `http://lit.lunar-lander.hellomoon.io/send?api-key=xxxx`
+- **send_cors.example**: `http://fra.lunar-lander.hellomoon.io/send-cors?api-key=xxxx`
+- **send_bin.example**: `http://fra.lunar-lander.hellomoon.io/send-bin?api-key=xxxx`
+- **send_bin.cors_variant**: `http://fra.lunar-lander.hellomoon.io/send-bin-cors?api-key=xxxx`
+- **send_bundle.geolocated**: `http://lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.frankfurt**: `http://fra.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.amsterdam**: `http://ams.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.new_york**: `http://nyc.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.ashburn_virginia**: `http://ash.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.tokyo**: `http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.chicago**: `http://chi.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.dallas**: `http://dal.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.dubai**: `http://uae.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.london**: `http://lon.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.los_angeles**: `http://lax.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.seattle**: `http://sea.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.singapore**: `http://sgp.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.sydney**: `http://syd.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
+- **send_bundle.vilnius**: `http://lit.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx`
