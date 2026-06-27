@@ -3,6 +3,7 @@
   "website": "https://corvus-labs.io",
   "docs": "https://docs.corvus-labs.io/falcon",
   "dashboard": "https://dashboard.corvus-labs.io/falcon",
+  "discord": "https://discord.gg/corvus-labs",
   "api_key": {
     "required": true,
     "delivery": "query_param",
@@ -86,6 +87,13 @@
     }
   },
   "submission_formats": {
+    "http_status_codes": {
+      "200": "Accepted - Transaction forwarded successfully",
+      "401": "Unauthorized - Check your API key",
+      "403": "Forbidden - API key revoked or invalid",
+      "429": "Rate Limited - Slow down, implement backoff",
+      "500": "Server Error - Retry with backoff"
+    },
     "json_rpc": {
       "path": "/?api-key=<UUID>",
       "content_type": "application/json",
@@ -131,6 +139,7 @@
       "best_for": "HFT, latency-critical applications",
       "auth": "Client certificate with API key UUID as CN",
       "rust_library": "falcon-client",
+      "keep_alive_interval_seconds": 25,
       "example_address": "fra.falcon.wtf:5000",
       "cert_generation": "openssl req -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout client-key.pem -out client-cert.pem -days 365 -nodes -subj '/CN=<YOUR-API-KEY-UUID>'",
       "error_codes": {

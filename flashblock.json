@@ -308,5 +308,17 @@
     "discord": "https://discord.gg/FgkZ76EbzK",
     "telegram": "https://t.me/FlashBlock_trade_chat",
     "twitter": "https://x.com/FlashBlocktrade"
+  },
+
+  "support": {
+    "email": "support@flashblocktrade.com",
+    "telegram_handles": {
+      "founding_partner": ["@FlashBlocktrade", "@FlashBlock_Official"],
+      "business_bd": "@FBL_Global_Eve",
+      "developer_support": "@FBL_Global_Dev",
+      "customer_support": "@FBL_Global_Sup"
+    },
+    "support_hours": "Monday-Friday 9:00-18:00",
+    "response_time": "24-hour response"
   }
 }

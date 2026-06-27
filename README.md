@@ -26,7 +26,7 @@ The provider list is based on https://circular.fi/providers and updated manually
 | `hellomoon.json` | HelloMoon Lunar Lander | send, binary, bundle, batch |
 | `jito.json` | Jito Block Engine | transactions, bundles, tip floor |
 | `lightbridge.json` | LightBridge | JSON, binary, batch, CORS |
-| `merkle.json` | Merkle QuickSlot | QuickSlot, SVM RPC, status |
+| `merkle.json` | Merkle QuickSlot (now Blink Labs) | QuickSlot, SVM RPC, status, gas sponsorship |
 | `nextblock.json` | NextBlock | HTTP/gRPC/QUIC, bundles, tip floor |
 | `node1.json` | Node1 | Regional sender endpoints |
 | `raiden.json` | Raiden | HTTP sender and QUIC |

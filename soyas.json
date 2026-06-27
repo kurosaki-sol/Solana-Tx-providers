@@ -26,7 +26,9 @@
       "features": [
         "Ultra-low latency Turbine stream",
         "Global region support",
-        "Seamless RPC node compatible stream"
+        "Seamless RPC node compatible stream",
+        "100% uptime guarantee",
+        "Flexible Daily/Weekly Plans"
       ]
     }
   },
@@ -104,7 +106,7 @@
       "encoding": "Binary (raw transaction bytes, not base58/base64 encoded)",
       "behavior": "Opens a new QUIC unidirectional stream per transaction. Auto-reconnects on write failure.",
       "requirements": [
-        "Transaction must include a System Program transfer >= 0.001 SOL to one of the 4 tip wallets",
+        "Transaction must include a System Program transfer >= 0.001 SOL to one of the 10 tip wallets",
         "API key (Solana keypair) must be whitelisted"
       ]
     },
@@ -187,7 +189,7 @@
   },
 
   "best_practices": [
-    "Include tip transfer instruction (>= 0.001 SOL) to one of the 4 tip wallets in every transaction",
+    "Include tip transfer instruction (>= 0.001 SOL) to one of the 10 tip wallets in every transaction",
     "Use the closest regional endpoint to minimize latency",
     "Client connections auto-reconnect on failure — safe to share across threads/goroutines",
     "Contact @matt_soyas on Telegram to get your public key whitelisted",

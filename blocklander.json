@@ -96,6 +96,9 @@
   "features": {
     "parallel_pipelines": true,
     "geographically_aware_routing": true,
+    "stake_weighted_validator_routing": true,
+    "differentiated_staked_connections": true,
+    "jito_mev_auctions": true,
     "global_dns_latency_balancing": true,
     "dashboard_regional_endpoints": true,
     "rpc_like_send_transaction": true,

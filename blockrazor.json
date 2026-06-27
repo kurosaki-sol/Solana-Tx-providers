@@ -103,8 +103,9 @@
   },
   "rate_limits": {
     "send_transaction": {
-      "default": "1 TPS",
-      "note": "Contact Discord support for TPS increases"
+      "default": "3 TPS",
+      "decoupled_from_subscription": true,
+      "note": "Default send-transaction rate limit is 3 TPS and is not bound to the subscription plan. Contact Discord support for TPS increases"
     },
     "network_fee_stream": {
       "tier_4_free": "1 QPS",
@@ -203,6 +204,41 @@
         "500": "InternalServerError"
       }
     },
+    "sendBinaryTransaction": {
+      "endpoint": "POST /v2/sendBinaryTransaction",
+      "auth": "query parameter ?auth=<auth_token>",
+      "content_type": "application/octet-stream",
+      "body": "raw signed transaction binary (not base64)",
+      "params": {
+        "mode": {
+          "type": "string",
+          "required": false,
+          "default": "fast",
+          "values": ["fast", "sandwichMitigation"]
+        },
+        "safeWindow": {
+          "type": "integer",
+          "required": false,
+          "default": 3,
+          "range": "3-13"
+        },
+        "revertProtection": {
+          "type": "boolean",
+          "required": false,
+          "default": false
+        }
+      },
+      "response": {
+        "success": {"signature": "<txn_hash>", "error": ""},
+        "error": {"signature": "", "error": "<error message>"}
+      },
+      "status_codes": {
+        "200": "OK",
+        "400": "BadRequest",
+        "403": "Forbidden",
+        "500": "InternalServerError"
+      }
+    },
     "getTransactionFee": {
       "endpoint": "gRPC GetTransactionFee",
       "server": "grpc.solana-fee.blockrazor.me:443",
@@ -252,6 +288,15 @@
       "mode": "sandwichMitigation",
       "safe_window_range": "3-13 slots"
     },
+    "sandwich_detector": {
+      "description": "Real-time sandwich-attack monitoring via gRPC stream (separate from the sandwichMitigation send mode)",
+      "endpoint": "solana.sandwich-detector.blockrazor.me:443",
+      "service": "TxStreamService",
+      "rpc": "SubscribeTxStream(TxFilter) returns (stream TxStreamResponse)",
+      "filters": ["signer", "relevantProgramId"],
+      "auth": "TLS",
+      "availability": "Tier 0 whitelist only"
+    },
     "revert_protection": {
       "description": "Prevents failed transactions from landing on-chain; may reduce inclusion speed"
     },
@@ -269,7 +314,20 @@
       "replay": "Supports transaction replay for most recent 500 slots (~200 seconds)",
       "data_allowance_tier_2": "20 TiB/cycle",
       "data_allowance_tier_1": "50 TiB/cycle",
-      "min_tier": "Tier 2 - Solana"
+      "min_tier": "Tier 2 - Solana",
+      "pricing": {
+        "unit": "per cycle",
+        "entry": "5 TiB",
+        "tiers": [
+          {"data_allowance": "5 TiB/cycle", "price": "$250"},
+          {"data_allowance": "10 TiB/cycle", "price": "$500"},
+          {"data_allowance": "50 TiB/cycle", "price": "$2500"},
+          {"data_allowance": "100 TiB/cycle", "price": "$4750"},
+          {"data_allowance": "150 TiB/cycle", "price": "$6750"},
+          {"data_allowance": "200 TiB/cycle", "price": "$8500"},
+          {"data_allowance": "250 TiB/cycle", "price": "$10000"}
+        ]
+      }
     },
     "gas_sponsor": {
       "description": "Enables transactions without holding SOL by sponsoring fees and rent",

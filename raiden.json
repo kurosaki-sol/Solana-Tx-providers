@@ -122,6 +122,7 @@
       "zero_rtt": true,
       "auth": "Derived from API key: SHA-256(api_key) -> ed25519 keypair -> self-signed X.509 TLS client certificate",
       "connection_error_codes": {
+        "0": "Normal close",
         "1": "Unknown certificate (API key unrecognized)",
         "3": "QUIC access not enabled for account",
         "4": "Account suspended/banned"
@@ -145,6 +146,7 @@
       "500": "Server error"
     },
     "quic_connection": {
+      "0": "Normal close",
       "1": "Unknown certificate (API key unrecognized)",
       "3": "QUIC access not enabled",
       "4": "Account suspended/banned"
@@ -178,6 +180,31 @@
       "raiden_insight": {
         "description": "Strategy backtesting and analytics",
         "status": "coming_soon"
+      },
+      "raiden_pulse": {
+        "description": "Server-side decoded transaction streaming via gRPC",
+        "tagline": "Decoded transactions. Delivered via gRPC. Microsecond overhead. No client-side decoding.",
+        "regions": {
+          "fra": { "status": "Live" },
+          "nyc": { "status": "Live" },
+          "ams": { "status": "Live" }
+        },
+        "grpc_service": "ShrederBinaryService",
+        "grpc_rpc": "SubscribeBinaryTransactions",
+        "streaming": "bidirectional",
+        "payload": "bincode-deserialized into Solana VersionedTransaction",
+        "server_side_filtering": ["account_required", "account_include", "account_exclude"],
+        "reserve_access": "raiden.wtf/dashboard/pulse",
+        "endpoints": {
+          "fra": "fra.pulse.raiden.wtf",
+          "nyc": "nyc.pulse.raiden.wtf",
+          "ams": "ams.pulse.raiden.wtf"
+        },
+        "ports": {
+          "endpoint_table": 16000,
+          "code_samples": 9991,
+          "note": "Docs are inconsistent: the endpoint table lists port 16000 while the Rust/Python/TS code samples use port 9991. Both recorded verbatim; discrepancy unresolved in docs."
+        }
       }
     }
   },
