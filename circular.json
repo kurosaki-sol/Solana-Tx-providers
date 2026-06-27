@@ -21,10 +21,10 @@
   "cost_on_failure": "free",
   "endpoints": {
     "fast": {
-      "default": "https://fast.circular.fi",
-      "amsterdam": "https://ams.fast.circular.fi",
-      "frankurt": "https://fra.fast.circular.fi",
-      "new_york": "https://ny.fast.circular.fi"
+      "default": "https://fast.circular.fi/transactions",
+      "amsterdam": "https://ams.fast.circular.fi/transactions",
+      "frankurt": "https://fra.fast.circular.fi/transactions",
+      "new_york": "https://ny.fast.circular.fi/transactions"
     },
     "pro": {
       "tokens": "https://pro.circular.bot/market/tokens",
