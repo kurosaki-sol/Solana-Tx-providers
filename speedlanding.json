@@ -1,0 +1,73 @@
+{
+  "name": "SpeedLanding",
+  "website": "https://speedlanding.trade",
+  "docs": "https://speedlanding.trade/docs.html",
+  "description": "High-speed Solana SWQoS transaction landing service over QUIC. Uses a base58 Solana keypair as the API key for mutual-TLS client authentication (Solana-style self-signed certificate).",
+  "api_key": {
+    "required": true,
+    "type": "Solana keypair (base58-encoded)",
+    "auth_mechanism": "QUIC mutual-TLS: the base58 keypair generates a self-signed X.509 client certificate (new_dummy_x509_certificate). Server name 'speed-landing', ALPN 'solana-tpu'.",
+    "how_to_get": "Contact @speedlanding on Telegram."
+  },
+  "tip_wallets": [
+    "SpEEdz8S1KorkMZqjMUxfxrmWwofmp6ReNP2Nx6CUmq",
+    "SpeeDy3GJM4wcrQmk1itRFWgidvxX4rwjTLMv78wwjE",
+    "SPeEdva37vW8vRtqgYjprQs1g3965icfVN5Rt7SMAyh",
+    "speEdrSEpox5GUfHWcBc7tQjRuSfUin2yvB7qoYvvJh",
+    "SPeEDmkHkN3A2roSZf6aZyEMsmrGqTHKqwP51y2Y4rV",
+    "SpeedLdTJXh2RKpXEaP8JCxkWoUVXhtdPQ1EnxBJMxc",
+    "SpEediGKLbbXndSYTzwmz6Z3NDgHQLDcTDEvGFkSMH9",
+    "speede8xCcUq2Tiv1efXeTuE3k9TDNq8TnGKaKSc6J4"
+  ],
+  "tip_wallet_note": "Each transaction must include a SOL transfer to one of the SWQoS tip payment accounts.",
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "cost_on_failure": "not explicitly documented; tip is a SOL transfer in the transaction, so it only executes if the transaction lands",
+  "endpoints": {
+    "quic": {
+      "protocol": "QUIC (UDP)",
+      "port": 17778,
+      "alpn": "solana-tpu",
+      "server_name": "speed-landing",
+      "regions": {
+        "frankfurt": "fra.speedlanding.trade:17778",
+        "amsterdam": "ams.speedlanding.trade:17778",
+        "new_york": "ny.speedlanding.trade:17778",
+        "tokyo": "tyo.speedlanding.trade:17778",
+        "london": "lon.speedlanding.trade:17778",
+        "singapore": "spg.speedlanding.trade:17778"
+      }
+    }
+  },
+  "methods": {
+    "send_transaction": {
+      "description": "Send a signed Solana VersionedTransaction over a QUIC connection.",
+      "protocol": "QUIC unidirectional stream",
+      "encoding": "Binary (bincode-serialized VersionedTransaction, raw bytes)",
+      "behavior": "Establish a persistent QUIC connection with the keypair-derived client certificate, then write serialized transaction bytes. Auto-reconnect on send failure.",
+      "requirements": [
+        "Transaction must include a SOL transfer to one of the tip wallets",
+        "API key is a base58 Solana keypair used for mTLS client auth"
+      ]
+    }
+  },
+  "features": {
+    "swqos": "Stake-Weighted Quality of Service transaction landing",
+    "transports": ["QUIC"],
+    "geographic_regions": 6,
+    "keep_alive": {
+      "interval_seconds": 25,
+      "max_idle_timeout_seconds": 300,
+      "note": "Client sets QUIC keep-alive every 25s; max idle timeout 5 minutes."
+    },
+    "skip_server_verification": "Client skips server certificate verification (Solana-TPU style self-signed certs)",
+    "native_staking": "SpeedLanding also advertises a staking product (see site)"
+  },
+  "encoding": {
+    "supported": ["binary (bincode-serialized VersionedTransaction)"],
+    "transaction_format": "Signed VersionedTransaction, raw serialized bytes"
+  },
+  "contact": {
+    "telegram": "@speedlanding"
+  }
+}

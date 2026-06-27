@@ -1,0 +1,124 @@
+{
+  "name": "landX",
+  "website": "https://landx.dev",
+  "docs": "https://landx-1.gitbook.io/landx-docs",
+  "llms": "https://landx-1.gitbook.io/landx-docs/llms.txt",
+  "description": "Solana fast transaction landing service. Supports HTTP JSON-RPC, HTTP binary, and UDP binary submission across regional endpoints, with API-key-in-path (HTTP) or key-in-packet (UDP) authentication.",
+  "api_key": {
+    "required": true,
+    "delivery": {
+      "http": "API key in the URL path (query-string and header auth are NOT supported)",
+      "udp": "API key in the first 12 bytes of the packet body"
+    },
+    "note": "The HTTP API key is appended to the URL path; the UDP API key is a fixed 12-byte prefix."
+  },
+  "tip_wallets": [
+    "LandX1EMgYtrfi4jVJ7ryby4mDpZcef6sVH9b9U1cog",
+    "LandX2gHE7y6RejuvoLJK4hJiKkrAwcrJJ34u19Gmo1",
+    "LandX3uK1cSUF7hbefKo3oL1j4FhvhxitiMRKut99Z6",
+    "LandX4wXzvDyWfq1XXn4StRjwPjzqb7je2kqDGLoT9L",
+    "LandX5T4jfRASrcn76owxHM4q9bduNGj24ev4Ufc5fP",
+    "LandX6RsjjnfaxfYAFTZX1TW9Cgfe9HFStj9nRDd5SK",
+    "LandX7LsdzXDAbbyBjAq5FxLTnGQaU3LojGQMLZCvkt",
+    "LandX8Gv3UkhjmgKdSEg4F7yG7Z2tiqhNDYDtxazydN",
+    "LandX9fhNN5S7fuBgekKBYeYvK1Sy9hbGvDmHsBGYFh",
+    "LandXXxDXaSS8MjrqG9nri51htrfM6V4R3zXDVCeV8R"
+  ],
+  "tip_wallet_note": "Each transaction must include a system transfer to one of the designated tip addresses.",
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
+  "cost_on_failure": "not explicitly documented; tip is a SOL transfer in the transaction, so it only executes if the transaction lands",
+  "endpoints": {
+    "regions": {
+      "amsterdam": { "host": "ams1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "amsterdam_2": { "host": "ams2.landx.dev", "provider": "Cherry Servers", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "frankfurt_1": { "host": "fra1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "frankfurt_2": { "host": "fra2.landx.dev", "provider": "Allnodes", "transports": ["udp"], "note": "UDP only" },
+      "frankfurt_3": { "host": "fra3.landx.dev", "provider": "Cherry Servers", "transports": ["udp"], "note": "UDP only" },
+      "new_york": { "host": "ny1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "tokyo": { "host": "tyo1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "london": { "host": "lon1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "singapore": { "host": "sgp1.landx.dev", "provider": "TeraSwitch", "transports": ["http_json_rpc", "http_binary", "udp"] },
+      "salt_lake_city": { "host": "slc1.landx.dev", "provider": "TeraSwitch", "transports": ["udp"], "note": "UDP only" },
+      "dublin": { "host": "dub1.landx.dev", "provider": "TeraSwitch", "transports": ["udp"], "note": "UDP only" },
+      "toronto": { "host": "toro1.landx.dev", "provider": "OVH SAS", "transports": ["udp"], "note": "UDP only" }
+    },
+    "udp_port": 10000,
+    "health": "GET http://<host>/ping (returns 'ok')"
+  },
+  "rate_limits": {
+    "exceeded_response": "HTTP 419 'rate limit exceeded' (TPS rate limit)",
+    "specific_limits": "not publicly documented"
+  },
+  "methods": {
+    "sendTransaction_jsonrpc": {
+      "description": "Standard Solana JSON-RPC sendTransaction. base64 encoding only.",
+      "http_method": "POST",
+      "path": "/$APIKEY",
+      "content_type": "application/json",
+      "encoding": "base64",
+      "request_body": {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "sendTransaction",
+        "params": [
+          "<base64_transaction>",
+          { "encoding": "base64" }
+        ]
+      },
+      "response_success": { "jsonrpc": "2.0", "id": 1, "result": "<signature>" },
+      "error_messages": {
+        "too many transactions": "The request exceeds the transaction limit",
+        "missing tip account": "Missing a valid tip",
+        "duplicate transaction": "Duplicate transaction",
+        "invalid wire transaction": "Invalid transaction wire format"
+      }
+    },
+    "sendTransaction_binary": {
+      "description": "HTTP binary transaction submission. Raw Solana transaction bytes in the request body.",
+      "http_method": "POST",
+      "path": "/txb/$APIKEY",
+      "content_type": "application/octet-stream",
+      "request_body": "Raw serialized transaction bytes",
+      "status_codes": {
+        "200": "ok (accepted)",
+        "400": "bad request (malformed HTTP request)",
+        "403": "api-key key is null (missing) / api-key does not exist (invalid)",
+        "419": "rate limit exceeded (TPS)",
+        "500": "ok body but transaction failed pre-submit checks"
+      },
+      "note": "200 ok does not mean on-chain confirmation. Record the signature and query status yourself."
+    },
+    "sendTransaction_udp": {
+      "description": "UDP binary transaction submission. Fire-and-forget, no response.",
+      "protocol": "UDP",
+      "endpoint": "<host>:10000",
+      "packet_layout": {
+        "bytes_0_12": "12-byte LandX API key",
+        "bytes_12_end": "Raw serialized Solana transaction wire bytes"
+      },
+      "note": "UDP has no response. Sending the packet does not mean on-chain confirmation. Record the signature and query status yourself."
+    },
+    "health": {
+      "description": "Health / keep-alive endpoint",
+      "http_method": "GET",
+      "path": "/ping",
+      "response": "ok"
+    }
+  },
+  "features": {
+    "transports": ["http_json_rpc", "http_binary", "udp"],
+    "geographic_regions": 12,
+    "keep_alive": {
+      "idle_timeout_seconds": 65,
+      "recommended_ping_interval_seconds": 60,
+      "note": "Server closes idle HTTP connections after 65s; reuse keep-alive connections and ping every 60s."
+    },
+    "udp_only_regions": ["frankfurt_2", "frankfurt_3", "salt_lake_city", "dublin", "toronto"]
+  },
+  "encoding": {
+    "json_rpc": ["base64"],
+    "binary": "raw serialized bytes",
+    "udp": "raw serialized bytes (12-byte key prefix)"
+  }
+}
