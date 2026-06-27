@@ -47,15 +47,21 @@
   "min_tip_sol": 0.001,
   "cost_on_failure": "unknown (no docs on refunds; tip is via SOL transfer instruction so it executes if TX lands)",
   "endpoints": {
+    "solana_rpc_blinklabs": {
+      "url": "https://sol.blinklabs.xyz/v1/<API_KEY>",
+      "description": "Current Solana RPC endpoint (rebranded blinklabs.xyz domain) for sendTransaction and pm_isSponsorable. Per the live docs this replaces svm.merkle.io and quicksol.merkle.io, which no longer appear in the documentation as of 2026-06.",
+      "method": "POST",
+      "protocol": "JSON-RPC"
+    },
     "quickslot": {
       "url": "https://quicksol.merkle.io",
-      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed.",
+      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed. (Legacy domain; no longer listed in live docs as of 2026-06 — see solana_rpc_blinklabs.)",
       "method": "POST",
       "protocol": "JSON-RPC"
     },
     "svm_rpc": {
       "url": "https://svm.merkle.io/<api_key>",
-      "description": "Solana RPC endpoint for sending transactions with API key auth",
+      "description": "Solana RPC endpoint for sending transactions with API key auth. (Legacy domain; no longer listed in live docs as of 2026-06 — see solana_rpc_blinklabs.)",
       "method": "POST",
       "protocol": "JSON-RPC"
     },

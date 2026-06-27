@@ -65,10 +65,15 @@
       "protocol": "QUIC (port 9000)",
       "regions": {
         "frankfurt": "fra.landing.soyas.xyz:9000",
+        "frankfurt_2": "fra2.landing.soyas.xyz:9000",
         "amsterdam": "ams.landing.soyas.xyz:9000",
         "new_york": "nyc.landing.soyas.xyz:9000",
         "london": "lon.landing.soyas.xyz:9000",
         "tokyo": "tyo.landing.soyas.xyz:9000"
+      },
+      "data_centers": {
+        "frankfurt_2": "Allnodes",
+        "note": "The live endpoints table adds a Frankfurt 2 (fra2) region with a per-region data-center column (Teraswitch / Allnodes)."
       }
     },
     "web_api": {

@@ -24,6 +24,8 @@
   "cost_on_failure": "Not documented - unclear if tip is consumed on failed transactions",
   "endpoints": {
     "base_url_format": "https://<region-host>/$APIKEY",
+    "route": "POST /fast",
+    "route_note": "The live docs document an explicit 'POST /fast' route for both single and batch transaction submission.",
     "http_method": "POST",
     "content_type": "application/json",
     "protocol": "JSON-RPC 2.0",

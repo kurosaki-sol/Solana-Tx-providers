@@ -30,7 +30,16 @@
       "amsterdam": "http://ams.lunar-lander.hellomoon.io/send?api-key=xxxx",
       "new_york": "http://nyc.lunar-lander.hellomoon.io/send?api-key=xxxx",
       "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/send?api-key=xxxx",
-      "tokyo": "http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx"
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "chicago": "http://chi.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "dallas": "http://dal.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "dubai": "http://uae.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "london": "http://lon.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "los_angeles": "http://lax.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "seattle": "http://sea.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "singapore": "http://sgp.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "sydney": "http://syd.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "vilnius": "http://lit.lunar-lander.hellomoon.io/send?api-key=xxxx"
     },
     "send_cors": {
       "note": "Same regions, path /send-cors, adds Access-Control-Allow-Origin: * header",
@@ -47,7 +56,16 @@
       "amsterdam": "http://ams.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
       "new_york": "http://nyc.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
       "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
-      "tokyo": "http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx"
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "chicago": "http://chi.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "dallas": "http://dal.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "dubai": "http://uae.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "london": "http://lon.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "los_angeles": "http://lax.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "seattle": "http://sea.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "singapore": "http://sgp.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "sydney": "http://syd.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "vilnius": "http://lit.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx"
     },
     "send_batch": {
       "path": "/sendBatch",
@@ -198,9 +216,9 @@
     "atomic_bundles": true,
     "batch_send": true,
     "cors_support": true,
-    "geographic_regions": 5,
+    "geographic_regions": 14,
     "geolocated_routing": true,
-    "available_regions": ["frankfurt", "amsterdam", "new_york", "ashburn_virginia", "tokyo"],
+    "available_regions": ["frankfurt", "amsterdam", "new_york", "ashburn_virginia", "tokyo", "chicago", "dallas", "dubai", "london", "los_angeles", "seattle", "singapore", "sydney", "vilnius"],
     "keep_alive": {
       "endpoint": "/ping",
       "recommended_interval_seconds": "30-45",

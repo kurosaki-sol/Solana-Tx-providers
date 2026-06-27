@@ -30,6 +30,8 @@
     "global": "https://global.blocksprint.io",
     "frankfurt": "https://fra.blocksprint.io",
     "frankfurt_2": "https://fra2.blocksprint.io",
+    "frankfurt_3": "http://fra3.blocksprint.io",
+    "frankfurt_4": "http://fra4.blocksprint.io",
     "amsterdam": "https://ams.blocksprint.io",
     "amsterdam_2": "https://ams2.blocksprint.io",
     "london": "https://lon.blocksprint.io",
@@ -37,9 +39,12 @@
     "los_angeles": "https://la.blocksprint.io",
     "singapore": "https://sgp.blocksprint.io",
     "tokyo": "https://jp.blocksprint.io",
+    "dublin": "http://dub.blocksprint.io",
     "lithuania": "https://lit.blocksprint.io",
     "quic": "{region}.blocksprint.io:10000",
     "quic_alpn": "solana-tpu",
+    "udp": "udp://{region}.blocksprint.io:5000",
+    "udp_note": "UDP fire-and-forget transport: one datagram per transaction, no handshake, no response.",
     "json_rpc": "POST /",
     "bundle": "POST /bundle",
     "health": "GET /health",
@@ -48,6 +53,8 @@
   "endpoint_providers": {
     "frankfurt": "Teraswitch",
     "frankfurt_2": "Vultr",
+    "frankfurt_3": "Cherry Servers",
+    "frankfurt_4": "Allnodes",
     "amsterdam": "Cherry Servers",
     "amsterdam_2": "Teraswitch",
     "london": "Teraswitch",
@@ -55,6 +62,7 @@
     "los_angeles": "Vultr",
     "singapore": "Vultr",
     "tokyo": "Teraswitch",
+    "dublin": "Teraswitch",
     "lithuania": "Cherry Servers"
   },
   "rate_limits": {

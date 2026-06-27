@@ -34,27 +34,42 @@
     "send_transaction_v1": {
       "http": {
         "frankfurt": "http://frankfurt.solana.blockrazor.xyz:443/sendTransaction",
+        "frankfurt_allnodes": "http://frankfurt-allnodes.solana.blockrazor.xyz:443/sendTransaction",
+        "frankfurt_cherryservers": "http://frankfurt-cherryservers.solana.blockrazor.xyz:443/sendTransaction",
         "new_york": "http://newyork.solana.blockrazor.xyz:443/sendTransaction",
         "tokyo": "http://tokyo.solana.blockrazor.xyz:443/sendTransaction",
         "amsterdam": "http://amsterdam.solana.blockrazor.xyz:443/sendTransaction",
-        "london": "http://london.solana.blockrazor.xyz:443/sendTransaction"
+        "amsterdam_cherryservers": "http://amsterdam-cherryservers.solana.blockrazor.xyz:443/sendTransaction",
+        "london": "http://london.solana.blockrazor.xyz:443/sendTransaction",
+        "toronto": "http://toronto.solana.blockrazor.xyz:443/sendTransaction",
+        "singapore": "http://singapore.solana.blockrazor.xyz:443/sendTransaction"
       },
       "grpc": {
         "frankfurt": "frankfurt.solana-grpc.blockrazor.xyz:80",
+        "frankfurt_allnodes": "frankfurt-allnodes.solana-grpc.blockrazor.xyz:80",
+        "frankfurt_cherryservers": "frankfurt-cherryservers.solana-grpc.blockrazor.xyz:80",
         "new_york": "newyork.solana-grpc.blockrazor.xyz:80",
         "tokyo": "tokyo.solana-grpc.blockrazor.xyz:80",
         "amsterdam": "amsterdam.solana-grpc.blockrazor.xyz:80",
-        "london": "london.solana-grpc.blockrazor.xyz:80"
+        "amsterdam_cherryservers": "amsterdam-cherryservers.solana-grpc.blockrazor.xyz:80",
+        "london": "london.solana-grpc.blockrazor.xyz:80",
+        "toronto": "toronto.solana-grpc.blockrazor.xyz:80",
+        "singapore": "singapore.solana-grpc.blockrazor.xyz:80"
       },
       "health": "http://frankfurt.solana.blockrazor.xyz:443/health"
     },
     "send_transaction_v2": {
       "http": {
         "frankfurt": "http://frankfurt.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "frankfurt_allnodes": "http://frankfurt-allnodes.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "frankfurt_cherryservers": "http://frankfurt-cherryservers.solana.blockrazor.xyz:443/v2/sendTransaction",
         "new_york": "http://newyork.solana.blockrazor.xyz:443/v2/sendTransaction",
         "tokyo": "http://tokyo.solana.blockrazor.xyz:443/v2/sendTransaction",
         "amsterdam": "http://amsterdam.solana.blockrazor.xyz:443/v2/sendTransaction",
-        "london": "http://london.solana.blockrazor.xyz:443/v2/sendTransaction"
+        "amsterdam_cherryservers": "http://amsterdam-cherryservers.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "london": "http://london.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "toronto": "http://toronto.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "singapore": "http://singapore.solana.blockrazor.xyz:443/v2/sendTransaction"
       },
       "https": {
         "frankfurt": "https://frankfurt.solana.blockrazor.io/v2/sendTransaction",
@@ -62,6 +77,13 @@
         "tokyo": "https://tokyo.solana.blockrazor.io/v2/sendTransaction"
       },
       "health": "http://frankfurt.solana.blockrazor.xyz:443/v2/health?auth=<auth_token>"
+    },
+    "send_transaction_v2_binary": {
+      "note": "Raw binary transaction submission. Content-Type application/octet-stream, body is raw serialized bytes (not base64). Available on all 10 HTTP regions plus HTTPS Frankfurt/New York/Tokyo.",
+      "path": "/v2/sendBinaryTransaction",
+      "content_type": "application/octet-stream",
+      "http_example": "http://frankfurt.solana.blockrazor.xyz:443/v2/sendBinaryTransaction",
+      "https_example": "https://frankfurt.solana.blockrazor.io/v2/sendBinaryTransaction"
     },
     "network_fee_stream": {
       "grpc": "grpc.solana-fee.blockrazor.me:443",

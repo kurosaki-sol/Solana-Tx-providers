@@ -68,6 +68,17 @@
       "tx_stream_grpc": {
         "port": 22221,
         "example_hostname": "fra.stream.nextblock.io",
+        "regional_hostnames": {
+          "frankfurt": "fra.stream.nextblock.io:22221",
+          "amsterdam": "amsterdam.stream.nextblock.io:22221",
+          "london": "london.stream.nextblock.io:22221",
+          "singapore": "singapore.stream.nextblock.io:22221",
+          "tokyo": "tokyo.stream.nextblock.io:22221",
+          "new_york": "ny.stream.nextblock.io:22221",
+          "salt_lake_city": "slc.stream.nextblock.io:22221",
+          "dublin": "dublin.stream.nextblock.io:22221",
+          "vilnius": "vilnius.stream.nextblock.io:22221"
+        },
         "auth_type": "wallet_signature",
         "payment": {
           "recipient": "nextstream.sol",

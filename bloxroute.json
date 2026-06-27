@@ -80,6 +80,11 @@
       "tokyo": {
         "host": "tokyo.solana.dex.blxrbdn.com",
         "http": "http://tokyo.solana.dex.blxrbdn.com"
+      },
+      "toronto": {
+        "host": "toronto.solana.dex.blxrbdn.com",
+        "http": "http://toronto.solana.dex.blxrbdn.com",
+        "status": "new/beta"
       }
     },
     "pumpfun_beta": {

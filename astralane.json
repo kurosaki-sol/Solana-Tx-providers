@@ -49,6 +49,13 @@
       "singapore": "http://sg.gateway.astralane.io/iris?api-key=xxxx",
       "lithuania": "http://lit.gateway.astralane.io/iris?api-key=xxxx"
     },
+    "global_edge": "https://edge.astralane.io/iris2?api-key=xxxx",
+    "global_edge_note": "Geo-routed global entrypoint; also serves the Shreds product at https://edge.astralane.io/shred-pay?api-key=xxxx",
+    "shred_pay": "http://{region}.gateway.astralane.io/shred-pay?api-key=xxxx",
+    "shreds_relay_regions": {
+      "frankfurt": "Fra2 Terraswitch (shred relay co-location)",
+      "new_york": "Ewr2 Terraswitch (shred relay co-location)"
+    },
     "iris2_plaintext": "http://{region}.gateway.astralane.io/iris2?api-key=xxxx",
     "irisb_binary": "http://{region}.gateway.astralane.io/irisb?api-key=xxxx",
     "quic": "{region}.gateway.astralane.io:7000",
