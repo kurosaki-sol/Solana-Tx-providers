@@ -1,0 +1,32 @@
+# Node1
+
+**Auth:** required — header
+**Min tip:** 0.002 SOL
+
+## Tip wallets
+- `node1PqAa3BWWzUnTHVbw8NJHC874zn9ngAkXjgWEej`
+- `node1UzzTxAAeBTpfZkQPJXBAqixsbdth11ba1NXLBG`
+- `node1Qm1bV4fwYnCurP8otJ9s5yrkPq7SPZ5uhj3Tsv`
+- `node1PUber6SFmSQgvf2ECmXsHP5o3boRSGhvJyPMX1`
+- `node1AyMbeqiVN6eoQzEAwCA6Pk826hrdqdAHR7cdJ3`
+- `node1YtWCoTwwVYTFLfS19zquRQzYX332hs1HEuRBjC`
+
+## Endpoints
+- **new_york.https**: `https://ny.node1.me`
+- **new_york.http**: `http://ny.node1.me`
+- **amsterdam.https**: `https://ams.node1.me`
+- **amsterdam.http**: `http://ams.node1.me`
+- **london.https**: `https://lon.node1.me`
+- **london.http**: `http://lon.node1.me`
+- **frankfurt-tsw.https**: `https://fra.node1.me`
+- **frankfurt-tsw.http**: `http://fra.node1.me`
+- **frankfurt-cherry.https**: `https://fra2.node1.me`
+- **frankfurt-cherry.http**: `http://fra2.node1.me`
+- **toronto.https**: `https://tor.node1.me`
+- **toronto.http**: `http://tor.node1.me`
+- **dublin.https**: `https://dub.node1.me`
+- **dublin.http**: `http://dub.node1.me`
+- **tokyo.https**: `https://tk.node1.me`
+- **tokyo.http**: `http://tk.node1.me`
+- **singapore.https**: `https://sgp.node1.me`
+- **singapore.http**: `http://sgp.node1.me`
