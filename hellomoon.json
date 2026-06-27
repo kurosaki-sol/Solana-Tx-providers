@@ -6,7 +6,7 @@
     "required": true,
     "delivery": "query_param",
     "query_param": "api-key",
-    "how_to_get": "Open a ticket on HelloMoon Discord, or visit https://hellomoon.readme.io/reference/get-your-api-key",
+    "how_to_get": "Open a ticket on HelloMoon Discord, or visit https://hellomoon.readme.io/reference/get-your-api-key, or get your API key by messaging our Telegram bot at https://t.me/lunar_lander_status_bot",
     "auth_scheme": "bearer (HTTP Bearer for some endpoints), query param for Lunar Lander"
   },
   "tip_wallets": [
@@ -30,7 +30,16 @@
       "amsterdam": "http://ams.lunar-lander.hellomoon.io/send?api-key=xxxx",
       "new_york": "http://nyc.lunar-lander.hellomoon.io/send?api-key=xxxx",
       "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/send?api-key=xxxx",
-      "tokyo": "http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx"
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "chicago": "http://chi.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "dallas": "http://dal.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "dubai": "http://uae.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "london": "http://lon.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "los_angeles": "http://lax.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "seattle": "http://sea.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "singapore": "http://sgp.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "sydney": "http://syd.lunar-lander.hellomoon.io/send?api-key=xxxx",
+      "vilnius": "http://lit.lunar-lander.hellomoon.io/send?api-key=xxxx"
     },
     "send_cors": {
       "note": "Same regions, path /send-cors, adds Access-Control-Allow-Origin: * header",
@@ -47,7 +56,16 @@
       "amsterdam": "http://ams.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
       "new_york": "http://nyc.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
       "ashburn_virginia": "http://ash.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
-      "tokyo": "http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx"
+      "tokyo": "http://tyo.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "chicago": "http://chi.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "dallas": "http://dal.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "dubai": "http://uae.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "london": "http://lon.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "los_angeles": "http://lax.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "seattle": "http://sea.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "singapore": "http://sgp.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "sydney": "http://syd.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx",
+      "vilnius": "http://lit.lunar-lander.hellomoon.io/sendbundle?api-key=xxxx"
     },
     "send_batch": {
       "path": "/sendBatch",
@@ -198,9 +216,9 @@
     "atomic_bundles": true,
     "batch_send": true,
     "cors_support": true,
-    "geographic_regions": 5,
+    "geographic_regions": 14,
     "geolocated_routing": true,
-    "available_regions": ["frankfurt", "amsterdam", "new_york", "ashburn_virginia", "tokyo"],
+    "available_regions": ["frankfurt", "amsterdam", "new_york", "ashburn_virginia", "tokyo", "chicago", "dallas", "dubai", "london", "los_angeles", "seattle", "singapore", "sydney", "vilnius"],
     "keep_alive": {
       "endpoint": "/ping",
       "recommended_interval_seconds": "30-45",
@@ -209,6 +227,20 @@
       "note": "Must ping on same TCP connection to be effective"
     },
     "transaction_ordering": "by received time and tip amount (higher tips processed faster)",
-    "bundle_status_tracking": false
+    "bundle_status_tracking": false,
+    "mev_protection": {
+      "enabled": true,
+      "description": "Enable MEV protection on transaction submission",
+      "query_param": "?mev-protect=true (or ?mev-protect=1)",
+      "header": "X-Mev-Protect: true (or X-Mev-Protect: 1)",
+      "supported_endpoints": ["/send", "/send-bin", "/send-cors", "/send-bin-cors", "/sendBatch"]
+    },
+    "front_running_protection": {
+      "enabled": true,
+      "description": "Front-running protection (jitodontfront): add any valid Solana pubkey beginning with 'jitodontfront' as a read-only account to any instruction; the block engine rejects bundles containing it unless it appears at index 0",
+      "example_pubkey": "jitodontfront111111111111111111111111111111",
+      "account_role": "read-only",
+      "rejected_unless_index": 0
+    }
   }
 }

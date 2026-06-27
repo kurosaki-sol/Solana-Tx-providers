@@ -1,5 +1,13 @@
 {
-  "name": "Merkle QuickSlot",
+  "name": "Merkle QuickSlot (now Blink Labs)",
+  "aka": "Blink Labs",
+  "rebrand": {
+    "old_names": ["Merkle", "QuickSlot", "Solana Boost"],
+    "new_name": "Blink Labs",
+    "new_website": "https://blinklabs.xyz",
+    "new_dashboard": "https://portal.blinklabs.xyz",
+    "note": "Merkle / QuickSlot / Solana Boost have rebranded to 'Blink Labs'. All *.merkle.io domains (svm/quicksol/mempool/api/mbs.merkle.io) are absent from the live docs and replaced by *.blinklabs.xyz. The new dashboard portal is portal.blinklabs.xyz and the new website is blinklabs.xyz. All merkle.io domains are considered legacy as of 2026-06; existing merkle.io fields in this file are retained and annotated as legacy."
+  },
   "website": "https://merkle.io",
   "docs": "https://docs.merkle.io/quickslot/send-transactions",
   "dashboard": "https://mbs.merkle.io",
@@ -11,7 +19,14 @@
     "api_header": "Token sk_mbs_xxxxxxxxxxx",
     "api_header_name": "Authorization",
     "mempool_api_header": "X-MBS-Key",
-    "obtain": "https://mbs.merkle.io (API Keys tab in dashboard)"
+    "obtain": "https://mbs.merkle.io (API Keys tab in dashboard)",
+    "obtain_blinklabs": "Email contact@blinklabs.xyz to request keys; manage via dashboard at https://portal.blinklabs.xyz (replaces mbs.merkle.io as of 2026-06).",
+    "searcher_api_header": "X-Blink-Signature",
+    "searcher_api_auth": "Searcher API uses a Flashbots-style signed-payload header: X-Blink-Signature (the request payload is signed and the signature passed in this header).",
+    "legacy": {
+      "obtain": "https://mbs.merkle.io (API Keys tab in dashboard) — legacy as of 2026-06; superseded by portal.blinklabs.xyz and contact@blinklabs.xyz.",
+      "mempool_api_header": "X-MBS-Key — legacy header for *.merkle.io endpoints as of 2026-06."
+    }
   },
   "tip_wallets": {
     "quickslot": [
@@ -39,20 +54,29 @@
     "solana_boost": [
       "mkLkJUvg6yNULmMvEHW4rQvoTGNZWLSeYdMswPMNpVD"
     ],
-    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account."
+    "sponsor": [
+      "7czf8vVLjGUaLqn9DBneEz1sNwP3gLx8Usrq3zMctify"
+    ],
+    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account. The 'sponsor' wallet is used by the active gas-sponsorship feature (pm_isSponsorable): append a transfer of activeSponsorAmount (0.005 SOL / 5,000,000 lamports) to it, distinct from landing tips."
   },
   "min_tip_sol": 0.001,
   "cost_on_failure": "unknown (no docs on refunds; tip is via SOL transfer instruction so it executes if TX lands)",
   "endpoints": {
+    "solana_rpc_blinklabs": {
+      "url": "https://sol.blinklabs.xyz/v1/<API_KEY>",
+      "description": "Current Solana RPC endpoint (rebranded blinklabs.xyz domain) for sendTransaction and pm_isSponsorable. Per the live docs this replaces svm.merkle.io and quicksol.merkle.io, which no longer appear in the documentation as of 2026-06.",
+      "method": "POST",
+      "protocol": "JSON-RPC"
+    },
     "quickslot": {
       "url": "https://quicksol.merkle.io",
-      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed.",
+      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed. (Legacy domain; no longer listed in live docs as of 2026-06 — see solana_rpc_blinklabs.)",
       "method": "POST",
       "protocol": "JSON-RPC"
     },
     "svm_rpc": {
       "url": "https://svm.merkle.io/<api_key>",
-      "description": "Solana RPC endpoint for sending transactions with API key auth",
+      "description": "Solana RPC endpoint for sending transactions with API key auth. (Legacy domain; no longer listed in live docs as of 2026-06 — see solana_rpc_blinklabs.)",
       "method": "POST",
       "protocol": "JSON-RPC"
     },
@@ -76,16 +100,16 @@
   "rate_limits": {
     "quickslot": "not documented",
     "svm_rpc": "not documented",
-    "note": "No rate limits specified in docs"
+    "note": "Rate limits are now explicitly enforced. Excessive polling or flooding of endpoints is treated as endpoint abuse per the Searchers Terms & Conditions section 2.4."
   },
   "methods": {
     "sendTransaction_quickslot": {
       "endpoint": "https://quicksol.merkle.io",
-      "description": "Send transaction via QuickSlot (no API key). Must include a SOL transfer tip of >= 0.001 SOL to one of the tip wallets.",
+      "description": "Send transaction via QuickSlot (no API key). Must include a SOL transfer tip of >= 0.001 SOL to one of the tip wallets. On Solana the second param MUST be an options object with skipPreflight:true — the live docs warn the transaction fails preflight otherwise.",
       "request": {
         "method": "sendTransaction",
         "id": 1,
-        "params": ["<base64_or_base58_encoded_transaction>"]
+        "params": ["<base64_or_base58_encoded_transaction>", { "skipPreflight": true }]
       },
       "response": {
         "id": 1,
@@ -95,11 +119,11 @@
     },
     "sendTransaction_svm_rpc": {
       "endpoint": "https://svm.merkle.io/<api_key>",
-      "description": "Send transaction via SVM RPC (requires API key in URL path)",
+      "description": "Send transaction via SVM RPC (requires API key in URL path). On Solana the second param MUST be an options object with skipPreflight:true — the live docs warn the transaction fails preflight otherwise.",
       "request": {
         "method": "sendTransaction",
         "id": 1,
-        "params": ["<base64_or_base58_encoded_transaction>"]
+        "params": ["<base64_or_base58_encoded_transaction>", { "skipPreflight": true }]
       },
       "response": {
         "id": 1,
@@ -140,6 +164,21 @@
         "source": "string (optional tracking tag)",
         "release_targets": "string array ('public' or 'private')"
       }
+    },
+    "pm_isSponsorable": {
+      "endpoint": "https://sol.blinklabs.xyz/v1/<API_KEY>",
+      "description": "Checks whether an unsigned transaction is gas-sponsorable before submission. Used by the active gas-sponsorship flow: if sponsorable, append a Blink transfer instruction (sponsorWallet) before signing/submitting.",
+      "request": {
+        "method": "pm_isSponsorable",
+        "id": 1,
+        "params": ["<unsigned_encoded_transaction>"]
+      },
+      "response_fields": {
+        "sponsorable": "boolean - whether the transaction is eligible for gas sponsorship",
+        "sponsorName": "string - name of the sponsor",
+        "sponsorWallet": "string - wallet address to receive the appended sponsor transfer",
+        "activeSponsorTransfer": "transfer amount/instruction to append for active sponsorship"
+      }
     }
   },
   "features": {
@@ -173,6 +212,38 @@
     "supported_chains": ["Solana", "Ethereum", "BSC"],
     "mevswap_dex": {
       "description": "Natively MEV-protected DEX by Merkle"
+    },
+    "universal_gas_payments": {
+      "description": "Universal Gas Payments: pay Solana transaction fees with any SPL token (e.g. USDC, USDT, etc.), auto-converted to SOL on-chain.",
+      "any_spl_token": true,
+      "auto_conversion": "on-chain SPL -> SOL"
+    },
+    "low_latency_solana": {
+      "description": "Low Latency Solana service: an add-on combining Jito relays and SWQoS clients for faster inclusion.",
+      "add_on": true,
+      "combines": ["Jito relays", "SWQoS clients"],
+      "usage_models": {
+        "subscription_mode": "Flat subscription for low-latency routing.",
+        "tip_mode": "Pay per transaction via tip.",
+        "automatic_inclusion": "Transactions with an above-average priority fee are automatically routed through SWQoS."
+      }
+    },
+    "swqos_routing": {
+      "description": "Stake-Weighted QoS (SWQoS) routing layer via partner validators controlling ~3% of active stake. Distinct from the solana_boost SWQoS broadcasting feature.",
+      "partner_stake_share": "~3% of active stake",
+      "access_models_count": 3
+    },
+    "gas_sponsorship": {
+      "description": "Solana Gas Sponsorship with passive and active modes; uses Jito bundles with revert protection.",
+      "passive": {
+        "description": "Passive sponsorship lifts swap landing rates by up to ~5%."
+      },
+      "active": {
+        "description": "Active sponsorship reduces sponsorship cost by ~90% via pm_isSponsorable plus an appended Blink transfer instruction.",
+        "method": "pm_isSponsorable",
+        "mechanism": "append Blink transfer instruction"
+      },
+      "execution": "Jito bundles with revert protection"
     }
   }
 }

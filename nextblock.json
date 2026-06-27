@@ -68,6 +68,17 @@
       "tx_stream_grpc": {
         "port": 22221,
         "example_hostname": "fra.stream.nextblock.io",
+        "regional_hostnames": {
+          "frankfurt": "fra.stream.nextblock.io:22221",
+          "amsterdam": "amsterdam.stream.nextblock.io:22221",
+          "london": "london.stream.nextblock.io:22221",
+          "singapore": "singapore.stream.nextblock.io:22221",
+          "tokyo": "tokyo.stream.nextblock.io:22221",
+          "new_york": "ny.stream.nextblock.io:22221",
+          "salt_lake_city": "slc.stream.nextblock.io:22221",
+          "dublin": "dublin.stream.nextblock.io:22221",
+          "vilnius": "vilnius.stream.nextblock.io:22221"
+        },
         "auth_type": "wallet_signature",
         "payment": {
           "recipient": "nextstream.sol",
@@ -232,6 +243,27 @@
         "landed_tips_99th_percentile": "number (SOL, not lamports)",
         "ema_landed_tips_50th_percentile": "number (SOL, not lamports, exponential moving average)"
       }
+    },
+    "tipfloor_stream_grpc": {
+      "protocol": "gRPC",
+      "proto_service": "StreamTipFloor(TipFloorStreamRequest) returns (stream TipFloorStreamResponse)",
+      "client": "nextblockApiClient (main API client)",
+      "description": "gRPC streaming variant of tipfloor: stream real-time tip floor data instead of polling HTTP GET /api/v2/tipfloor",
+      "request": {
+        "UpdateFrequency": {
+          "type": "string",
+          "description": "Update frequency for tip floor data, e.g. \"1m\""
+        }
+      },
+      "response": "stream of tip floor data"
+    },
+    "ping": {
+      "protocol": "gRPC",
+      "proto_service": "nextblockApiClient.Ping",
+      "client": "nextblockApiClient (main API client)",
+      "description": "gRPC keepalive method returning an empty pong to keep the gRPC connection alive for faster deliveries",
+      "request": {},
+      "response": "empty pong"
     }
   },
   "features": {
@@ -244,7 +276,8 @@
     "multi_protocol": "HTTP, gRPC, QUIC (fire-and-forget), and TX Stream (real-time transaction feed)",
     "9_global_regions": "Frankfurt, Amsterdam, London, Singapore, Tokyo, New York, Salt Lake City, Dublin, Vilnius",
     "ip_access_controls": "IP, CIDR, and HOST-based access controls on all tiers",
-    "tx_stream": "Real-time transaction stream filtered by program/account IDs via gRPC (separate paid service, wallet-auth)"
+    "tx_stream": "Real-time transaction stream filtered by program/account IDs via gRPC (separate paid service, wallet-auth)",
+    "tip_floor_stream": "Stream real-time tip floor data via gRPC to dynamically optimize tips; documented across Go, Rust, Python, and TypeScript"
   },
   "transaction_requirements": {
     "must_include_tip": "Transaction must contain a plain SOL transfer instruction to one of the 8 NextBlock tip wallets",

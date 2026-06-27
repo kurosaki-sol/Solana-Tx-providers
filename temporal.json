@@ -9,7 +9,7 @@
     "passed_as": "query_parameter",
     "parameter_name": "c",
     "format": "?c=<YOUR_API_KEY>",
-    "how_to_get": "Contact hello@temporal.xyz or check https://temporal.xyz/ for access"
+    "how_to_get": "Contact hello@temporal.xyz or check https://temporal.xyz/ for access; you can also self-serve a request via the access Typeform at https://form.typeform.com/to/pGXN0ryV"
   },
   "tip_wallets": [
     "TEMPaMeCRFAS9EKF53Jd6KpHxgL47uWLcpFArU1Fanq",
@@ -84,7 +84,7 @@
       },
       "tokyo": {
         "direct": "https://tyo1.nozomi.temporal.xyz",
-        "cloudflare": "https://tyo1.nozomi.temporal.xyz"
+        "cloudflare": "https://tyo.nozomi.temporal.xyz"
       },
       "singapore": {
         "direct": "https://sgp1.nozomi.temporal.xyz",
@@ -99,8 +99,8 @@
   "rate_limits": {
     "scope": "per_region",
     "notes": "Multi-region sends don't count against the same limit",
-    "qos_penalty": "Applied if landing rate drops below expected threshold",
-    "custom_limits": "Available for high-volume users (contact Temporal)"
+    "qos_penalty": "Applied if landing rate drops below expected threshold; quantified as a discount on effective priority equal to your recent landing rate, e.g. if only 10% of your transactions land successfully over the last 30 minutes, your effective priority is discounted to 10%.",
+    "custom_limits": "High-volume users can request custom rate limits and priority configurations. Reach out via Discord."
   },
   "methods": {
     "sendTransaction_jsonrpc": {
@@ -182,7 +182,7 @@
   "features": {
     "tip_only_on_success": true,
     "higher_tips_prioritized": true,
-    "delivery_paths": ["Jito validators", "Harmonic bundles"],
+    "delivery_paths": ["Jito validators", "Harmonic bundles", "Staked connections"],
     "tcp_keepalive": {
       "timeout_seconds": 65,
       "max_requests_per_connection": 1000,
@@ -190,7 +190,12 @@
     },
     "supported_languages": ["Rust", "Python", "JavaScript", "TypeScript", "cURL"],
     "no_full_rpc": "Nozomi is NOT a full RPC. Use a separate RPC (e.g. Helius) for getLatestBlockhash and other read calls.",
-    "multi_region_send": "Can send to multiple regions simultaneously without rate limit penalty"
+    "multi_region_send": "Can send to multiple regions simultaneously without rate limit penalty",
+    "private_tip_addresses": "Nozomi can generate dedicated tip addresses exclusive to a project, created from the dashboard 'Tip Accounts' page.",
+    "front_running_protection": "Front Running Protection mode routes a transaction exclusively through a whitelist of trusted validators (Helius, Coinbase, etc.) to prevent adversarial validators from seeing it.",
+    "staked_connections": "The tip pays for Nozomi's staked connections, available as a delivery path alongside Jito validators and Harmonic bundles.",
+    "automatic_retries": "Nozomi automatically retries a transaction until it is confirmed or the blockhash expires; higher-tipped transactions are retried more aggressively, so clients need no retry logic of their own.",
+    "no_simulation_direct_tpu": "Nozomi does not simulate transactions. It routes directly to the TPU for the fastest possible delivery."
   },
   "response_status_codes": {
     "200": "Success",

@@ -14,12 +14,28 @@
     "HWEoBxYs7ssKuudEjzjmpfJVX7Dvi7wescFsVx2L5yoY",
     "95cfoy472fcQHaw4tPGBTKpn6ZQnfEPfBgDQx6gcRmRg",
     "3UQUKjhMKaY2S6bjcQD6yHB7utcZt5bfarRCmctpRtUd",
-    "FogxVNs6Mm2w9rnGL1vkARSwJxvLE8mujTv3LK8RnUhF"
+    "FogxVNs6Mm2w9rnGL1vkARSwJxvLE8mujTv3LK8RnUhF",
+    "bLx7MvxGaKdKL7mEbpk9tC79z6MnBSJoJkuaEAPu6Nd",
+    "bLx7XBqSg3LUPVf1bRgCnkJmgVZR8QEgDJBPqcRLHvp",
+    "bLx8KeZxinPwy6kkUgyzMLeqb2ARNsWjADG1dhSsVba",
+    "bLxADBknoNj8WAGw2W6GBYeq848Xx6ajhaymV1YvrHm",
+    "bLxAc88vRBwvcUQJEgcxNfBLvHPikY4csNsUmPeWea2",
+    "bLxQ88oCiTsL8Xj4YWekKi1hjrgmbE3J3FFZ2xZHR3h",
+    "bLxS7NoLuynNRJ4mCnEE2YbtwJFttYsEyp2ME7rp2yt",
+    "bLxW6mCov7VEbrKc3S9tcBRcfSzRnLCbNp3Dfn3SJG5",
+    "bLxXSGXs4mYPTC5okZXed1qzvjNwNJ48QJ82hT2V7w7",
+    "bLxYi3vojbbB7hVzVDVTdBLVPhp7GJ3ZB3BwdK5sFXi",
+    "bLxhLPgBXtUpX4b1bH3HatuMGMSKT9GnwtuCGiMSAqe",
+    "bLxpY1mniuFW4PgkNA4JiNxoeKHFszryi6tNgyZAiAA",
+    "bLxuETxd2tgWxBALNwPzAfHhsik4BzD3nrEBCiPNZQD",
+    "bLxuL2gK5FW7xfahvwLrxLyW76vcCpNsKQY2CmnE6kV",
+    "bLxv4Hnub7nDJWHs8s17o9bGU65Bnx6Yqp2fqtMgHmm"
   ],
   "tip_wallet_sns": {
     "HWEoBxYs7ssKuudEjzjmpfJVX7Dvi7wescFsVx2L5yoY": "bloxroute.sol",
     "95cfoy472fcQHaw4tPGBTKpn6ZQnfEPfBgDQx6gcRmRg": "bloxroute1.sol"
   },
+  "tip_wallet_note_legacy": "The two SNS-named wallets (bloxroute.sol, bloxroute1.sol) are retained here but no longer appear in the live tipping list as of 2026-06; the 15 bLx-prefixed addresses are the current live set.",
   "min_tip_sol": 0.001,
   "min_tip_lamports": 1000000,
   "tip_type": "system_transfer",
@@ -64,6 +80,11 @@
       "tokyo": {
         "host": "tokyo.solana.dex.blxrbdn.com",
         "http": "http://tokyo.solana.dex.blxrbdn.com"
+      },
+      "toronto": {
+        "host": "toronto.solana.dex.blxrbdn.com",
+        "http": "http://toronto.solana.dex.blxrbdn.com",
+        "status": "new/beta"
       }
     },
     "pumpfun_beta": {

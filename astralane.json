@@ -27,6 +27,13 @@
     "AStRAnpi6kFrKypragExgeRoJ1QnKH7pbSjLAKQVWUum",
     "ASTRaoF93eYt73TYvwtsv6fMWHWbGmMUZfVZPo3CRU9C"
   ],
+  "shreds_tip_wallets": [
+    "ASTZHptaMgYVMX6DAocDr1vVXLran5PpfKfQtVTSWkfE",
+    "AStZiY6EE532nQBBogmvcWemc2bwg2kHuR4Jrd5Cqaq5",
+    "AStzprSDj14m1pdMuuomjLQwUL5X4d4yEKwiFfzfUSeC",
+    "ASTzWqJ1irGmrWZAkc1UUfVYbJknsxh7R3Jo4jYZ7Mbd"
+  ],
+  "shreds_tip_note": "Dedicated tip addresses for the Astralane Shreds product (raw shred streaming via /shred-pay), distinct from the sendTransaction landing tip_wallets above.",
   "min_tip_sol": 0.00001,
   "cost_on_failure": "free (tip refunds)",
   "endpoints": {
@@ -42,6 +49,13 @@
       "singapore": "http://sg.gateway.astralane.io/iris?api-key=xxxx",
       "lithuania": "http://lit.gateway.astralane.io/iris?api-key=xxxx"
     },
+    "global_edge": "https://edge.astralane.io/iris2?api-key=xxxx",
+    "global_edge_note": "Geo-routed global entrypoint; also serves the Shreds product at https://edge.astralane.io/shred-pay?api-key=xxxx",
+    "shred_pay": "http://{region}.gateway.astralane.io/shred-pay?api-key=xxxx",
+    "shreds_relay_regions": {
+      "frankfurt": "Fra2 Terraswitch (shred relay co-location)",
+      "new_york": "Ewr2 Terraswitch (shred relay co-location)"
+    },
     "iris2_plaintext": "http://{region}.gateway.astralane.io/iris2?api-key=xxxx",
     "irisb_binary": "http://{region}.gateway.astralane.io/irisb?api-key=xxxx",
     "quic": "{region}.gateway.astralane.io:7000",
@@ -54,7 +68,49 @@
     "quic_max_connections": 10,
     "quic_concurrent_streams": 64,
     "quic_stream_timeout_ms": 750,
-    "quic_idle_timeout_s": 30
+    "quic_idle_timeout_s": 30,
+    "tiers": {
+      "free": {
+        "single_tps": 5,
+        "bundle_tps": 1,
+        "min_tip_sol": 0.001,
+        "volume_requirement": "none",
+        "qos_penalty": "QoS penalty applied on high failure rate"
+      },
+      "vip1": {
+        "single_tps": 20,
+        "bundle_tps": 5,
+        "min_tip_sol": 0.0001,
+        "volume_requirement_7d_sol": 3
+      },
+      "vip2": {
+        "single_tps": 40,
+        "bundle_tps": 10,
+        "min_tip_sol": 0.0001,
+        "volume_requirement_7d_sol": 5
+      },
+      "vip3": {
+        "single_tps": 80,
+        "bundle_tps": 20,
+        "min_tip_sol": 0.00001,
+        "volume_requirement_7d_sol": 8
+      }
+    }
+  },
+  "error_codes": {
+    "-32603": {
+      "name": "Internal Error",
+      "messages": ["failed to send batch, internal error"]
+    },
+    "-32600": {
+      "name": "Invalid Request",
+      "description": "batch/sanitization failures",
+      "messages": [
+        "request size exceeded max batch size",
+        "contains duplicate signature",
+        "Transaction sanitization errors"
+      ]
+    }
   },
   "methods": {
     "sendTransaction": {
@@ -127,14 +183,41 @@
   "features": {
     "tip_refunds": true,
     "mev_protection": true,
+    "mev_frontrun_protection": {
+      "description": "sendBundle MEV/frontrun protection via special public-key prefixes that Jito/Harmonic block engines reject unless the matching account is at index zero.",
+      "rejected_prefixes": ["jitodontfront", "dontbund1e"],
+      "exception": "Allowed only when the account is at index zero of the transaction."
+    },
     "swqos_routing": true,
     "paladin_routing": true,
+    "harmonic_routing": true,
+    "bam_routing": true,
+    "block_builders": ["Harmonic", "BAM"],
+    "swqos_partners": ["Jito", "Paladin"],
+    "transaction_routing_note": "sendTransaction routes through partner SWQoS clients including Jito and Paladin (Paladin requires a higher min tip), plus direct routing to block builders Harmonic and BAM.",
     "durable_nonce_management": true,
     "geographic_regions": 10,
     "recommended_regions": ["frankfurt", "amsterdam"],
     "latency_improvement": "500ms vs standard RPC",
     "zero_dropped_transactions": true,
     "data_indexing": ["dex_pools", "ohlcv", "token_prices", "dex_trades", "pnl", "portfolio", "top_holders"],
-    "keep_alive_pool_idle_timeout_s": 85
+    "keep_alive_pool_idle_timeout_s": 85,
+    "shreds": {
+      "description": "Raw shred streaming product delivering Solana shreds with ultra-low latency.",
+      "endpoint": "/shred-pay",
+      "regions": ["fr", "fr2", "la", "jp", "ny", "ams", "ams2", "lim", "sg", "lit", "edge"],
+      "access_tiers": {
+        "tier_1": {
+          "required_24h_tips_sol": 0.2,
+          "description": "Good for dev testing, faster than Jito shreds"
+        },
+        "tier_2": {
+          "required_24h_tips_sol": 0.5,
+          "description": "Ideal for ultra-low-latency shred delivery and production"
+        },
+        "grace_and_downgrade": "24h grace window then fall back one tier at a time (tier-2 -> tier-1).",
+        "accumulation_window": "Access is gated by tips accumulated in a rolling 24h window."
+      }
+    }
   }
 }

@@ -44,7 +44,7 @@
     }
   },
   "rate_limits": {
-    "rpc": "Not explicitly documented (no per-second limit stated)",
+    "rpc": "10 transactions per second (TPS) per client",
     "quic_connections_per_minute": 8,
     "quic_keepalive_interval_seconds": 10
   },
@@ -108,7 +108,16 @@
     },
     "front_running_protection": false,
     "bundle_support": false,
-    "priority_fees": "Not documented (standard Solana priority fees presumably still apply)"
+    "priority_fees": "Not documented (standard Solana priority fees presumably still apply)",
+    "no_preflight": {
+      "enabled": true,
+      "note": "Everstake SWQoS does not perform preflight simulation; transactions are forwarded as-is."
+    },
+    "optional_memo": {
+      "supported": true,
+      "note": "Optionally attach a memo (invoice number, order ID, custom reference) recorded on-chain via the SPL Memo program.",
+      "spl_memo_program": "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+    }
   },
   "notes": {
     "port_443": "Port 443 only works with HTTPS",

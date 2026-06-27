@@ -39,9 +39,10 @@
       "note": "Global DNS load-balanced endpoint based on latency."
     },
     "regional": {
-      "documented_publicly": false,
-      "source": "Blocklander dashboard",
-      "note": "Docs state that geolocated endpoints closer to users or servers are available in the dashboard, but do not publish the full regional list."
+      "documented_publicly": true,
+      "source": "Blocklander site (live as of 2026-06)",
+      "locations": ["Frankfurt", "Amsterdam", "New York", "Hong Kong"],
+      "note": "Live site states: 'Access endpoints in strategic locations: Frankfurt, Amsterdam, New York, Hong Kong and more.' Specific regional hostnames are still surfaced via the dashboard, not published as URLs."
     }
   },
   "methods": {
@@ -95,6 +96,9 @@
   "features": {
     "parallel_pipelines": true,
     "geographically_aware_routing": true,
+    "stake_weighted_validator_routing": true,
+    "differentiated_staked_connections": true,
+    "jito_mev_auctions": true,
     "global_dns_latency_balancing": true,
     "dashboard_regional_endpoints": true,
     "rpc_like_send_transaction": true,

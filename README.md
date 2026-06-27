@@ -26,7 +26,7 @@ The provider list is based on https://circular.fi/providers and updated manually
 | `hellomoon.json` | HelloMoon Lunar Lander | send, binary, bundle, batch |
 | `jito.json` | Jito Block Engine | transactions, bundles, tip floor |
 | `lightbridge.json` | LightBridge | JSON, binary, batch, CORS |
-| `merkle.json` | Merkle QuickSlot | QuickSlot, SVM RPC, status |
+| `merkle.json` | Merkle QuickSlot (now Blink Labs) | QuickSlot, SVM RPC, status, gas sponsorship |
 | `nextblock.json` | NextBlock | HTTP/gRPC/QUIC, bundles, tip floor |
 | `node1.json` | Node1 | Regional sender endpoints |
 | `raiden.json` | Raiden | HTTP sender and QUIC |
@@ -67,3 +67,12 @@ The files are descriptive JSON, not a strict schema yet. Common top-level fields
 - `notes`
 
 Transport support differs widely by provider: JSON-RPC, raw HTTP binary, plaintext body, batch, bundle, QUIC, gRPC and WebSocket are all represented where documented.
+
+## Changelog
+
+Notes are refreshed manually against each provider's live docs (preferring `llms.txt` where available). Only dated, high-level entries are kept here — see git history for the per-file detail.
+
+### 2026-06
+
+- Synced all providers against live docs. Highlights: corrected a few stale/incorrect values (a mistyped Circular tip wallet, 10x-too-high min tips on BlockRazor and Glaive, a dead Syncro Amsterdam host, Jito bundle-status method paths); added new tip wallets (bloXroute, Soyas, Astralane, AURA, Merkle); added new regions and endpoints (HelloMoon, BlockRazor, BlockSprint, Raiden, NextBlock, Syncro, Soyas, bloXroute and others); and recorded new features, auth channels, rate-limit tiers and error codes across the set.
+- Merkle / QuickSlot / Solana Boost rebranded to **Blink Labs** (`*.merkle.io` domains are now legacy; `*.blinklabs.xyz` is current). The `merkle.json` filename is kept for continuity.

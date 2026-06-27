@@ -36,7 +36,8 @@
   },
   "rate_limits": {
     "default_tps": 5,
-    "note": "Higher limits available upon request via Discord"
+    "note": "Higher limits available upon request via Discord",
+    "prioritization": "We prioritize users who have a high ratio of successful on-chain transactions over failed ones."
   },
   "methods": {
     "sendTransaction": {
@@ -47,7 +48,13 @@
       "request_body": {
         "transaction": "base64-encoded serialized transaction (required)"
       },
+      "request_body_note": "The request body can contain just the transaction as shown in the Quickstart example, or a full JSON-RPC payload if you wish to be compatible with the standard Solana sendTransaction RPC method.",
       "response_200": "Transaction signature as string",
+      "response_200_body": {
+        "signature": "Transaction signature (string)",
+        "status": "Landing status of the transaction"
+      },
+      "response_200_note": "Per the live Quickstart, the JSON response includes both a transaction signature and landing status (e.g. `const { signature, status } = await response.json()` — 'The response includes a transaction signature and landing status.'). Inconsistency: the live formal Response reference table still lists 200 as just 'Transaction signature (string)', so the formal table has not been updated to reflect the landing status field. Documented here as-is rather than asserting which is authoritative.",
       "response_400": "Error message as string",
       "notes": "Always skips preflight checks"
     },
@@ -75,8 +82,9 @@
         "attempted": "int",
         "accepted": "int",
         "rejected": "int",
-        "parse_error": "null or error string"
+        "parse_error": "null, or an object containing the error type and a 1-based at_tx_index indicating where in the batch the problem occurred"
       },
+      "parse_error_note": "When a parse error occurs, the parse_error field will contain the error type and a 1-based at_tx_index indicating where in the batch the problem occurred.",
       "parse_errors": [
         "empty_body",
         "incomplete_length_prefix",
@@ -103,7 +111,13 @@
       "full_example": "GET http://fra.lightbridge.vision-node.com/ping?api-key=YOUR_API_KEY",
       "method": "GET",
       "response_200": "Plain text 'pong'",
-      "note": "Keep-alive / health check endpoint"
+      "note": "Keep-alive / health check endpoint",
+      "keep_alive_constraints": {
+        "same_connection_required": "The ping must traverse the same TCP connection you use for transaction sends.",
+        "recommended_interval_seconds": "Send a ping every 30-45 seconds.",
+        "max_interval_seconds": 60,
+        "max_interval_note": "Do not exceed 60 seconds between pings or the connection may be closed."
+      }
     }
   },
   "features": {

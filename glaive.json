@@ -25,9 +25,9 @@
     "GLaivRU6eDKrta3p3psFAWPEFLzCjeMHGpPUuQqTjtyv",
     "GLaivq5dU8qHayz9Qf13LjPfVy3SmUhbmickfGiZdmfh"
   ],
-  "min_tip_sol": 0.001,
-  "min_tip_lamports": 1000000,
-  "tip_note": "Transactions must include a SOL transfer of at least 0.001 SOL to one Glaive tip account. Missing or invalid tips are rejected.",
+  "min_tip_sol": 0.0001,
+  "min_tip_lamports": 100000,
+  "tip_note": "Transactions must include a SOL transfer of at least 0.0001 SOL (100,000 lamports) to one Glaive tip account. Missing or invalid tips are rejected.",
   "cost_on_failure": "not explicitly documented; tip is included in the submitted transaction, so it is only transferred if the transaction lands and executes the tip instruction",
   "endpoints": {
     "regions": {

@@ -34,25 +34,29 @@
       "fra": { "label": "Frankfurt", "host": "fra.bolt.raiden.wtf" },
       "ams": { "label": "Amsterdam", "host": "ams.bolt.raiden.wtf" },
       "lnd": { "label": "London", "host": "lnd.bolt.raiden.wtf" },
-      "nyc": { "label": "New York", "host": "nyc.bolt.raiden.wtf" }
+      "nyc": { "label": "New York", "host": "nyc.bolt.raiden.wtf" },
+      "tky": { "label": "Tokyo", "host": "tky.bolt.raiden.wtf" }
     },
     "sendTransaction": {
       "fra": "https://fra.bolt.raiden.wtf/api/v1/sendTransaction",
       "ams": "https://ams.bolt.raiden.wtf/api/v1/sendTransaction",
       "lnd": "https://lnd.bolt.raiden.wtf/api/v1/sendTransaction",
-      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendTransaction"
+      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendTransaction",
+      "tky": "https://tky.bolt.raiden.wtf/api/v1/sendTransaction"
     },
     "sendRawTransaction": {
       "fra": "https://fra.bolt.raiden.wtf/api/v1/sendRawTransaction",
       "ams": "https://ams.bolt.raiden.wtf/api/v1/sendRawTransaction",
       "lnd": "https://lnd.bolt.raiden.wtf/api/v1/sendRawTransaction",
-      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendRawTransaction"
+      "nyc": "https://nyc.bolt.raiden.wtf/api/v1/sendRawTransaction",
+      "tky": "https://tky.bolt.raiden.wtf/api/v1/sendRawTransaction"
     },
     "quic": {
       "fra": "fra.bolt.raiden.wtf:4433",
       "ams": "ams.bolt.raiden.wtf:4433",
       "lnd": "lnd.bolt.raiden.wtf:4433",
-      "nyc": "nyc.bolt.raiden.wtf:4433"
+      "nyc": "nyc.bolt.raiden.wtf:4433",
+      "tky": "tky.bolt.raiden.wtf:4433"
     },
     "ping": "GET https://{region}.bolt.raiden.wtf/ping"
   },
@@ -118,6 +122,7 @@
       "zero_rtt": true,
       "auth": "Derived from API key: SHA-256(api_key) -> ed25519 keypair -> self-signed X.509 TLS client certificate",
       "connection_error_codes": {
+        "0": "Normal close",
         "1": "Unknown certificate (API key unrecognized)",
         "3": "QUIC access not enabled for account",
         "4": "Account suspended/banned"
@@ -141,6 +146,7 @@
       "500": "Server error"
     },
     "quic_connection": {
+      "0": "Normal close",
       "1": "Unknown certificate (API key unrecognized)",
       "3": "QUIC access not enabled",
       "4": "Account suspended/banned"
@@ -150,7 +156,7 @@
   "features": {
     "landing_latency": "< 1ms average",
     "uptime_sla": "99.9%",
-    "global_regions": 4,
+    "global_regions": 5,
     "infrastructure": "Dedicated bare-metal servers",
     "quic_zero_rtt": true,
     "products": {
@@ -165,7 +171,8 @@
           "fra": { "ip": "198.13.140.100", "datacenter": "FRA2" },
           "ams": { "ip": "64.130.43.242", "datacenter": "AMS3" },
           "lnd": { "ip": "64.130.46.240", "datacenter": "LON1" },
-          "nyc": { "ip": "64.130.45.192", "datacenter": "EWR2" }
+          "nyc": { "ip": "64.130.45.192", "datacenter": "EWR2" },
+          "tky": { "ip": "198.13.133.221", "datacenter": "TYO2" }
         },
         "protocol": "UDP shreds from validators",
         "requires": "Public IP + UDP port"
@@ -173,6 +180,31 @@
       "raiden_insight": {
         "description": "Strategy backtesting and analytics",
         "status": "coming_soon"
+      },
+      "raiden_pulse": {
+        "description": "Server-side decoded transaction streaming via gRPC",
+        "tagline": "Decoded transactions. Delivered via gRPC. Microsecond overhead. No client-side decoding.",
+        "regions": {
+          "fra": { "status": "Live" },
+          "nyc": { "status": "Live" },
+          "ams": { "status": "Live" }
+        },
+        "grpc_service": "ShrederBinaryService",
+        "grpc_rpc": "SubscribeBinaryTransactions",
+        "streaming": "bidirectional",
+        "payload": "bincode-deserialized into Solana VersionedTransaction",
+        "server_side_filtering": ["account_required", "account_include", "account_exclude"],
+        "reserve_access": "raiden.wtf/dashboard/pulse",
+        "endpoints": {
+          "fra": "fra.pulse.raiden.wtf",
+          "nyc": "nyc.pulse.raiden.wtf",
+          "ams": "ams.pulse.raiden.wtf"
+        },
+        "ports": {
+          "endpoint_table": 16000,
+          "code_samples": 9991,
+          "note": "Docs are inconsistent: the endpoint table lists port 16000 while the Rust/Python/TS code samples use port 9991. Both recorded verbatim; discrepancy unresolved in docs."
+        }
       }
     }
   },

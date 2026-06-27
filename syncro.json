@@ -52,12 +52,18 @@
   "endpoints": {
     "public": {
       "global_example": "https://sfls.l2.p2p.org/public",
+      "geo_routed": "http://sfls-geo.l2.p2p.org/",
       "frankfurt": "http://sfls-geo-fra.l2.p2p.org/public",
       "new_york": "http://sfls-geo-nyc.l2.p2p.org/public",
       "london": "http://sfls-geo-lon.l2.p2p.org/public",
       "tokyo": "http://sfls-geo-tky.l2.p2p.org/public",
       "singapore": "http://sfls-geo-sgp.l2.p2p.org/public",
-      "amsterdam": "http://sfls-eu1.l2.p2p.org/"
+      "amsterdam": "http://sfls-ams-plain.l2.p2p.org/",
+      "geo_routed_note": "Bare host auto-routes to the nearest region; amsterdam (sfls-ams-plain) is co-located with the validator (Recommended)."
+    },
+    "tpu_direct": {
+      "amsterdam": "sfls-ams-plain.l2.p2p.org:8090",
+      "note": "Direct TPU endpoint, available to authorized clients only. Create a key pair and send your public key to the P2P team."
     },
     "private": {
       "global_example": "https://sfls.l2.p2p.org",

@@ -24,6 +24,8 @@
   "cost_on_failure": "Not documented - unclear if tip is consumed on failed transactions",
   "endpoints": {
     "base_url_format": "https://<region-host>/$APIKEY",
+    "route": "POST /fast",
+    "route_note": "The live docs document an explicit 'POST /fast' route for both single and batch transaction submission.",
     "http_method": "POST",
     "content_type": "application/json",
     "protocol": "JSON-RPC 2.0",
@@ -137,6 +139,16 @@
         "Each request must have a unique id for correct response matching",
         "Rate limits apply to total transactions across batch and individual submissions"
       ]
+    },
+    "keep_alive": {
+      "description": "Keep-alive heartbeat to keep the connection warm",
+      "http_method": "GET",
+      "endpoint": "GET https://<region>.flashrpc.com/$APIKEY (same API URL as sendTransaction)",
+      "behavior": [
+        "A lightweight GET request to the same API URL keeps the connection warm",
+        "Send a heartbeat every 60s when idle",
+        "Does not submit a transaction"
+      ]
     }
   },
   "features": {
@@ -145,8 +157,9 @@
     "regional_endpoints": "8 regions available: Frankfurt, Amsterdam, New York, London, Tokyo, Dublin, Singapore, Lithuania",
     "batch_support": "Multiple transactions in a single HTTP POST",
     "standard_rpc_format": "Uses standard Solana JSON-RPC format (sendTransaction)",
-    "native_staking": "Also offers native staking product (Maximum returns through Stellium Engine)",
-    "referral_program": "Referral program available"
+    "native_staking": "Also offers native staking product (Maximum returns through Stellium Engine; Zero Commission - 0% inflation commission and 0% MEV commission)",
+    "referral_program": "Referral program available (tiered 20-50% of block rewards referees contribute, from Starter 20% to Infinity 50%)",
+    "stellium_points": "Stellium Points system: points earned alongside staking rewards and referral commissions, with a duration/amount boost system"
   },
   "supported_encodings": ["base64"],
   "contact": {
