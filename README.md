@@ -70,7 +70,7 @@ Transport support differs widely by provider: JSON-RPC, raw HTTP binary, plainte
 
 ## Changelog
 
-Notes are refreshed manually against each provider's live docs (preferring `llms.txt` where available). Only dated, high-level entries are kept here — see git history for the per-file detail.
+Notes are refreshed manually against each provider's live docs (preferring `llms.txt` where available). Only dated, high-level entries are kept here - see git history for the per-file detail.
 
 ### 2026-06
 
