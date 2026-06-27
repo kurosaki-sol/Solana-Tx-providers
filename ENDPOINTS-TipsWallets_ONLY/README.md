@@ -3,8 +3,7 @@
 Minimal, copy-paste-friendly extract of each provider: **auth, min tip, tip wallets, endpoints** only.
 For full details (methods, rate limits, features, error codes) see the per-provider JSON in the repo root.
 
-> **Generated file — do not edit by hand.** Everything here is derived from the root provider JSON.
-> Regenerate after any change with: `python3 ENDPOINTS-TipsWallets_ONLY/generate_quickref.py`
+> Derived from the per-provider JSON in the repo root. If a provider changes, update its entry here to match.
 
 Two formats, same content:
 - `markdown/<provider>.md` — for reading / copy-paste in the browser
