@@ -1,7 +1,7 @@
 # Helius Sender
 
 **Auth:** optional — query parameter: ?api-key=YOUR_API_KEY
-**Min tip:** dual_routing 0.0002, swqos_only 5e-06 SOL
+**Min tip:** sender_max 0.001, swqos_only 5e-06 SOL
 
 ## Tip wallets
 - `4ACfpUFoaSD9bfPdeu6DBt89gB6ENTeHBXCAi87NhDEE`

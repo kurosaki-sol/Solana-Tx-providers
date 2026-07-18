@@ -26,9 +26,9 @@
   ],
 
   "min_tip_sol": {
-    "dual_routing": 0.0002,
+    "sender_max": 0.001,
     "swqos_only": 0.000005,
-    "note": "Tip is a native SOL transfer to one of the tip wallet addresses above"
+    "note": "Sender Max (all high-speed pathways) minimum is 0.001 SOL; SWQoS-only path (?swqos_only=true) minimum is 0.000005 SOL. Tip is a native SOL transfer to one of the tip wallet addresses above."
   },
 
   "cost_on_failure": "no cost — 0 credits consumed, no SOL lost (tip only transfers on successful landing)",
@@ -66,7 +66,8 @@
     },
     "query_params": {
       "api-key": "YOUR_SENDER_API_KEY (optional, for elevated TPS)",
-      "swqos_only": "true (optional, routes exclusively via SWQOS, lower min tip)"
+      "swqos_only": "true (optional, routes exclusively via SWQOS, lower min tip)",
+      "mev-protect": "true (optional, opt-in per request; routes away from validators statistically linked to sandwich attacks; works with both Sender tiers and basic sendTransaction/sendBundle)"
     }
   },
 
@@ -106,7 +107,7 @@
       "params_detail": {
         "transaction": "Serialized versioned (v0) transaction as base64 or base58 string",
         "encoding": "base64 (recommended) or base58",
-        "skipPreflight": "MUST be true (mandatory)",
+        "skipPreflight": "optional (set true to skip preflight for lower latency)",
         "maxRetries": "MUST be 0 (mandatory)"
       },
       "response_success": {
@@ -182,7 +183,8 @@
   },
 
   "features": {
-    "dual_routing": "Transactions are routed to both Solana validators (via staked connections) and Jito infrastructure simultaneously for maximum landing probability",
+    "multi_path_routing": "Transactions are routed simultaneously across all pathways (Helius, Jito, Harmonic, Rakurai, etc.) for maximum inclusion probability",
+    "mev_protect": "Optional ?mev-protect=true routes away from validators statistically linked to sandwich attacks; opt-in per request, works with both Sender tiers and basic sendTransaction/sendBundle",
     "swqos_only_mode": "Optional ?swqos_only=true parameter routes exclusively through SWQOS (Stake-Weighted Quality of Service) — lower min tip (0.000005 SOL) but no Jito bundle inclusion",
     "staked_connections": "Direct routing to block leaders via Solana's largest validator, bypassing public queues. Paid plans only.",
     "regional_endpoints": "7 global regions (SLC, EWR, LON, FRA, AMS, SG, TYO) for lowest latency from backend servers",

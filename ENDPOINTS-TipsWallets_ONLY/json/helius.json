@@ -2,9 +2,9 @@
   "name": "Helius Sender",
   "auth": "optional \u2014 query parameter: ?api-key=YOUR_API_KEY",
   "min_tip_sol": {
-    "dual_routing": 0.0002,
+    "sender_max": 0.001,
     "swqos_only": 5e-06,
-    "note": "Tip is a native SOL transfer to one of the tip wallet addresses above"
+    "note": "Sender Max (all high-speed pathways) 0.001 SOL; SWQoS-only (?swqos_only=true) 0.000005 SOL. Native SOL transfer to a tip wallet above."
   },
   "tip_wallets": [
     "4ACfpUFoaSD9bfPdeu6DBt89gB6ENTeHBXCAi87NhDEE",
