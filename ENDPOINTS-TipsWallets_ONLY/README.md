@@ -16,7 +16,7 @@ Two formats, same content:
 | Astralane | `astralane` | 21 | 17 |
 | AURA Transaction Service | `aura` | 8 | 12 |
 | Blocklander | `blocklander` | 1 | 4 |
-| BlockRazor | `blockrazor` | 14 | 42 |
+| BlockRazor | `blockrazor` | 14 | 45 |
 | BlockSprint | `blocksprint` | 5 | 15 |
 | bloXroute Solana Trader API | `bloxroute` | 19 | 26 |
 | Circular | `circular` | 8 | 13 |

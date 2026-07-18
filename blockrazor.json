@@ -42,7 +42,8 @@
         "amsterdam_cherryservers": "http://amsterdam-cherryservers.solana.blockrazor.xyz:443/sendTransaction",
         "london": "http://london.solana.blockrazor.xyz:443/sendTransaction",
         "toronto": "http://toronto.solana.blockrazor.xyz:443/sendTransaction",
-        "singapore": "http://singapore.solana.blockrazor.xyz:443/sendTransaction"
+        "singapore": "http://singapore.solana.blockrazor.xyz:443/sendTransaction",
+        "los_angeles": "http://losangeles.solana.blockrazor.xyz:443/sendTransaction"
       },
       "grpc": {
         "frankfurt": "frankfurt.solana-grpc.blockrazor.xyz:80",
@@ -54,7 +55,8 @@
         "amsterdam_cherryservers": "amsterdam-cherryservers.solana-grpc.blockrazor.xyz:80",
         "london": "london.solana-grpc.blockrazor.xyz:80",
         "toronto": "toronto.solana-grpc.blockrazor.xyz:80",
-        "singapore": "singapore.solana-grpc.blockrazor.xyz:80"
+        "singapore": "singapore.solana-grpc.blockrazor.xyz:80",
+        "los_angeles": "losangeles.solana-grpc.blockrazor.xyz:80"
       },
       "health": "http://frankfurt.solana.blockrazor.xyz:443/health"
     },
@@ -69,7 +71,8 @@
         "amsterdam_cherryservers": "http://amsterdam-cherryservers.solana.blockrazor.xyz:443/v2/sendTransaction",
         "london": "http://london.solana.blockrazor.xyz:443/v2/sendTransaction",
         "toronto": "http://toronto.solana.blockrazor.xyz:443/v2/sendTransaction",
-        "singapore": "http://singapore.solana.blockrazor.xyz:443/v2/sendTransaction"
+        "singapore": "http://singapore.solana.blockrazor.xyz:443/v2/sendTransaction",
+        "los_angeles": "http://losangeles.solana.blockrazor.xyz:443/v2/sendTransaction"
       },
       "https": {
         "frankfurt": "https://frankfurt.solana.blockrazor.io/v2/sendTransaction",
@@ -84,6 +87,18 @@
       "content_type": "application/octet-stream",
       "http_example": "http://frankfurt.solana.blockrazor.xyz:443/v2/sendBinaryTransaction",
       "https_example": "https://frankfurt.solana.blockrazor.io/v2/sendBinaryTransaction"
+    },
+    "send_bundle": {
+      "note": "Solana atomic bundle, max 4 transactions, sequential all-or-nothing. Same HTTP/gRPC hosts as sendTransaction.",
+      "path": "/sendBundle",
+      "grpc": true,
+      "http_example": "http://frankfurt.solana.blockrazor.xyz:443/sendBundle"
+    },
+    "send_batch": {
+      "note": "Batch of up to 25 transactions. Same HTTP/gRPC hosts as sendTransaction.",
+      "path": "/sendBatch",
+      "grpc": true,
+      "http_example": "http://frankfurt.solana.blockrazor.xyz:443/sendBatch"
     },
     "network_fee_stream": {
       "grpc": "grpc.solana-fee.blockrazor.me:443",
@@ -239,6 +254,38 @@
         "500": "InternalServerError"
       }
     },
+    "sendBundle": {
+      "endpoint": "POST /sendBundle",
+      "grpc": true,
+      "auth": "apikey header / query ?auth=<token> (API key may be required)",
+      "max_transactions": 4,
+      "execution": "Sequential, all-or-nothing (if any transaction fails, the whole bundle fails)",
+      "content_type": "application/json",
+      "encoding": ["base64"],
+      "params": {
+        "transactions": {
+          "type": "string[]",
+          "required": true,
+          "description": "Fully signed transactions, Base64 encoded (max 4)"
+        }
+      },
+      "anti_frontrun": "Include a valid Solana pubkey starting with 'jitodontfront' or 'dontbund1e' in the first transaction's instructions; if the transaction is frontrun, the bundle is rejected by the Jito/Harmonic block engine.",
+      "rate_limit": "3 TPS default (not bound to subscription plan)"
+    },
+    "sendBatch": {
+      "endpoint": "POST /sendBatch",
+      "grpc": true,
+      "max_transactions": 25,
+      "content_type": "application/json",
+      "encoding": ["base64"],
+      "params": {
+        "transactions": {"type": "string[]", "required": true, "description": "Signed transactions, Base64 encoded, maximum 25"},
+        "mode": {"type": "string", "required": false, "default": "fast", "values": ["fast", "sandwichMitigation"]},
+        "safeWindow": {"type": "integer", "required": false, "default": 3, "range": "3-13"},
+        "revertProtection": {"type": "boolean", "required": false, "default": false}
+      },
+      "rate_limit": "3 TPS default (not bound to subscription plan)"
+    },
     "getTransactionFee": {
       "endpoint": "gRPC GetTransactionFee",
       "server": "grpc.solana-fee.blockrazor.me:443",
@@ -301,7 +348,7 @@
       "description": "Prevents failed transactions from landing on-chain; may reduce inclusion speed"
     },
     "swqos": "Stake-Weighted Quality of Service from high-stake validators",
-    "geographic_endpoints": ["frankfurt", "new_york", "tokyo", "amsterdam", "london"],
+    "geographic_endpoints": ["frankfurt", "new_york", "tokyo", "amsterdam", "london", "toronto", "singapore", "los_angeles"],
     "multi_protocol": ["HTTP", "gRPC"],
     "shred_stream": {
       "description": "Native UDP shred packets directly from validators with minimal forwarding hops",
@@ -333,8 +380,8 @@
       "description": "Enables transactions without holding SOL by sponsoring fees and rent",
       "solana_support": "mentioned but not documented in detail (Ethereum-focused docs)"
     },
-    "bundle_support_solana": false,
-    "bundle_support_note": "Bundles only supported for BSC and Ethereum, not Solana",
+    "bundle_support_solana": true,
+    "bundle_support_note": "Solana Send Bundle is live: POST /sendBundle + gRPC, max 4 transactions, sequential all-or-nothing. Anti-frontrun via a 'jitodontfront' or 'dontbund1e' pubkey in the first transaction. Default 3 TPS, not bound to the subscription plan.",
     "sdk_languages": ["Go", "Rust", "JavaScript", "TypeScript", "CLI"]
   },
   "pricing": {

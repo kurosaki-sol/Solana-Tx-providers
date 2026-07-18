@@ -30,6 +30,7 @@
 - **send_transaction_v1.http.london**: `http://london.solana.blockrazor.xyz:443/sendTransaction`
 - **send_transaction_v1.http.toronto**: `http://toronto.solana.blockrazor.xyz:443/sendTransaction`
 - **send_transaction_v1.http.singapore**: `http://singapore.solana.blockrazor.xyz:443/sendTransaction`
+- **send_transaction_v1.http.los_angeles**: `http://losangeles.solana.blockrazor.xyz:443/sendTransaction`
 - **send_transaction_v1.grpc.frankfurt**: `frankfurt.solana-grpc.blockrazor.xyz:80`
 - **send_transaction_v1.grpc.frankfurt_allnodes**: `frankfurt-allnodes.solana-grpc.blockrazor.xyz:80`
 - **send_transaction_v1.grpc.frankfurt_cherryservers**: `frankfurt-cherryservers.solana-grpc.blockrazor.xyz:80`
@@ -40,6 +41,7 @@
 - **send_transaction_v1.grpc.london**: `london.solana-grpc.blockrazor.xyz:80`
 - **send_transaction_v1.grpc.toronto**: `toronto.solana-grpc.blockrazor.xyz:80`
 - **send_transaction_v1.grpc.singapore**: `singapore.solana-grpc.blockrazor.xyz:80`
+- **send_transaction_v1.grpc.los_angeles**: `losangeles.solana-grpc.blockrazor.xyz:80`
 - **send_transaction_v1.health**: `http://frankfurt.solana.blockrazor.xyz:443/health`
 - **send_transaction_v2.http.frankfurt**: `http://frankfurt.solana.blockrazor.xyz:443/v2/sendTransaction`
 - **send_transaction_v2.http.frankfurt_allnodes**: `http://frankfurt-allnodes.solana.blockrazor.xyz:443/v2/sendTransaction`
@@ -51,6 +53,7 @@
 - **send_transaction_v2.http.london**: `http://london.solana.blockrazor.xyz:443/v2/sendTransaction`
 - **send_transaction_v2.http.toronto**: `http://toronto.solana.blockrazor.xyz:443/v2/sendTransaction`
 - **send_transaction_v2.http.singapore**: `http://singapore.solana.blockrazor.xyz:443/v2/sendTransaction`
+- **send_transaction_v2.http.los_angeles**: `http://losangeles.solana.blockrazor.xyz:443/v2/sendTransaction`
 - **send_transaction_v2.https.frankfurt**: `https://frankfurt.solana.blockrazor.io/v2/sendTransaction`
 - **send_transaction_v2.https.new_york**: `https://newyork.solana.blockrazor.io/v2/sendTransaction`
 - **send_transaction_v2.https.tokyo**: `https://tokyo.solana.blockrazor.io/v2/sendTransaction`
