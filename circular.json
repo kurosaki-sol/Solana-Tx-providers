@@ -1,11 +1,11 @@
 {
   "name": "Circular",
-  "website": "https://www.circular.bot",
-  "docs": "https://docs.circular.bot",
+  "website": "https://www.circular.fi",
+  "docs": "https://docs.circular.fi",
   "api_key": {
     "required": true,
     "header": "x-api-key",
-    "get_key_url": "https://www.circular.bot/account"
+    "get_key_url": "https://www.circular.fi/account"
   },
   "tip_wallets": [
     "FAST3dMFZvESiEipBvLSiXq3QCV51o3xuoHScqRU6cB6",
@@ -23,19 +23,19 @@
     "fast": {
       "default": "https://fast.circular.fi/transactions",
       "amsterdam": "https://ams.fast.circular.fi/transactions",
-      "frankurt": "https://fra.fast.circular.fi/transactions",
+      "frankfurt": "https://fra.fast.circular.fi/transactions",
       "new_york": "https://ny.fast.circular.fi/transactions"
     },
     "pro": {
-      "tokens": "https://pro.circular.bot/market/tokens",
-      "market_cache": "https://pro.circular.bot/market/cache",
-      "market_status": "https://pro.circular.bot/market/status",
-      "wallets_overview": "https://pro.circular.bot/wallets/overview",
-      "wallet_transactions": "https://pro.circular.bot/wallets/transactions",
-      "transaction_details": "https://pro.circular.bot/transaction",
-      "tips_by_compute_unit": "https://pro.circular.bot/market/tips/by/computeUnit",
-      "tips_by_gains": "https://pro.circular.bot/market/tips/by/gains",
-      "fees_by_compute_unit": "https://pro.circular.bot/market/fees/by/computeUnit"
+      "tokens": "https://pro.circular.fi/market/tokens",
+      "market_cache": "https://pro.circular.fi/market/cache",
+      "market_status": "https://pro.circular.fi/market/status",
+      "wallets_overview": "https://pro.circular.fi/wallets/overview",
+      "wallet_transactions": "https://pro.circular.fi/wallets/transactions",
+      "transaction_details": "https://pro.circular.fi/transaction",
+      "tips_by_compute_unit": "https://pro.circular.fi/market/tips/by/computeUnit",
+      "tips_by_gains": "https://pro.circular.fi/market/tips/by/gains",
+      "fees_by_compute_unit": "https://pro.circular.fi/market/fees/by/computeUnit"
     }
   },
   "rate_limits": {
@@ -74,9 +74,9 @@
     "multi_route_broadcasting": "SWQOS + standard nodes + Jito simultaneously",
     "front_running_protection": true,
     "uuid_tracking": true,
-    "geographic_endpoints": ["amsterdam", "new_york"],
+    "geographic_endpoints": ["frankfurt", "amsterdam", "new_york"],
     "arbitrage_intelligence": "tokens API filters real arb gains vs synthetic volume"
   },
-  "pricing_url": "https://www.circular.bot/plans",
+  "pricing_url": "https://www.circular.fi/plans",
   "tiers": ["FREE", "PREMIUM", "PRO"]
 }

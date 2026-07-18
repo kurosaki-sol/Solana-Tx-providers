@@ -16,14 +16,14 @@
 ## Endpoints
 - **fast.default**: `https://fast.circular.fi/transactions`
 - **fast.amsterdam**: `https://ams.fast.circular.fi/transactions`
-- **fast.frankurt**: `https://fra.fast.circular.fi/transactions`
+- **fast.frankfurt**: `https://fra.fast.circular.fi/transactions`
 - **fast.new_york**: `https://ny.fast.circular.fi/transactions`
-- **pro.tokens**: `https://pro.circular.bot/market/tokens`
-- **pro.market_cache**: `https://pro.circular.bot/market/cache`
-- **pro.market_status**: `https://pro.circular.bot/market/status`
-- **pro.wallets_overview**: `https://pro.circular.bot/wallets/overview`
-- **pro.wallet_transactions**: `https://pro.circular.bot/wallets/transactions`
-- **pro.transaction_details**: `https://pro.circular.bot/transaction`
-- **pro.tips_by_compute_unit**: `https://pro.circular.bot/market/tips/by/computeUnit`
-- **pro.tips_by_gains**: `https://pro.circular.bot/market/tips/by/gains`
-- **pro.fees_by_compute_unit**: `https://pro.circular.bot/market/fees/by/computeUnit`
+- **pro.tokens**: `https://pro.circular.fi/market/tokens`
+- **pro.market_cache**: `https://pro.circular.fi/market/cache`
+- **pro.market_status**: `https://pro.circular.fi/market/status`
+- **pro.wallets_overview**: `https://pro.circular.fi/wallets/overview`
+- **pro.wallet_transactions**: `https://pro.circular.fi/wallets/transactions`
+- **pro.transaction_details**: `https://pro.circular.fi/transaction`
+- **pro.tips_by_compute_unit**: `https://pro.circular.fi/market/tips/by/computeUnit`
+- **pro.tips_by_gains**: `https://pro.circular.fi/market/tips/by/gains`
+- **pro.fees_by_compute_unit**: `https://pro.circular.fi/market/fees/by/computeUnit`
