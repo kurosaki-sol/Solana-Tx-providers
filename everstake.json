@@ -18,8 +18,8 @@
     "DMHQ51qK2wChtDEUED54cqzbSLMLGvTygQCv5uLTUmZP",
     "GDnz7cAA7hKEFmDyrk6mz3drybHWc3Gn14y9LCsvvtjE"
   ],
-  "min_tip_sol": 0.0005,
-  "min_tip_lamports": 500000,
+  "min_tip_sol": 0.001,
+  "min_tip_lamports": 1000000,
   "cost_on_failure": "unknown (tip is embedded in TX, so likely lost on failure)",
   "endpoints": {
     "rpc_https": {
@@ -27,14 +27,18 @@
       "frankfurt": "https://fra-swqos.everstake.one",
       "new_york": "https://ny-swqos.everstake.one",
       "tokyo": "https://tyo-swqos.everstake.one",
-      "amsterdam": "https://ams-swqos.everstake.one"
+      "amsterdam": "https://ams-swqos.everstake.one",
+      "singapore": "https://sgp-swqos.everstake.one",
+      "london": "https://lon-swqos.everstake.one"
     },
     "rpc_http": {
       "main_cloudflare": "http://main-swqos.everstake.one",
       "frankfurt": "http://fra-swqos.everstake.one",
       "new_york": "http://ny-swqos.everstake.one",
       "tokyo": "http://tyo-swqos.everstake.one",
-      "amsterdam": "http://ams-swqos.everstake.one"
+      "amsterdam": "http://ams-swqos.everstake.one",
+      "singapore": "http://sgp-swqos.everstake.one",
+      "london": "http://lon-swqos.everstake.one"
     },
     "quic": {
       "frankfurt": "64.130.57.62:11809",
@@ -52,7 +56,7 @@
     "sendTransaction_rpc": {
       "path": "RPC (HTTP/HTTPS)",
       "method": "sendTransaction",
-      "description": "Standard Solana JSON-RPC sendTransaction. TX must include a SystemProgram::transfer instruction to one of the tip wallets with >= 500000 lamports.",
+      "description": "Standard Solana JSON-RPC sendTransaction. TX must include a SystemProgram::transfer instruction to one of the tip wallets with >= 1000000 lamports.",
       "params": {
         "jsonrpc": "2.0",
         "id": "integer",
@@ -66,7 +70,7 @@
       },
       "requirements": [
         "Transaction must include a SystemProgram::transfer to a tip wallet",
-        "Minimum tip: 500000 lamports (0.0005 SOL)",
+        "Minimum tip: 1000000 lamports (0.001 SOL)",
         "Do NOT add the tip address to an AddressLookupTable",
         "Transaction must be fully signed before submission"
       ]
@@ -88,7 +92,7 @@
   },
   "features": {
     "stake_weighted_qos": "Everstake's validator stake provides prioritized transaction delivery to block leaders",
-    "geographic_endpoints": ["main_cloudflare", "frankfurt", "new_york", "tokyo", "amsterdam"],
+    "geographic_endpoints": ["main_cloudflare", "frankfurt", "new_york", "tokyo", "amsterdam", "singapore", "london"],
     "http2_support": {
       "enabled": true,
       "h2c_cleartext": "Use http:// endpoints with http2_prior_knowledge() for lowest latency",

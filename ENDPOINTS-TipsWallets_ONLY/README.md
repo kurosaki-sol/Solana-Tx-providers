@@ -21,7 +21,7 @@ Two formats, same content:
 | bloXroute Solana Trader API | `bloxroute` | 19 | 26 |
 | Circular | `circular` | 8 | 13 |
 | Corvus Falcon | `corvus-falcon` | 10 | 8 |
-| Everstake SWQoS | `everstake` | 10 | 14 |
+| Everstake SWQoS | `everstake` | 10 | 18 |
 | FlashBlock | `flashblock` | 10 | 10 |
 | Glaive | `glaive` | 6 | 12 |
 | Helius Sender | `helius` | 10 | 15 |

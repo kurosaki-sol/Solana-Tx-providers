@@ -1,7 +1,7 @@
 # Everstake SWQoS
 
 **Auth:** optional
-**Min tip:** 0.0005 SOL
+**Min tip:** 0.001 SOL
 
 ## Tip wallets
 - `J4cL8c22KNLHwheuWxK1SCYBWASWPGhEi6xvcGyf6o3S`
@@ -21,11 +21,15 @@
 - **rpc_https.new_york**: `https://ny-swqos.everstake.one`
 - **rpc_https.tokyo**: `https://tyo-swqos.everstake.one`
 - **rpc_https.amsterdam**: `https://ams-swqos.everstake.one`
+- **rpc_https.singapore**: `https://sgp-swqos.everstake.one`
+- **rpc_https.london**: `https://lon-swqos.everstake.one`
 - **rpc_http.main_cloudflare**: `http://main-swqos.everstake.one`
 - **rpc_http.frankfurt**: `http://fra-swqos.everstake.one`
 - **rpc_http.new_york**: `http://ny-swqos.everstake.one`
 - **rpc_http.tokyo**: `http://tyo-swqos.everstake.one`
 - **rpc_http.amsterdam**: `http://ams-swqos.everstake.one`
+- **rpc_http.singapore**: `http://sgp-swqos.everstake.one`
+- **rpc_http.london**: `http://lon-swqos.everstake.one`
 - **quic.frankfurt**: `64.130.57.62:11809`
 - **quic.tokyo**: `208.91.107.171:11809`
 - **quic.amsterdam**: `74.118.140.197:11809`
