@@ -116,7 +116,32 @@
         "note": "X = number of $250/month bundles"
       }
     },
-    "check_endpoint": "GET /api/v2/rate-limit"
+    "check_endpoint": "GET /api/v2/rate-limit",
+    "credit_costs_per_endpoint": {
+      "submit": 1,
+      "submit-plain-text": 1,
+      "submit-snipe": 1,
+      "submit-batch": 1,
+      "submit-paladin": 1,
+      "balance": 10,
+      "rate-limit": 1,
+      "transaction": 10,
+      "slot-info": 1,
+      "trace": 5,
+      "priority-fee": 1,
+      "blockhash": 1,
+      "time": 1,
+      "pumpfun_quotes": 1,
+      "pumpfun_swap": 1,
+      "pumpfun_swap-sol": 1,
+      "pumpfun_amm_quotes": 1,
+      "pumpfun_amm_swap": 1,
+      "jupiter_quotes": 5,
+      "jupiter_swap": 5,
+      "jupiter_swap-instructions": 5,
+      "jupiter_route-swap": 5,
+      "note": "Transaction submissions cost 1 credit each. Credits reset every 60 seconds."
+    }
   },
   "methods": {
     "core": {
@@ -265,6 +290,13 @@
           ]
         }
       },
+      "submit_paladin": {
+        "method": "POST",
+        "path": "/api/v2/submit-paladin",
+        "path_note": "Inferred from the naming convention; submit-paladin is listed in the credit-cost table (1 credit) but its dedicated docs page is not yet published as of 2026-07.",
+        "description": "Submit a transaction via the Paladin path (Paladin anti-MEV validator-client integration).",
+        "credit_cost": 1
+      },
       "balance": {
         "method": "GET",
         "path": "/api/v2/balance",
@@ -398,6 +430,34 @@
           "feeAtPercentile": "uint64 (micro lamports)"
         },
         "note": "Recommended fees capped at 0.1 SOL. Does not guarantee inclusion."
+      },
+      "blockhash": {
+        "method": "GET",
+        "path": "/api/v2/system/blockhash",
+        "description": "Get a recent Solana blockhash for transaction construction, with an optional slot offset.",
+        "parameters": {
+          "offset": {
+            "type": "uint64",
+            "required": false,
+            "default": 0,
+            "description": "Slot offset from the most recent cached blockhash"
+          }
+        },
+        "response": {
+          "blockHash": "string (recent blockhash with the applied offset)",
+          "timestamp": "google.protobuf.Timestamp"
+        },
+        "credit_cost": 1
+      },
+      "time": {
+        "method": "GET",
+        "path": "/api/v1/system/time",
+        "description": "Return the current server time from Trader API (RFC 3339).",
+        "parameters": {},
+        "response": {
+          "timestamp": "google.protobuf.Timestamp (RFC 3339)"
+        },
+        "credit_cost": 1
       }
     },
     "streams": {
@@ -429,6 +489,17 @@
           "percentile99": "uint64",
           "emaPercentile50": "uint64 (1-min EMA of 50th percentile)"
         }
+      },
+      "GetRecentBlockHashStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "description": "Streams the latest Solana blockhash for transaction construction."
+      },
+      "GetPumpFunNewAmmPoolStream": {
+        "protocol": "WebSocket",
+        "ws_method": "subscribe",
+        "endpoint": "wss://pump-{region}.solana.dex.blxrbdn.com/ws",
+        "description": "Streams new PumpFun AMM pool creation events."
       },
       "GetPumpFunNewTokensStream": {
         "protocol": "WebSocket",
@@ -766,8 +837,13 @@
       "description": "Full trace of TX journey: received time, released time, regions, delays. Ultra tier only.",
       "tier_required": "Ultra"
     },
+    "quic_submission": {
+      "description": "Submit transactions over QUIC for reduced serialization overhead (raw bytes), stream multiplexing (no head-of-line blocking), and faster connection setup. Official SDK is Rust, but any language works if it follows the same connection/submission protocol.",
+      "auth": "mTLS — download the client certificate/key from the bloXroute portal (unlike HTTP/WebSocket/gRPC, which use the Authorization header).",
+      "sdk": "quic-sdk (Rust)"
+    },
     "sdks": ["Go", "Python", "TypeScript", "Rust"],
-    "protocols": ["HTTP", "HTTPS", "WebSocket (WSS)", "gRPC"],
+    "protocols": ["HTTP", "HTTPS", "WebSocket (WSS)", "gRPC", "QUIC (mTLS)"],
     "encoding": "base64 (transaction content)",
     "keep_alive_seconds": 60,
     "performance_tips": {
