@@ -1,0 +1,25 @@
+{
+  "name": "MANKA",
+  "auth": "required — query parameter: ?api-key=YOUR_KEY (request key via Discord)",
+  "min_tip_sol": null,
+  "min_tip_note": "Per-API-key minimum (no global value). Docs advertise a first-week 0.0001 SOL trial.",
+  "tip_wallets": [
+    "MANKAkkxLekcPvmwzT33GrMBqi2pJCnUTZ6gCmNCNZ8",
+    "MANKAYSFgE25exjx8svRS3aHSj3E9H3ZygXtqwdWDtA",
+    "MANKAKg6Dv4AaSEBN6a1Fn7jaXarqjjH2J1yjHpypuf",
+    "MANKARNB4Bmx9n4mUyPm7e67SGfdNCP1fSjJo58GsHd",
+    "MANKA8wAZkJ3icGCD43kQUq2DDTUZT9WyR8ZHYpkh4n",
+    "MANKAWLhWQtK3XDfSRzYYFeUqBcAd2MieRi5F9RjFnP",
+    "MANKA8qcVHGt87DTa8BbkQZZ8DyxnwHMKErUwvq47xS",
+    "MANKAU2GMrL7GCWzH3pNKPkG5xToYPh9Vn6hwj2wggt",
+    "MANKAaXosaBi8ezcn4hCqVpjbvpjbGvfcFBGUaLqupN",
+    "MANKAZYMJSUFEui63ZzSRzk6NsdZj8ej7wkcrk13vzS",
+    "MANKA6u4JhQvHt94PvM6G54LvAuQHxYzuJTLnrfnoKU",
+    "MANKAimDfGzpjkcwt7ugpEbMJNRADBDJSejKa5Tb96T"
+  ],
+  "endpoints": {
+    "mainnet.regions.frankfurt.send": "http://fra.manka.wtf:5000/send",
+    "mainnet.regions.amsterdam.send": "http://ams.manka.wtf:5000/send",
+    "mainnet.regions.new_york.send": "http://nyc.manka.wtf:5000/send"
+  }
+}

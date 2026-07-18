@@ -1,0 +1,233 @@
+{
+  "name": "MANKA",
+  "website": "https://manka.wtf/",
+  "docs": "https://docs.manka.wtf/",
+  "llms_txt": "https://docs.manka.wtf/llms.txt",
+  "description": "Transaction landing service for Solana. Instead of a public RPC, you send to the MANKA gateway, which delivers the transaction to the leader validator over staked connections (SWQoS) for higher speed and inclusion probability, with built-in front-running / sandwich protection. Two transports are planned: HTTP (live) and gRPC (in development).",
+
+  "api_key": {
+    "required": true,
+    "note": "Every request needs a key. Each key comes with individual terms: a TPS limit and a per-transaction minimum tip.",
+    "how_to_get": "Request a key from support via the #request channel on the official Discord (https://discord.gg/ZPjeV7WRyR).",
+    "auth_methods": [
+      { "type": "query_param", "format": "?api-key=YOUR_KEY" }
+    ],
+    "key_terms": {
+      "tps_limit": "How many transactions per second the key may send (enforced, see error -32098).",
+      "minimum_tip": "The minimum service fee per transaction assigned to the key (enforced, see error -32000 'Min tip is X SOL')."
+    },
+    "trial": "First-week promo of 0.0001 SOL tip advertised on the docs; request via a Discord ticket."
+  },
+
+  "tip_wallets": [
+    "MANKAkkxLekcPvmwzT33GrMBqi2pJCnUTZ6gCmNCNZ8",
+    "MANKAYSFgE25exjx8svRS3aHSj3E9H3ZygXtqwdWDtA",
+    "MANKAKg6Dv4AaSEBN6a1Fn7jaXarqjjH2J1yjHpypuf",
+    "MANKARNB4Bmx9n4mUyPm7e67SGfdNCP1fSjJo58GsHd",
+    "MANKA8wAZkJ3icGCD43kQUq2DDTUZT9WyR8ZHYpkh4n",
+    "MANKAWLhWQtK3XDfSRzYYFeUqBcAd2MieRi5F9RjFnP",
+    "MANKA8qcVHGt87DTa8BbkQZZ8DyxnwHMKErUwvq47xS",
+    "MANKAU2GMrL7GCWzH3pNKPkG5xToYPh9Vn6hwj2wggt",
+    "MANKAaXosaBi8ezcn4hCqVpjbvpjbGvfcFBGUaLqupN",
+    "MANKAZYMJSUFEui63ZzSRzk6NsdZj8ej7wkcrk13vzS",
+    "MANKA6u4JhQvHt94PvM6G54LvAuQHxYzuJTLnrfnoKU",
+    "MANKAimDfGzpjkcwt7ugpEbMJNRADBDJSejKa5Tb96T"
+  ],
+  "tip_wallet_note": "Rotate randomly between addresses to avoid write-lock contention under load. The tip destination MUST be in the transaction's static account keys, not referenced via an Address Lookup Table (otherwise error -32001 'At least 1 tip address required').",
+
+  "min_tip_sol": null,
+  "min_tip_lamports": null,
+  "tip_note": "There is no single global minimum: the minimum tip is set per API key. The attached amount also acts as a priority signal — a larger tip improves queue position during congested slots. Docs advertise a first-week 0.0001 SOL trial; the quickstart example uses 1000000 lamports (0.001 SOL) purely as an illustration.",
+
+  "cost_on_failure": "No cost — MANKA charges its fee on-chain and only for a successfully landed transaction. The tip is a plain SOL transfer to a tip account and only settles if the transaction lands.",
+
+  "endpoints": {
+    "mainnet": {
+      "protocol": "HTTP JSON-RPC 2.0",
+      "port": 5000,
+      "path": "/send",
+      "regions": {
+        "frankfurt": {
+          "code": "FRA",
+          "location": "Frankfurt, Germany",
+          "send": "http://fra.manka.wtf:5000/send"
+        },
+        "amsterdam": {
+          "code": "AMS",
+          "location": "Amsterdam, Netherlands",
+          "send": "http://ams.manka.wtf:5000/send"
+        },
+        "new_york": {
+          "code": "NYC",
+          "location": "New York City, USA",
+          "send": "http://nyc.manka.wtf:5000/send"
+        }
+      },
+      "note": "Same API on every host; only the hostname changes and any key works in every region. Pick the region closest to your infrastructure (measure with ping or curl -w \"%{time_total}\"). The regions/HTTP-API pages document http:// hosts; the quickstart curl example uses https://fra.manka.wtf:5000/send — confirm the scheme with support when onboarding."
+    }
+  },
+
+  "transports": {
+    "http": "Live. JSON-RPC 2.0 over HTTP, api-key passed as query parameter.",
+    "grpc": "Announced but not yet available ('still working on this' — watch the Discord for the release)."
+  },
+
+  "encoding": {
+    "required": "base64",
+    "note": "Transactions (and every element of a bundle) must be base64-encoded serialized signed transactions, legacy or v0. base58 is not accepted (error -32602 'Invalid base64')."
+  },
+
+  "methods": {
+    "sendTransaction": {
+      "description": "Submit a single signed transaction. No preflight simulation is performed — it goes straight to submission for maximum speed.",
+      "http_method": "POST",
+      "path": "/send",
+      "jsonrpc": "2.0",
+      "params": [
+        {
+          "index": 0,
+          "type": "string",
+          "required": true,
+          "description": "Signed transaction serialized and base64-encoded. Must include a tip transfer and a recent blockhash."
+        },
+        {
+          "index": 1,
+          "type": "object",
+          "required": false,
+          "example": { "skipPreflight": true, "encoding": "base64" },
+          "description": "Config object accepted for compatibility with standard Solana RPC. Preflight is skipped regardless."
+        }
+      ],
+      "returns": "Transaction signature (string) in the result field."
+    },
+
+    "sendBundle": {
+      "description": "Submit an atomic bundle of 1 to 4 transactions: either all land in the block or none do. Suited to arbitrage, multi-step swaps and similar flows.",
+      "http_method": "POST",
+      "path": "/send",
+      "jsonrpc": "2.0",
+      "params": [
+        {
+          "index": 0,
+          "type": "array[string]",
+          "required": true,
+          "min_items": 1,
+          "max_items": 4,
+          "description": "Array of 1-4 base64-encoded signed transactions. No duplicate transactions. At least one transaction must pay a tip; the total tip across the bundle must be >= the key's minimum tip."
+        },
+        {
+          "index": 1,
+          "type": "object",
+          "required": false,
+          "example": { "encoding": "base64" }
+        }
+      ],
+      "returns": "Bundle ID (string) in the result field."
+    },
+
+    "getHealth": {
+      "description": "Health/ping method (referenced by the errors page as a valid method alongside sendTransaction and sendBundle).",
+      "http_method": "POST",
+      "path": "/send",
+      "jsonrpc": "2.0"
+    }
+  },
+
+  "features": {
+    "swqos": "Delivery to the leader validator over priority staked connections (Stake-Weighted QoS) for higher speed and inclusion probability.",
+    "mev_protection": {
+      "name": "mankaProtect",
+      "description": "Front-running / sandwich protection enabled by adding a single special address to the transaction's account list. The gateway auto-detects it and runs the transaction in protected mode. Optional — if absent, the transaction takes the regular fast path.",
+      "address": "mankadontfront11111111111111111111111111123"
+    },
+    "bundles": {
+      "max_transactions": 4,
+      "execution": "Atomic all-or-nothing"
+    },
+    "skip_preflight": "No preflight simulation is ever run; transactions are submitted directly."
+  },
+
+  "rate_limits": {
+    "model": "Per-API-key TPS limit set individually per key.",
+    "exceeded_response": "JSON-RPC error -32098 'Rate limit exceeded. Limit: N per second' (HTTP 200).",
+    "increase": "Ask support (Discord) to raise the limit.",
+    "guidance": "Slow down and add exponential backoff when rate limited."
+  },
+
+  "constraints": {
+    "max_transaction_bytes": 1232,
+    "bundle_size": "1 to 4 transactions, no duplicates",
+    "tip_location": "Tip transfer must be in static account keys, not an Address Lookup Table",
+    "signature": "Transaction must be signed before sending (error -32000 'No signature in transaction')."
+  },
+
+  "error_codes": {
+    "transport": "All gateway errors are returned as JSON-RPC 2.0 error objects with HTTP status 200. The only exception: a body that is not valid JSON returns HTTP 400 with plain text 'invalid JSON'.",
+    "-32001": {
+      "category": "Authentication and tip problems",
+      "messages": {
+        "API key required": "The api-key query parameter is missing from the URL.",
+        "Invalid API key": "The key does not exist.",
+        "API key expired": "The key was deactivated.",
+        "At least 1 tip address required.": "No transfer to a MANKA tip account among the static account keys (ALT reference does not count)."
+      }
+    },
+    "-32000": {
+      "category": "Tip amount and submission failures",
+      "messages": {
+        "Min tip is X SOL": "Attached tip below the key's minimum. Permanent until you raise the tip.",
+        "Transaction send failed": "Gateway could not deliver. Transient — retry with a fresh blockhash.",
+        "No signature in transaction": "Sign the transaction before sending.",
+        "Bundle submission failed:": "Bundle rejected downstream; read details, rebuild and retry."
+      }
+    },
+    "-32602": {
+      "category": "Malformed request",
+      "messages": {
+        "Invalid params": "params missing or wrong shape.",
+        "Invalid base64": "Transaction string could not be decoded — use base64, not base58.",
+        "Invalid tx format": "Bytes do not deserialize into a Solana transaction (legacy or v0).",
+        "Transaction size exceeds maximum of 1232 bytes": "Reduce instructions or accounts.",
+        "No transactions provided / Invalid params: expected [[tx1, tx2, ...]]": "sendBundle called without a transaction array.",
+        "Bundle must contain 1-4 transactions": "Bundle empty or > 4 transactions.",
+        "Each transaction must be a base64 string": "Non-string element in the bundle array.",
+        "Bundle contains duplicate transactions": "Deduplicate before submitting.",
+        "Bundle must include a tip to a MANKA tip account in at least one transaction": "Add the tip transfer to any one transaction in the bundle."
+      }
+    },
+    "-32098": {
+      "category": "Rate limiting",
+      "messages": {
+        "Rate limit exceeded. Limit: N per second": "Key exceeded its TPS allowance. Transient — back off and retry."
+      }
+    },
+    "-32601": {
+      "category": "Unknown method",
+      "messages": {
+        "Method not found": "Use sendTransaction, sendBundle, or getHealth."
+      }
+    }
+  },
+
+  "retry_guidance": {
+    "transient_retry_with_backoff": ["-32098", "Transaction send failed"],
+    "permanent_fix_request_first": ["-32001", "-32602", "-32601", "Min tip is X SOL"]
+  },
+
+  "best_practices": [
+    "Include a SOL tip transfer to a MANKA tip account in every transaction; without it the request is rejected (-32001).",
+    "Keep the tip account in the transaction's static account keys, never behind an Address Lookup Table.",
+    "Rotate tip accounts at random to reduce write-lock contention under load.",
+    "Encode transactions as base64 (legacy or v0); base58 is rejected.",
+    "Raise the tip during congestion — the amount doubles as your priority signal.",
+    "Add the mankadontfront address for front-running protection when needed.",
+    "Retry -32098 and 'Transaction send failed' with exponential backoff and a fresh blockhash; do not blindly retry permanent errors.",
+    "Pick the region closest to your servers; measure round-trip time to fra/ams/nyc first."
+  ],
+
+  "notes": [
+    "API keys, terms and support are handled through Discord; there is no self-serve dashboard documented yet.",
+    "gRPC transport is announced but not yet live as of this record.",
+    "Official channels: website https://manka.wtf/, X https://x.com/mankalandingwtf, Discord https://discord.gg/ZPjeV7WRyR, Telegram @MankaLanding. MANKA staff never DM first or ask for keys/seed phrases."
+  ]
+}

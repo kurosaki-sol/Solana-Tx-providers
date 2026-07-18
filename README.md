@@ -28,6 +28,7 @@ The provider list is based on https://circular.fi/providers and updated manually
 | `jito.json` | Jito Block Engine | transactions, bundles, tip floor |
 | `landx.json` | landX | JSON-RPC, HTTP binary, UDP, path auth |
 | `lightbridge.json` | LightBridge | JSON, binary, batch, CORS |
+| `manka.json` | MANKA | SWQoS gateway, JSON-RPC send/bundle, mankaProtect |
 | `merkle.json` | Merkle QuickSlot (now Blink Labs) | QuickSlot, SVM RPC, status, gas sponsorship |
 | `nextblock.json` | NextBlock | HTTP/gRPC/QUIC, bundles, tip floor |
 | `node1.json` | Node1 | Regional sender endpoints |
@@ -74,6 +75,10 @@ Transport support differs widely by provider: JSON-RPC, raw HTTP binary, plainte
 ## Changelog
 
 Notes are refreshed manually against each provider's live docs (preferring `llms.txt` where available). Only dated, high-level entries are kept here - see git history for the per-file detail.
+
+### 2026-07
+
+- Added new provider: **MANKA** (`manka.json`). SWQoS landing gateway with JSON-RPC over HTTP (`sendTransaction`, `sendBundle` up to 4 tx atomic), `mankaProtect` front-running protection, 12 `MANKA…`-prefixed tip wallets, 3 regions (FRA/AMS/NYC), and per-key auth + min-tip terms. gRPC transport announced but not yet live. Sourced from https://docs.manka.wtf/llms.txt.
 
 ### 2026-06
 

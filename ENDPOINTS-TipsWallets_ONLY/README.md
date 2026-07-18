@@ -29,6 +29,7 @@ Two formats, same content:
 | Jito Block Engine | `jito` | 8 | 30 |
 | landX | `landx` | 10 | 12 |
 | LightBridge | `lightbridge` | 10 | 5 |
+| MANKA | `manka` | 12 | 3 |
 | Merkle QuickSlot (now Blink Labs) | `merkle` | 22 | 6 |
 | NextBlock | `nextblock` | 8 | 21 |
 | Node1 | `node1` | 6 | 18 |
