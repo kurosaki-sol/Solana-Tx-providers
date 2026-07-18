@@ -12,7 +12,7 @@ Two formats, same content:
 | Provider | File | Tip wallets | Endpoints |
 | --- | --- | --: | --: |
 | 0slot | `0slot` | 21 | 11 |
-| AllenHark Relay (Slipstream) | `allenhark` | 11 | 4 |
+| AllenHark Relay (Slipstream) | `allenhark` | 11 | 8 |
 | Astralane | `astralane` | 21 | 17 |
 | AURA Transaction Service | `aura` | 8 | 12 |
 | Blocklander | `blocklander` | 1 | 4 |

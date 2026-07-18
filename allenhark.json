@@ -3,15 +3,19 @@
   "website": "https://allenhark.com",
   "docs": "https://allenhark.com/docs/infrastructure/relay",
   "llms": "https://allenhark.com/llm-relay.txt",
-  "description": "Institutional-grade Solana transaction relay (marketed as Slipstream / AllenHark Relay). Bypasses the public mempool and routes directly to current and upcoming leaders for same-slot inclusion and MEV protection. Sender-agnostic with QUIC and HTTPS submission.",
+  "llms_note": "As of 2026-07 the llm-relay.txt is STALE (still describes the old single-region, key-required model). The HTML docs page (docs/infrastructure/relay) is the authoritative, up-to-date source; this fiche is built from it.",
+  "description": "Institutional-grade Solana transaction relay (marketed as Slipstream / AllenHark Relay). Bypasses the public mempool and routes directly to current and upcoming leaders for same-slot inclusion and MEV protection. Sender-agnostic, multi-region, with QUIC, HTTPS and WebSocket submission plus atomic Jito bundles.",
   "api_key": {
-    "required": true,
+    "required": false,
+    "note": "API keys are OPTIONAL. Transactions are accepted without a key. Providing one enables rate tracking, transaction history and dedicated-relay features.",
     "delivery": {
       "http": "header x-api-key: YOUR_API_KEY (or query parameter ?api-key=YOUR_API_KEY)",
       "quic": "First stream line 'api-key: YOUR_API_KEY\\n' followed by the JSON payload"
     },
     "how_to_get": "Contact AllenHark via Discord (https://discord.gg/JpzS72MAKG) or Telegram (https://t.me/antonyAllenHark).",
-    "note": "Do not commit a real API key; load from environment variables. Keys can be rotated on request."
+    "rate_limit_without_key": "No rate limiting (subject to change).",
+    "rate_limit_with_key": "100 requests/second default (per API key, not per IP); contact for higher limits.",
+    "note_security": "Do not commit a real API key; load from environment variables. Keys can be rotated on request."
   },
   "tip_wallets": [
     "hark1zxc5Rz3K8Kquz79WPWFEgNCFeJnsMJ16f22uNP",
@@ -26,31 +30,61 @@
     "harkRBygM8pHYe4K8eBjfxyEX19oJn3LepFjvNbLbyi",
     "harkYFxB6DuUFNwDLvA5CQ66KpfRvFgUoVypMagNcmd"
   ],
-  "tip_wallet_note": "Select one tip wallet randomly per transaction. The transfer must be a top-level instruction, not nested in a CPI (static analysis may miss it).",
+  "tip_wallet_note": "Select one tip wallet randomly per transaction. The transfer must be a top-level instruction, not nested in a CPI (static analysis may miss it). Transactions using Address Lookup Tables are rejected for non-dedicated customers because the relay cannot verify the tip destination without resolving the ALT on-chain.",
   "min_tip_sol": 0.001,
   "min_tip_lamports": 1000000,
-  "tip_note": "During extreme congestion, 0.001 SOL may be insufficient; try 0.002-0.005 SOL.",
+  "tip_note": "During extreme congestion, 0.001 SOL may be insufficient; try 0.002-0.005 SOL. For bundles, a SEPARATE Jito tip to a Jito tip account is also required (a Jito tip does not count toward the AllenHark relay tip).",
   "cost_on_failure": "not explicitly documented; tip is a SOL transfer instruction in the transaction, so it only executes if the transaction lands",
   "endpoints": {
-    "quic": {
-      "host": "84.32.223.83",
-      "port": 4433,
-      "address": "84.32.223.83:4433",
-      "sni": "relay.allenhark.com",
-      "protocol": "QUIC (UDP)",
-      "note": "Recommended for production: persistent connections, multiplexing, 0-RTT resumption, ~0.1ms internal processing, up to 80% latency reduction vs HTTPS."
+    "quic_recommended": true,
+    "mainnet": {
+      "regions": {
+        "frankfurt": {
+          "primary": true,
+          "quic": "84.32.223.83:4433",
+          "https_sendTx": "https://fra.relay.allenhark.com/v1/sendTx",
+          "https_sendBundle": "https://fra.relay.allenhark.com/v1/sendBundle",
+          "ws_tx": "wss://fra.relay.allenhark.com/v1/stream/tx",
+          "ws_bundle": "wss://fra.relay.allenhark.com/v1/stream/bundle"
+        },
+        "amsterdam": {
+          "quic": "84.32.104.38:4433",
+          "https_sendTx": "https://ams.relay.allenhark.com/v1/sendTx",
+          "https_sendBundle": "https://ams.relay.allenhark.com/v1/sendBundle",
+          "ws_tx": "wss://ams.relay.allenhark.com/v1/stream/tx",
+          "ws_bundle": "wss://ams.relay.allenhark.com/v1/stream/bundle"
+        },
+        "new_york": {
+          "quic": "66.94.98.217:4433",
+          "https_sendTx": "https://ny.relay.allenhark.com/v1/sendTx",
+          "https_sendBundle": "https://ny.relay.allenhark.com/v1/sendBundle",
+          "ws_tx": "wss://ny.relay.allenhark.com/v1/stream/tx",
+          "ws_bundle": "wss://ny.relay.allenhark.com/v1/stream/bundle"
+        },
+        "tokyo": {
+          "quic": "88.216.188.28:4433",
+          "https_sendTx": "https://tyo.relay.allenhark.com/v1/sendTx",
+          "https_sendBundle": "https://tyo.relay.allenhark.com/v1/sendBundle",
+          "ws_tx": "wss://tyo.relay.allenhark.com/v1/stream/tx",
+          "ws_bundle": "wss://tyo.relay.allenhark.com/v1/stream/bundle"
+        }
+      },
+      "keepalive": "https://relay.allenhark.com/keepalive",
+      "ping": "https://relay.allenhark.com/ping"
     },
-    "https": {
-      "url": "https://relay.allenhark.com/v1/sendTx",
-      "http_method": "POST",
-      "note": "Fallback. ~1-5ms due to TCP/TLS overhead. Use for testing/scripts; prefer QUIC for live trading."
-    }
+    "notes": [
+      "QUIC uses bare IP addresses directly for lowest latency; HTTPS and WebSocket use regional domain names.",
+      "relay.allenhark.com is an alias for fra.relay.allenhark.com (Frankfurt); usable for HTTPS.",
+      "QUIC: skip server certificate verification (or use system roots), set NO ALPN, and send no client certificate (anonymous connections accepted)."
+    ]
   },
   "rate_limits": {
-    "default": "100 requests/second",
+    "without_api_key": "No rate limiting (subject to change)",
+    "default": "100 requests/second (with API key)",
     "burst": "up to 150/s",
     "exceeded_response": "HTTP 429 rate_limit_exceeded",
-    "enterprise": "Co-location/enterprise plans effectively unlimited (10,000+ tx/s)"
+    "enterprise": "Co-location/enterprise plans effectively unlimited (10,000+ tx/s)",
+    "scope": "Rate limits are applied per API key, not per IP address"
   },
   "methods": {
     "sendTransaction_https": {
@@ -58,7 +92,7 @@
       "http_method": "POST",
       "path": "/v1/sendTx",
       "content_type": "application/json",
-      "auth_header": "x-api-key",
+      "auth_header": "x-api-key (optional)",
       "request_body": {
         "tx": "BASE64_ENCODED_TRANSACTION_STRING",
         "simulate": false
@@ -67,38 +101,74 @@
         "tx": "Signed transaction, base64-encoded",
         "simulate": "MUST be false; setting it true returns simulate_forbidden"
       },
-      "response_success": { "status": "accepted", "request_id": "string" },
-      "response_error": { "status": "error", "code": "string", "message": "string" }
+      "response_success": { "status": "accepted", "request_id": "string", "signature": "string" },
+      "response_error": { "status": "rejected", "error": "string / code" }
     },
     "sendTransaction_quic": {
       "description": "Submit a signed transaction over a QUIC bidirectional stream.",
       "protocol": "QUIC (UDP)",
-      "endpoint": "84.32.223.83:4433 (SNI relay.allenhark.com)",
-      "wire_format": "Write 'api-key: YOUR_API_KEY\\n' then the JSON payload {\"tx\": \"<base64>\", \"simulate\": false}, then finish the stream and read the response.",
+      "endpoint": "regional QUIC IP:4433 (e.g. 84.32.223.83:4433 Frankfurt)",
+      "wire_format": "Optionally write 'api-key: YOUR_API_KEY\\n' then the JSON payload {\"tx\": \"<base64>\", \"simulate\": false}, then finish the stream and read the response.",
       "keep_alive_seconds": 3
+    },
+    "sendTransaction_ws": {
+      "description": "Submit single transactions over a persistent WebSocket stream (one socket per region).",
+      "protocol": "WebSocket (wss)",
+      "path": "/v1/stream/tx"
+    },
+    "sendBundle": {
+      "description": "Submit an atomic Jito bundle (executes all-or-nothing). Available over HTTPS, QUIC and WebSocket.",
+      "http_method": "POST",
+      "path": "/v1/sendBundle",
+      "quic_payload": "{\"txs\": [\"<base64>\", ...]}",
+      "ws_path": "/v1/stream/bundle",
+      "requirements": "Requires a Jito tip (SOL transfer to a Jito tip account) in addition to the AllenHark relay tip; the two tips are separate requirements. Single transactions must tip an AllenHark wallet; bundles must additionally tip Jito."
+    },
+    "keepalive": {
+      "description": "Maintain the HTTP connection warm and monitor server time. Poll every 5-10 seconds.",
+      "http_method": "GET",
+      "path": "/keepalive",
+      "response": { "status": "alive", "server_time": "ISO-8601", "region": "fra", "slot": "u64" }
+    },
+    "ping": {
+      "description": "Liveness check.",
+      "http_method": "GET",
+      "path": "/ping",
+      "response": "pong"
     }
   },
   "error_codes": {
     "accepted": { "status": 200, "message": "Transaction received and queued for broadcast" },
     "tip_missing": { "status": 400, "message": "No transfer to an AllenHark tip wallet found" },
-    "tip_insufficient": { "status": 400, "message": "Tip is below 0.001 SOL" },
+    "tip_insufficient": { "status": 400, "message": "Tip amount below minimum threshold (1,000,000 lamports)" },
+    "tip_hidden_in_alt": { "status": 400, "message": "Transaction uses Address Lookup Table — cannot verify tip" },
+    "jito_tip_missing": { "status": 400, "message": "Bundle has no transfer to a Jito tip account (bundles only)" },
+    "jito_tip_insufficient": { "status": 400, "message": "Jito tip below required minimum (bundles only)" },
     "simulate_forbidden": { "status": 400, "message": "simulate parameter was set to true" },
-    "invalid_api_key": { "status": 401, "message": "API key is missing or invalid" },
-    "rate_limit_exceeded": { "status": 429, "message": "Plan rate limit exceeded" }
+    "invalid_transaction": { "status": 400, "message": "Transaction deserialization failed" },
+    "invalid_api_key": { "status": 401, "message": "API key not found or invalid" },
+    "rate_limit_exceeded": { "status": 429, "message": "Request rate limit exceeded for this API key" }
   },
+  "error_response_format": { "status": "rejected", "error": "<code/message>" },
   "features": {
     "zero_slot_execution": "Transactions can land in the same slot they are sent",
-    "zero_hop_delivery": "Direct connections to current and upcoming leaders (broadcast to current + next 4 leaders)",
+    "zero_hop_delivery": "Direct connections to current and upcoming leaders (current + next 48 leaders)",
+    "leader_pipeline": "5-channel delivery: stake-weighted QUIC, QUIC TPU (current + next 48 leaders), UDP TPU (fire-and-forget), RPC fan-out (parallel sendTransaction to multiple RPCs), ROC relayers (Jito Block Engine and custom relayers)",
+    "atomic_bundles": "Jito atomic bundles via /v1/sendBundle (HTTPS/QUIC/WS); requires a separate Jito tip",
     "mev_protection": "Private transaction routing via leader TPU ports; never broadcast to public gossip until landed",
     "no_simulation": "Pure propagation engine; server-side validation only, simulate flag forbidden",
-    "transports": ["QUIC", "HTTPS"]
+    "dedicated_relay": "Tip-free dedicated relay for whitelisted signer pubkeys; dedicated customers are also exempt from the ALT restriction",
+    "alt_restriction": "Address Lookup Table transactions are rejected for non-dedicated customers (tip cannot be verified without resolving the ALT)",
+    "transports": ["QUIC", "HTTPS", "WebSocket"]
   },
   "best_practices": [
-    "Use QUIC for live trading; HTTPS only for testing/scripts",
+    "Use QUIC for live trading; HTTPS/WebSocket for other use cases; HTTPS only for testing/scripts",
     "Place the tip transfer at the top level of the transaction (not in a CPI)",
+    "For bundles, include BOTH an AllenHark relay tip and a separate Jito tip",
     "Skip client-side preflight; validation happens server-side",
-    "Reuse QUIC connections with a 3s keep-alive ping",
-    "Fetch the latest blockhash from a fast RPC or AllenHark gRPC before sending"
+    "Reuse QUIC connections with a 3s keep-alive ping (timeout 10-15s); or poll /keepalive every 5-10s for HTTP",
+    "Fetch the latest blockhash from a fast RPC or AllenHark gRPC before sending",
+    "Avoid Address Lookup Tables unless you are a dedicated-relay customer"
   ],
   "encoding": {
     "supported": ["base64"],
@@ -112,6 +182,7 @@
   },
   "notes": [
     "AllenHark also offers staked RPC, Yellowstone gRPC, ShredStream, 0-slot landing, co-location, and managed validator products; this entry covers the Slipstream / AllenHark Relay transaction relay only.",
-    "The QUIC endpoint is documented as a bare IP (84.32.223.83) with SNI relay.allenhark.com."
+    "QUIC endpoints are documented as bare IPs; HTTPS/WS use regional domains (fra/ams/ny/tyo.relay.allenhark.com).",
+    "For ultimate performance, co-locate bots in the Frankfurt datacenter (TeraSwitch)."
   ]
 }
