@@ -39,7 +39,6 @@
     "amsterdam_2": "https://ams2.blocksprint.io",
     "london": "https://lon.blocksprint.io",
     "new_york": "https://nyc.blocksprint.io",
-    "los_angeles": "https://la.blocksprint.io",
     "singapore": "https://sgp.blocksprint.io",
     "tokyo": "https://jp.blocksprint.io",
     "dublin": "http://dub.blocksprint.io",
@@ -63,8 +62,7 @@
     "amsterdam_2": "Teraswitch",
     "london": "Teraswitch",
     "new_york": "Teraswitch",
-    "los_angeles": "Vultr",
-    "singapore": "Vultr",
+    "singapore": "Teraswitch",
     "tokyo": "Teraswitch",
     "dublin": "Teraswitch",
     "lithuania": "Cherry Servers"
@@ -187,7 +185,7 @@
       "payout": "paid directly to a configured Solana wallet"
     },
     "supported_encodings": ["base64", "base58"],
-    "geographic_regions": 13,
+    "geographic_regions": 12,
     "global_auto_routing": true
   },
   "error_codes": {

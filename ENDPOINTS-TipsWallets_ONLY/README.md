@@ -17,7 +17,7 @@ Two formats, same content:
 | AURA Transaction Service | `aura` | 8 | 12 |
 | Blocklander | `blocklander` | 1 | 4 |
 | BlockRazor | `blockrazor` | 14 | 45 |
-| BlockSprint | `blocksprint` | 5 | 15 |
+| BlockSprint | `blocksprint` | 5 | 14 |
 | bloXroute Solana Trader API | `bloxroute` | 19 | 26 |
 | Circular | `circular` | 8 | 13 |
 | Corvus Falcon | `corvus-falcon` | 10 | 8 |

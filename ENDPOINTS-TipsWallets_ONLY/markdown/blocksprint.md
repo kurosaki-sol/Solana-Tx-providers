@@ -20,7 +20,6 @@
 - **amsterdam_2**: `https://ams2.blocksprint.io`
 - **london**: `https://lon.blocksprint.io`
 - **new_york**: `https://nyc.blocksprint.io`
-- **los_angeles**: `https://la.blocksprint.io`
 - **singapore**: `https://sgp.blocksprint.io`
 - **tokyo**: `https://jp.blocksprint.io`
 - **dublin**: `http://dub.blocksprint.io`
