@@ -6,10 +6,13 @@
     "new_name": "Blink Labs",
     "new_website": "https://blinklabs.xyz",
     "new_dashboard": "https://portal.blinklabs.xyz",
-    "note": "Merkle / QuickSlot / Solana Boost have rebranded to 'Blink Labs'. All *.merkle.io domains (svm/quicksol/mempool/api/mbs.merkle.io) are absent from the live docs and replaced by *.blinklabs.xyz. The new dashboard portal is portal.blinklabs.xyz and the new website is blinklabs.xyz. All merkle.io domains are considered legacy as of 2026-06; existing merkle.io fields in this file are retained and annotated as legacy."
+    "note": "Merkle / QuickSlot / Solana Boost have rebranded to 'Blink Labs'. All *.merkle.io domains (svm/quicksol/mempool/api/mbs.merkle.io) are absent from the live docs and replaced by *.blinklabs.xyz. The new dashboard portal is portal.blinklabs.xyz and the new website is blinklabs.xyz. All merkle.io domains are considered legacy as of 2026-06; existing merkle.io fields in this file are retained and annotated as legacy.",
+    "current_solana_send_endpoint": "https://sol.blinklabs.xyz/v1/<API_KEY> — the current Blink Labs Solana JSON-RPC endpoint, used for sendTransaction and pm_isSponsorable. The legacy QuickSlot endpoint (https://quicksol.merkle.io, no API key) also remains operational as of 2026-07-19."
   },
-  "website": "https://merkle.io",
-  "docs": "https://docs.merkle.io/quickslot/send-transactions",
+  "website": "https://blinklabs.xyz",
+  "website_legacy": "https://merkle.io (legacy — Merkle rebranded to Blink Labs)",
+  "docs": "https://docs.blinklabs.xyz/blink/solana",
+  "docs_legacy": "https://docs.merkle.io/quickslot/send-transactions (legacy; docs.merkle.io now serves Blink Labs content)",
   "dashboard": "https://mbs.merkle.io",
   "api_key": {
     "required_for_quickslot": false,
@@ -129,6 +132,20 @@
       "response": {
         "id": 1,
         "result": "<transaction_signature_base58>"
+      },
+      "encoding": ["base64", "base58"]
+    },
+    "sendTransaction_blinklabs": {
+      "endpoint": "https://sol.blinklabs.xyz/v1/<API_KEY>",
+      "description": "Current Blink Labs Solana JSON-RPC send endpoint (rebranded from svm.merkle.io / quicksol.merkle.io). Requires an API key in the URL path. On Solana the second param should be an options object with skipPreflight:true.",
+      "request": {
+        "method": "sendTransaction",
+        "id": 1,
+        "params": ["<base64_or_base58_encoded_transaction>", { "skipPreflight": true }]
+      },
+      "response": {
+        "id": 1,
+        "result": "<transaction_signature>"
       },
       "encoding": ["base64", "base58"]
     },
