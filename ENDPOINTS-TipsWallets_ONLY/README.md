@@ -23,10 +23,10 @@ Two formats, same content:
 | Corvus Falcon | `corvus-falcon` | 10 | 8 |
 | Everstake SWQoS | `everstake` | 10 | 18 |
 | FlashBlock | `flashblock` | 10 | 10 |
-| Glaive | `glaive` | 6 | 12 |
+| Glaive | `glaive` | 6 | 15 |
 | Helius Sender | `helius` | 10 | 15 |
 | HelloMoon Lunar Lander | `hellomoon` | 10 | 33 |
-| Jito Block Engine | `jito` | 8 | 30 |
+| Jito Block Engine | `jito` | 8 | 32 |
 | landX | `landx` | 10 | 12 |
 | LightBridge | `lightbridge` | 10 | 5 |
 | MANKA | `manka` | 12 | 3 |

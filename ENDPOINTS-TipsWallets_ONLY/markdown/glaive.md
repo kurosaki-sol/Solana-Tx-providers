@@ -24,3 +24,6 @@
 - **regions.new_york.host**: `ny.glaive.trade`
 - **regions.new_york.http**: `http://ny.glaive.trade`
 - **regions.new_york.quic**: `ny.glaive.trade:4000`
+- **regions.london.host**: `lon.glaive.trade`
+- **regions.london.http**: `http://lon.glaive.trade`
+- **regions.london.quic**: `lon.glaive.trade:4000`

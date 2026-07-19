@@ -55,6 +55,12 @@
         "quic": "ny.glaive.trade:4000",
         "status": "live",
         "note": "Newark"
+      },
+      "london": {
+        "host": "lon.glaive.trade",
+        "http": "http://lon.glaive.trade",
+        "quic": "lon.glaive.trade:4000",
+        "status": "live"
       }
     },
     "health": "GET https://<region>.glaive.trade/health",
@@ -171,6 +177,7 @@
   "error_codes": {
     "http": {
       "200": "Request processed; check JSON-RPC result or error body",
+      "400": "Bad request on /plain or /binary (e.g. invalid transaction); returns an {error} body",
       "401": "Missing or invalid API key",
       "429": "Rate limit exceeded"
     },

@@ -42,5 +42,7 @@
 - **testnet.global**: `https://testnet.block-engine.jito.wtf`
 - **testnet.regions.dallas.block_engine**: `https://dallas.testnet.block-engine.jito.wtf`
 - **testnet.regions.dallas.shred_receiver**: `141.98.218.12:1002`
+- **testnet.regions.dallas.ntp**: `ntp.dallas.jito.wtf`
 - **testnet.regions.new_york.block_engine**: `https://ny.testnet.block-engine.jito.wtf`
 - **testnet.regions.new_york.shred_receiver**: `64.130.35.224:1002`
+- **testnet.regions.new_york.ntp**: `ntp.dallas.jito.wtf`

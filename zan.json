@@ -170,6 +170,7 @@
       "400": "parameter error such as missing tip, invalid transaction, or non-base64 encoding"
     },
     "json_rpc": {
+      "-32000": "Authentication failure (maps to HTTP 401) per the sendTransaction docs — apiKey does not exist or has insufficient permissions",
       "-32600": "Invalid request format",
       "-32602": "Invalid parameters, missing/insufficient tip, expired/invalid API key, transaction format error, or decoding failure",
       "-32603": "Internal server error"

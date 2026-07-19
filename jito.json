@@ -12,7 +12,7 @@
       { "type": "header", "format": "x-jito-auth: <uuid>" },
       { "type": "query_param", "format": "?uuid=<uuid>" }
     ],
-    "rate_limit_increase_form": "https://forms.gle/8jZmKX1KZA71jXp38"
+    "rate_limit_increase": "Open a support ticket (the previous Google Form https://forms.gle/8jZmKX1KZA71jXp38 is no longer listed in the live docs as of 2026-07)"
   },
 
   "tip_wallets": [
@@ -102,11 +102,13 @@
       "regions": {
         "dallas": {
           "block_engine": "https://dallas.testnet.block-engine.jito.wtf",
-          "shred_receiver": "141.98.218.12:1002"
+          "shred_receiver": "141.98.218.12:1002",
+          "ntp": "ntp.dallas.jito.wtf"
         },
         "new_york": {
           "block_engine": "https://ny.testnet.block-engine.jito.wtf",
-          "shred_receiver": "64.130.35.224:1002"
+          "shred_receiver": "64.130.35.224:1002",
+          "ntp": "ntp.dallas.jito.wtf"
         }
       }
     }
@@ -115,7 +117,7 @@
   "rate_limits": {
     "default": "1 request per second per IP per region",
     "exceeded_response": "HTTP 429",
-    "increase": "Submit form at https://forms.gle/8jZmKX1KZA71jXp38",
+    "increase": "Open a support ticket (the previous Google Form is no longer listed in the live docs as of 2026-07)",
     "note": "No auth key needed for default rate. Rate limits are enforced per-region, so using multiple regions gives higher aggregate throughput."
   },
 

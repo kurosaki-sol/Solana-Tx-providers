@@ -58,7 +58,8 @@
       "nyc": "nyc.bolt.raiden.wtf:4433",
       "tky": "tky.bolt.raiden.wtf:4433"
     },
-    "ping": "GET https://{region}.bolt.raiden.wtf/ping"
+    "ping": "GET https://{region}.bolt.raiden.wtf/ping",
+    "scheme_note": "Both HTTPS (443) and HTTP (80) are supported on all Bolt endpoints; the docs now list http:// URLs too. Swap https:// for http:// (e.g. http://fra.bolt.raiden.wtf/api/v1/sendTransaction) for lower latency from servers."
   },
 
   "rate_limits": {
@@ -77,7 +78,7 @@
 
   "methods": {
     "sendTransaction": {
-      "protocol": "HTTPS",
+      "protocol": "HTTPS or HTTP",
       "method": "POST",
       "encoding": "base64",
       "content_type": "application/json",
@@ -95,7 +96,7 @@
       }
     },
     "sendRawTransaction": {
-      "protocol": "HTTPS",
+      "protocol": "HTTPS or HTTP",
       "method": "POST",
       "encoding": "binary",
       "content_type": "application/octet-stream",

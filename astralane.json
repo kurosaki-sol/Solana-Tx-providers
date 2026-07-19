@@ -53,12 +53,13 @@
     "global_edge_note": "Geo-routed global entrypoint; also serves the Shreds product at https://edge.astralane.io/shred-pay?api-key=xxxx",
     "shred_pay": "http://{region}.gateway.astralane.io/shred-pay?api-key=xxxx",
     "shreds_relay_regions": {
-      "frankfurt": "Fra2 Terraswitch (shred relay co-location)",
+      "frankfurt": "Fra2 Terraswitch and Cherry (shred relay co-location)",
       "new_york": "Ewr2 Terraswitch (shred relay co-location)"
     },
     "iris2_plaintext": "http://{region}.gateway.astralane.io/iris2?api-key=xxxx",
     "irisb_binary": "http://{region}.gateway.astralane.io/irisb?api-key=xxxx",
     "quic": "{region}.gateway.astralane.io:7000",
+    "quic_mev_protected": "{region}.gateway.astralane.io:9000 (MEV-protected QUIC port, e.g. 185.191.117.97:9000)",
     "graphql": "https://graphql.astralane.io/api/v1/",
     "indexer_admin": "https://indexer.astralane.io/",
     "websocket_prices": "wss://ws.price.astralane.io/price-by-token"
@@ -177,6 +178,8 @@
     },
     "quic": {
       "port": 7000,
+      "mev_protected_port": 9000,
+      "mev_protected_note": "Each region also exposes a MEV-protected QUIC port 9000 (e.g. 185.191.117.97:9000).",
       "library": "astralane-quic-client"
     }
   },
@@ -194,7 +197,8 @@
     "bam_routing": true,
     "block_builders": ["Harmonic", "BAM"],
     "swqos_partners": ["Jito", "Paladin"],
-    "transaction_routing_note": "sendTransaction routes through partner SWQoS clients including Jito and Paladin (Paladin requires a higher min tip), plus direct routing to block builders Harmonic and BAM.",
+    "custom_scheduler_routing": ["Rakurai"],
+    "transaction_routing_note": "sendTransaction routes through partner SWQoS clients including Jito and Paladin (Paladin requires a higher min tip), plus direct routing to block builders Harmonic and BAM, and the Rakurai custom scheduler.",
     "durable_nonce_management": true,
     "geographic_regions": 10,
     "recommended_regions": ["frankfurt", "amsterdam"],
@@ -216,7 +220,8 @@
           "description": "Ideal for ultra-low-latency shred delivery and production"
         },
         "grace_and_downgrade": "24h grace window then fall back one tier at a time (tier-2 -> tier-1).",
-        "accumulation_window": "Access is gated by tips accumulated in a rolling 24h window."
+        "accumulation_window": "Access is gated by tips accumulated in a rolling 24h window.",
+        "shredpay_registration": "As of 2026-07-15, Iris (sendTransaction) tips no longer count toward the shred tier unless separately registered via the ShredPay HTTP endpoint (/shred-pay)."
       }
     }
   }
