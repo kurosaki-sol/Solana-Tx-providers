@@ -57,7 +57,7 @@
     "sponsor": [
       "7czf8vVLjGUaLqn9DBneEz1sNwP3gLx8Usrq3zMctify"
     ],
-    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account. The 'sponsor' wallet is used by the active gas-sponsorship feature (pm_isSponsorable): append a transfer of activeSponsorAmount (0.005 SOL / 5,000,000 lamports) to it, distinct from landing tips."
+    "note": "QuickSlot has 20 unique tip accounts (pick one randomly). Solana Boost uses a separate dedicated tip account. The 'sponsor' wallet is used by the active gas-sponsorship feature (pm_isSponsorable): append a transfer of activeSponsorAmount (0.005 SOL / 5,000,000 lamports) to it, distinct from landing tips. The 20 QuickSlot accounts are fetchable live at GET https://quicksol.merkle.io/tip-accounts and were verified identical to this list on 2026-07-19 (QuickSlot remains operational despite being dropped from the Blink Labs docs)."
   },
   "min_tip_sol": 0.001,
   "cost_on_failure": "unknown (no docs on refunds; tip is via SOL transfer instruction so it executes if TX lands)",
@@ -70,7 +70,8 @@
     },
     "quickslot": {
       "url": "https://quicksol.merkle.io",
-      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed. (Legacy domain; no longer listed in live docs as of 2026-06 — see solana_rpc_blinklabs.)",
+      "description": "QuickSlot global endpoint with automatic data center routing. No API key needed. STILL LIVE as of 2026-07-19: GET / and GET /tip-accounts return the 20 current QuickSlot tip accounts (verified identical to tip_wallets.quickslot). The current Blink Labs docs no longer feature QuickSlot, but this is doc omission, NOT deprecation — the endpoint remains operational.",
+      "tip_accounts_endpoint": "https://quicksol.merkle.io/tip-accounts (GET; returns {\"tip_accounts\":[...]} with the current QuickSlot tip wallets)",
       "method": "POST",
       "protocol": "JSON-RPC"
     },
@@ -209,7 +210,8 @@
       "source_tracking": true
     },
     "transaction_status_tracking": true,
-    "supported_chains": ["Solana", "Ethereum", "BSC"],
+    "supported_chains": ["Solana", "Ethereum", "BSC", "Base", "Arbitrum"],
+    "supported_chains_note": "Base (base.blinklabs.xyz / baseauction.blinklabs.xyz) and Arbitrum (arb.blinklabs.xyz / arbauction.blinklabs.xyz) added under Blink Labs as of 2026-07; these are EVM chains outside this dataset's Solana scope, listed for completeness.",
     "mevswap_dex": {
       "description": "Natively MEV-protected DEX by Merkle"
     },
